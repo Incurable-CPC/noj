@@ -12,6 +12,7 @@ import s from './common.scss';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import Problem from '../Problem.jsx';
+import SubmissionForm from '../Forms/SubmissionForm.jsx';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
@@ -35,6 +36,7 @@ export default class ProblemPage extends Component {
         <div className={s.left}>
           <Paper className={s.paper}>
             <Problem problem={problem} />
+            <SubmissionForm problem={problem}/>
           </Paper>
         </div>
         <div className={s.right}>

@@ -18,6 +18,7 @@ export default class LoginForm extends Component {
     register: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
     withoutAction: PropTypes.bool,
+    disabled: PropTypes.bool,
   };
   render() {
     const {
