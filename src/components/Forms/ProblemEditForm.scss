@@ -1,0 +1,32 @@
+.form {
+  padding-bottom: 50px;
+}
+
+.paper {
+  padding: 1px 20px 40px 20px;
+  margin-top: 1em;
+}
+
+.action {
+  float: right;
+  padding-top: 20px;
+}
+
+.sample {
+  overflow: hidden;
+}
+
+.sample-enter {
+  height: 0;
+}
+.sample-enter-active {
+  height: 120px;
+  transition: height 500ms;
+}
+.sample-leave {
+  height: 120px;
+}
+.sample-leave-active {
+  height: 0;
+  transition: height 300ms;
+}

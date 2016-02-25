@@ -1,0 +1,19 @@
+@media screen and (min-width: 1024px) {
+  .left {
+    float: left;
+    width: 70%;
+  }
+  .right {
+    margin-left: 71%;
+  }
+}
+@media screen and (max-width: 1023px) {
+  .left, .right {
+    display: inline;
+  }
+}
+
+.paper {
+  padding: 20px 40px 40px 30px;
+  margin-bottom: 1em;
+}
