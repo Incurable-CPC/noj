@@ -19,6 +19,18 @@ export const initProblem = () => ({
 
 export const postProblem = async (problem, dispatch) => {
   try {
+    const requiredField = ['outputSrc', 'inputSrc', 'descriptionSrc', 'timeLimit', 'memoryLimit', 'title'];
+    let error = '';
+    requiredField.forEach((field) => {
+      if (!problem[field]) {
+        error = `Field '${field}' can't be empty`;
+      }
+    });
+    if (error) {
+      toast('warning', error);
+      return;
+    }
+
     nprogress.start();
     const action = problem.pid ? 'Saved' : 'Added';
     const res = await postJSON('/api/problems', { problem });
