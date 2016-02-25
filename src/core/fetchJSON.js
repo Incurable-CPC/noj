@@ -18,24 +18,23 @@ const handleError = async (res) => {
   throw new Error((await res.json()).error);
 };
 
-function sleep(time) {
+function sleep() {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve();
-    }, time);
+    }, 0);
   });
 }
 
 export const postJSON = async (url, data = {}) => {
-  await sleep(2000);
+  await sleep(500);
   const options = {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
     },
   };
-  const state = store.getState();
-  const auth = state.auth;
+  const { auth } = store.getState();
   if (auth.has('username')) data.auth = auth.toJS();
   options.body = JSON.stringify(data);
 
@@ -43,15 +42,30 @@ export const postJSON = async (url, data = {}) => {
   return handleError(res);
 };
 
-export const getJSON = async (url) => {
-  await sleep(2000);
+const serialize = (data, prefix) => {
+  const str = [];
+  Object.keys(data).forEach((key) => {
+    const value = data[key];
+    const newPrefix = prefix ? `${prefix}[${key}]` : key;
+    str.push(typeof value !== 'object' ?
+      `${encodeURIComponent(newPrefix)}=${encodeURIComponent(value)}`
+      : serialize(value, newPrefix));
+  });
+  return str.join('&');
+};
+
+export const getJSON = async (url, data = {}) => {
+  await sleep(500);
   const options = {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
     },
   };
+  let query = '';
+  const { auth } = store.getState();
+  if (auth.has('username')) data.auth = auth.toJS();
 
-  const res = await fetch(url, options);
+  const res = await fetch(`${url}?${serialize(data)}`, options);
   return handleError(res);
 };
