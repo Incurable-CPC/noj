@@ -5,7 +5,7 @@
 import ProblemConstants from '../constants/ProblemConstants';
 import { getJSON, postJSON } from '../core/fetchJSON';
 import toast from '../core/toast';
-import nprogress from 'nprogress';
+import nprogress from '../core/nprogress';
 import Location from '../core/Location';
 
 export const setProblem = (problem) => ({

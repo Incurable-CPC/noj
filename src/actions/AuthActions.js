@@ -6,8 +6,8 @@ import { getValues } from 'redux-form';
 import cookie from 'react-cookie';
 import AuthConstants from '../constants/AuthConstants';
 import { postJSON } from '../core/fetchJSON';
+import nprogress from '../core/nprogress';
 import toast from '../core/toast';
-import nprogress from 'nprogress';
 
 const cookieOpt = {
   maxAge: 9000000,

@@ -4,8 +4,8 @@
 
 import ProblemListConstants from '../constants/ProblemListConstants';
 import { getJSON } from '../core/fetchJSON';
+import nprogress from '../core/nprogress';
 import toast from '../core/toast';
-import nprogress from 'nprogress';
 
 export const reciveProblemList = (problemList) => ({
   type: ProblemListConstants.LOAD_SUCCESS,
