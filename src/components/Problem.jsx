@@ -4,10 +4,8 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import RaisedButton from 'material-ui/lib/raised-button';
 
 import { nameToStr, markWithMath } from '../common';
-import Location from '../core/Location';
 import withStyle from '../decorators/withStyles';
 import s from './Problem.scss';
 
@@ -30,23 +28,6 @@ export default class Problem extends Component {
         }
       });
     }
-
-    let buttons = ['status', 'statistics', 'discuss', 'edit'];
-    buttons = buttons.map((action, index) => (
-      <RaisedButton
-        style={{ marginLeft: 1 }}
-        onTouchTap={() => Location.push(`/problems/${problem.get('pid')}/${action}`)}
-        key={index}
-        label={action}
-      />
-    ));
-    const submitButton = (
-      <RaisedButton
-        style={{ marginLeft: 1 }}
-        secondary
-        label="submit"
-      />
-    );
 
     const showField = (field) => (problem.has(field) &&
       <div>
@@ -85,10 +66,6 @@ export default class Problem extends Component {
         </div>
         {showField('source')}
         {showField('hint')}
-        <div className={s.actions}>
-          {(!editting) && submitButton}
-          {(!editting) && buttons}
-        </div>
       </div>
     );
   }

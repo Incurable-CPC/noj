@@ -12,6 +12,7 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 import DropDownMenu from 'material-ui/lib/DropDownMenu';
 import Codemirror from 'react-codemirror';
 import Paper from 'material-ui/lib/paper';
+import RaisedButton from 'material-ui/lib/raised-button';
 import 'codemirror/mode/clike/clike';
 import 'codemirror/mode/python/python';
 import { reduxForm } from 'redux-form';
@@ -20,7 +21,7 @@ const fields = ['code', 'language'];
 @reduxForm({
   form: 'submission',
   fields,
-}, () => ({ initialValues: { language: 'c' } }))
+}, () => ({ initialValues: { code: '', language: 'c' } }))
 export default class SubmissionForm extends Component {
   static propTypes = {
     fields: PropTypes.object.isRequired,
@@ -32,6 +33,7 @@ export default class SubmissionForm extends Component {
       problem,
       fields: { code, language },
       } = this.props;
+    console.log(code.onChange.toString());
     const { pid, title } = problem.toJS();
     const map = {
       c: 'text/x-csrc',
@@ -57,11 +59,15 @@ export default class SubmissionForm extends Component {
               </DropDownMenu>
             </ToolbarGroup>
             <ToolbarGroup float="right">
+              <RaisedButton label="submit" primary />
               <ToolbarSeparator style={{ marginRight: 20 }}/>
               <ToolbarTitle text={` ${pid} - ${title}`} />
             </ToolbarGroup>
           </Toolbar>
-          <Codemirror {...code} options={options} />
+          <Codemirror
+            onChange={code.onChange}
+            options={options}
+          />
         </form>
       </Paper>
     );
