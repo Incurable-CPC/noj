@@ -6,11 +6,11 @@ import { Model, pre } from 'mongoose-babelmodel';
 import Counter from './counterModel';
 
 class Submission extends Model {
-  sid = { type: String, index: { unique: true } };
+  sid = { type: Number, index: { unique: true } };
   code = String;
-  lang = Number;
-  user = { type: String, index: true };
-  pid = { type: Number, index: true };
+  language = { type: String, default: 'c' };
+  username = { type: String, index: true };
+  pid = { type: String, index: true };
   date = { type: Date, default: Date.now };
   codeLength = Number;
   timeUsage = Number;
@@ -20,7 +20,7 @@ class Submission extends Model {
   static async getSid(next) {
     this.codeLength = this.code.length;
     if (this.sid) return;
-    const solCounter = await Counter.add('Submissioin');
+    const solCounter = await Counter.add('Submission');
     this.sid = solCounter + 100000;
     next();
   }

@@ -60,11 +60,12 @@ export default class ProblemEditForm extends Component {
       handleSubmit,
       submitting,
       values,
+      ...props,
       } = this.props;
     const textarea = (field, row) => {
       const src = this.props.fields[`${field}Src`];
       return (
-        <div>
+        <div {...props}>
           <TextField
             fullWidth
             multiLine

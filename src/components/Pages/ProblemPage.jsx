@@ -8,26 +8,22 @@ import Paper from 'material-ui/lib/paper';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/lib/raised-button';
 
-import { showDialog, hideDialog } from '../../actions/DialogActions';
 import { getProblem } from '../../actions/ProblemActions';
 import s from './common.scss';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import Location from '../../core/Location';
 import Problem from '../Problem.jsx';
-import SubmissionDialog from '../Dialogs/SubmissionDialog.jsx';
 import SubmissionForm from '../Forms/SubmissionForm.jsx';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
 @connect((state) => ({
   problem: state.problem,
-  dialog: state.dialog,
 }))
 export default class ProblemPage extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
-    dialog: PropTypes.string.isRequired,
     problem: ImmutableTypes.map.isRequired,
     params: PropTypes.object,
   };
@@ -38,7 +34,7 @@ export default class ProblemPage extends Component {
   }
 
   render() {
-    const { dispatch, problem, dialog } = this.props;
+    const { problem } = this.props;
     let buttons = ['status', 'statistics', 'discuss', 'edit'];
     buttons = buttons.map((action, index) => (
       <RaisedButton
@@ -48,14 +44,6 @@ export default class ProblemPage extends Component {
         label={action}
       />
     ));
-    const submitButton = (
-      <RaisedButton
-        style={{ marginLeft: 1 }}
-        onTouchTap={() => dispatch(showDialog('submission'))}
-        secondary
-        label="submit"
-      />
-    );
 
     return (
       <div className={s.div}>
@@ -63,9 +51,9 @@ export default class ProblemPage extends Component {
           <Paper className={s.paper}>
             <Problem problem={problem} />
             <div style={{ textAlign: 'center' }}>
-              {submitButton}
               {buttons}
             </div>
+            <SubmissionForm problem={problem} style={{ marginTop: 40 }}/>
           </Paper>
         </div>
         <div className={s.right}>
@@ -73,11 +61,6 @@ export default class ProblemPage extends Component {
             TEST
           </Paper>
         </div>
-        <SubmissionDialog
-          open={dialog === 'submission'}
-          hide={() => dispatch(hideDialog())}
-          problem={problem}
-        />
       </div>
     );
   }

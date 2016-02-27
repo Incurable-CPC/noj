@@ -10,8 +10,12 @@ import Submission from '../models/submissionModel';
 
 const postSubmission = async (req, res, next) => {
   try {
-    let { submission } = req.body;
-    submission = new Submission(submission);
+    const {
+      submission: { pid, language, code },
+      auth: { username },
+      } = req.body;
+    const submission = new Submission({ username, pid, language, code });
+    console.log(submission);
     await submission.save();
 
     res.send({ submission });

@@ -19,7 +19,10 @@ export const initProblem = () => ({
 
 export const postProblem = async (problem, dispatch) => {
   try {
-    const requiredField = ['outputSrc', 'inputSrc', 'descriptionSrc', 'timeLimit', 'memoryLimit', 'title'];
+    const requiredField = [
+      'timeLimit', 'memoryLimit', 'title',
+      'outputSrc', 'inputSrc', 'descriptionSrc',
+    ];
     let error = '';
     requiredField.forEach((field) => {
       if (!problem[field]) {

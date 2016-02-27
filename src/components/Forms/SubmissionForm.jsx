@@ -16,24 +16,29 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import 'codemirror/mode/clike/clike';
 import 'codemirror/mode/python/python';
 import { reduxForm } from 'redux-form';
+import { submit } from '../../actions/SubmissionActions';
 
-const fields = ['code', 'language'];
+const fields = ['code', 'language', 'pid'];
 @reduxForm({
   form: 'submission',
   fields,
-}, () => ({ initialValues: { code: '', language: 'c' } }))
+}, (state) => ({ initialValues: { language: 'c', pid: state.problem.get('pid') } }))
 export default class SubmissionForm extends Component {
   static propTypes = {
     fields: PropTypes.object.isRequired,
     problem: ImmutableTypes.map.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    submitting: PropTypes.bool.isRequired,
   };
 
   render() {
     const {
+      handleSubmit,
+      submitting,
       problem,
       fields: { code, language },
+      ...props,
       } = this.props;
-    console.log(code.onChange.toString());
     const { pid, title } = problem.toJS();
     const map = {
       c: 'text/x-csrc',
@@ -46,8 +51,8 @@ export default class SubmissionForm extends Component {
       mode: map[language.value],
     };
     return (
-      <Paper>
-        <form>
+      <Paper {...props}>
+        <form onSubmit={handleSubmit(submit)}>
           <Toolbar>
             <ToolbarGroup float="left">
               <ToolbarTitle text="Language: "/>
@@ -59,13 +64,18 @@ export default class SubmissionForm extends Component {
               </DropDownMenu>
             </ToolbarGroup>
             <ToolbarGroup float="right">
-              <RaisedButton label="submit" primary />
+              <RaisedButton
+                type="submit"
+                label="submit"
+                disabled={submitting}
+                secondary
+              />
               <ToolbarSeparator style={{ marginRight: 20 }}/>
               <ToolbarTitle text={` ${pid} - ${title}`} />
             </ToolbarGroup>
           </Toolbar>
           <Codemirror
-            onChange={code.onChange}
+            {...code}
             options={options}
           />
         </form>

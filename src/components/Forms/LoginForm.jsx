@@ -28,9 +28,10 @@ export default class LoginForm extends Component {
       disabled,
       withoutAction,
       fields: { username, password },
+      ...props,
       } = this.props;
     return (
-      <form className={s.form}>
+      <form className={s.form} {...props} >
         <TextField
           {...username}
           fullWidth
