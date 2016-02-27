@@ -9,11 +9,11 @@ import ListItem from 'material-ui/lib/lists/list-item';
 import Divider from 'material-ui/lib/divider';
 
 import withStyles from '../../decorators/withStyles';
-import s from './ProblemsList.scss';
+import s from './ProblemList.scss';
 import Location from '../../core/Location';
 
 @withStyles(s)
-export default class ProblemsTable extends Component {
+export default class ProblemList extends Component {
   static propTypes = {
     problemList: ImmutableTypes.list.isRequired,
   };

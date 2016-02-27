@@ -8,6 +8,17 @@ const router = new Router();
 import { requireAuth } from './common';
 import Submission from '../models/submissionModel';
 
+const getSubmissionList = async (req, res, next) => {
+  try {
+    const submissionList = await Submission.find({}).
+      select('-code').
+      sort({ sid: 1 });
+    res.send({ submissionList });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const postSubmission = async (req, res, next) => {
   try {
     const {
@@ -15,7 +26,6 @@ const postSubmission = async (req, res, next) => {
       auth: { username },
       } = req.body;
     const submission = new Submission({ username, pid, language, code });
-    console.log(submission);
     await submission.save();
 
     res.send({ submission });
@@ -23,6 +33,8 @@ const postSubmission = async (req, res, next) => {
     next(err);
   }
 };
+
+router.get('/', getSubmissionList);
 
 router.all('*', requireAuth);
 router.post('/', postSubmission);

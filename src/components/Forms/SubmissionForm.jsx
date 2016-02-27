@@ -16,13 +16,15 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import 'codemirror/mode/clike/clike';
 import 'codemirror/mode/python/python';
 import { reduxForm } from 'redux-form';
+
 import { submit } from '../../actions/SubmissionActions';
+import { LANGUAGES, LANGUAGE_MODES } from '../../constants/index';
 
 const fields = ['code', 'language', 'pid'];
 @reduxForm({
   form: 'submission',
   fields,
-}, (state) => ({ initialValues: { language: 'c', pid: state.problem.get('pid') } }))
+}, (state) => ({ initialValues: { language: 0, pid: state.problem.get('pid') } }))
 export default class SubmissionForm extends Component {
   static propTypes = {
     fields: PropTypes.object.isRequired,
@@ -40,15 +42,12 @@ export default class SubmissionForm extends Component {
       ...props,
       } = this.props;
     const { pid, title } = problem.toJS();
-    const map = {
-      c: 'text/x-csrc',
-      cpp: 'text/x-c++src',
-      java: 'text/x-java',
-      python: 'python',
-    };
+    const langs = LANGUAGES.map((lang, index) => (
+      <MenuItem value={index} key={index} primaryText={lang} />
+    ));
     const options = {
       lineNumbers: true,
-      mode: map[language.value],
+      mode: LANGUAGE_MODES[language.value],
     };
     return (
       <Paper {...props}>
@@ -57,10 +56,7 @@ export default class SubmissionForm extends Component {
             <ToolbarGroup float="left">
               <ToolbarTitle text="Language: "/>
               <DropDownMenu {...language} onChange={(evt, index, val) => language.onChange(val)}>
-                <MenuItem value="c" primaryText="C" />
-                <MenuItem value="cpp" primaryText="C++" />
-                <MenuItem value="java" primaryText="Java" />
-                <MenuItem value="python" primaryText="Python" />
+                {langs}
               </DropDownMenu>
             </ToolbarGroup>
             <ToolbarGroup float="right">

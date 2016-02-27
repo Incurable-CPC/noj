@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import s from './common.scss';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
-import ProblemTable from '../Lists/ProblemsList.jsx';
+import ProblemTable from '../Lists/ProblemList.jsx';
 import Location from '../../core/Location';
 import { getProblemList } from '../../actions/ProblemListActions';
 

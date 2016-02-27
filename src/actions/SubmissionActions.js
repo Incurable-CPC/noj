@@ -8,7 +8,8 @@ import nprogress from '../core/nprogress';
 
 export const submit = async (submission) => {
   try {
-    if (!submission.code) {
+    const code = submission.code;
+    if (!(code && code.trim())) {
       toast('warning', 'Please input your source code');
       return;
     }

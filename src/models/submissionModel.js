@@ -8,8 +8,9 @@ import Counter from './counterModel';
 class Submission extends Model {
   sid = { type: Number, index: { unique: true } };
   code = String;
-  language = { type: String, default: 'c' };
+  language = { type: Number, default: 0 };
   username = { type: String, index: true };
+  result = { Number, default: 0 };
   pid = { type: String, index: true };
   date = { type: Date, default: Date.now };
   codeLength = Number;
