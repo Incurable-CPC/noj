@@ -1,3 +1,5 @@
+$height: 200;
+
 .form {
   padding-bottom: 50px;
 }
@@ -17,16 +19,16 @@
 }
 
 .sample-enter {
-  height: 0;
+  max-height: 0;
 }
 .sample-enter-active {
-  height: 120px;
-  transition: height 500ms;
+  max-height: 200px;
+  transition: max-height 500ms;
 }
 .sample-leave {
-  height: 120px;
+  max-height: 200px;
 }
 .sample-leave-active {
-  height: 0;
-  transition: height 300ms;
+  max-height: 0;
+  transition: max-height 500ms;
 }

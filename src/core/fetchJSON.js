@@ -27,7 +27,7 @@ function sleep() {
 }
 
 export const postJSON = async (url, data = {}) => {
-  await sleep(500);
+  await sleep();
   const options = {
     method: 'post',
     headers: {
@@ -55,7 +55,7 @@ const serialize = (data, prefix) => {
 };
 
 export const getJSON = async (url, data = {}) => {
-  await sleep(500);
+  await sleep();
   const options = {
     method: 'get',
     headers: {

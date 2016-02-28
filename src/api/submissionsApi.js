@@ -10,9 +10,12 @@ import Submission from '../models/submissionModel';
 
 const getSubmissionList = async (req, res, next) => {
   try {
-    const submissionList = await Submission.find({}).
+    const { pid } = req.query;
+    const cond = {};
+    if (pid) cond.pid = pid;
+    const submissionList = await Submission.find(cond).
       select('-code').
-      sort({ sid: 1 });
+      sort({ sid: -1 });
     res.send({ submissionList });
   } catch (err) {
     next(err);

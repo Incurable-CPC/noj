@@ -18,8 +18,9 @@ import App from './components/App';
 import Index from './components/Pages/Index.jsx';
 import LoginForm from './components/Forms/LoginForm.jsx';
 import ProblemPage from './components/Pages/ProblemPage.jsx';
-import ProblemsListPage from './components/Pages/ProblemsListPage.jsx';
-import ProblemsEditPage from './components/Pages/ProblemEditPage.jsx';
+import ProblemListPage from './components/Pages/ProblemListPage.jsx';
+import ProblemEditPage from './components/Pages/ProblemEditPage.jsx';
+import SubmissionListPage from './components/Pages/SubmissionListPage.jsx';
 import Test from './components/Test.jsx';
 
 const appContainer = document.getElementById('app');
@@ -30,15 +31,16 @@ ReactDOM.render((
         <IndexRoute component={Index}/>
         <Route path="login" component={LoginForm} />
         <Route path="problems">
-          <IndexRoute component={ProblemsListPage} />
-          <Route path="page/:page" component={ProblemsListPage}/>
-          <Route path="add" component={ProblemsEditPage}/>
+          <IndexRoute component={ProblemListPage} />
+          <Route path="page/:page" component={ProblemListPage}/>
+          <Route path="add" component={ProblemEditPage}/>
           <Route path=":pid">
             <IndexRoute component={ProblemPage} />
-            <Route path="edit" component={ProblemsEditPage} />
+            <Route path="edit" component={ProblemEditPage} />
           </Route>
         </Route>
         <Route path="contests" component={Test} />
+        <Route path="status" component={SubmissionListPage} />
         <Route path="*" component={Index} />
       </Route>
     </Router>

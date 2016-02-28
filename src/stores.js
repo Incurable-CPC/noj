@@ -12,6 +12,7 @@ import dialogReducer from './reducers/DialogReducer';
 import authReducer from './reducers/AuthReducer';
 import problemReducer from './reducers/ProblemReducer';
 import problemListReducer from './reducers/ProblemListReducer';
+import submissionListReducer from './reducers/SubmissionListReducer';
 
 const reducer = combineReducers({
   routing: routeReducer,
@@ -20,6 +21,7 @@ const reducer = combineReducers({
   form: formReducer,
   problem: problemReducer,
   problemList: problemListReducer,
+  submissionList: submissionListReducer,
 });
 
 // Sync dispatched route actions to the history

@@ -39,7 +39,6 @@ export default class SubmissionForm extends Component {
       submitting,
       problem,
       fields: { code, language },
-      ...props,
       } = this.props;
     const { pid, title } = problem.toJS();
     const langs = LANGUAGES.map((lang, index) => (
@@ -50,7 +49,7 @@ export default class SubmissionForm extends Component {
       mode: LANGUAGE_MODES[language.value],
     };
     return (
-      <Paper {...props}>
+      <Paper>
         <form onSubmit={handleSubmit(submit)}>
           <Toolbar>
             <ToolbarGroup float="left">
@@ -71,7 +70,7 @@ export default class SubmissionForm extends Component {
             </ToolbarGroup>
           </Toolbar>
           <Codemirror
-            {...code}
+            onChange={code.onChange}
             options={options}
           />
         </form>

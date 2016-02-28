@@ -53,7 +53,9 @@ export default class ProblemPage extends Component {
             <div style={{ textAlign: 'center' }}>
               {buttons}
             </div>
-            <SubmissionForm problem={problem} style={{ marginTop: 40 }}/>
+            <div style={{ marginTop: 40 }}>
+              <SubmissionForm problem={problem} />
+            </div>
           </Paper>
         </div>
         <div className={s.right}>

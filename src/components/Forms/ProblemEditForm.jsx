@@ -60,12 +60,11 @@ export default class ProblemEditForm extends Component {
       handleSubmit,
       submitting,
       values,
-      ...props,
       } = this.props;
     const textarea = (field, row) => {
       const src = this.props.fields[`${field}Src`];
       return (
-        <div {...props}>
+        <div>
           <TextField
             fullWidth
             multiLine
@@ -78,7 +77,7 @@ export default class ProblemEditForm extends Component {
     };
 
     return (
-      <form className={s.form}>
+      <form className={s.form} onSubmit={handleSubmit(postProblem)}>
         {(this.state.status === 'edit') ? (
           <div>
             <div>
@@ -140,8 +139,8 @@ export default class ProblemEditForm extends Component {
           />
           <RaisedButton
             secondary
+            type="submit"
             label={this.props.action}
-            onTouchTap={handleSubmit(postProblem)}
             disabled={submitting}
           />
         </div>
