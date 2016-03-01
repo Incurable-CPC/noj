@@ -4,18 +4,20 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import List from 'material-ui/lib/lists/list';
+import FlatButton from 'material-ui/lib/flat-button';
 import ListItem from 'material-ui/lib/lists/list-item';
 import Divider from 'material-ui/lib/divider';
-import FlatButton from 'material-ui/lib/flat-button';
+import List from 'material-ui/lib/lists/list';
+import Paper from 'material-ui/lib/paper';
 import moment from 'moment';
 
 import CodeBlock from '../CodeBlock.jsx';
+import Animate from '../Animate.jsx';
 import cs from 'classnames';
 import s from './SubmissionList.scss';
 import withStyles from '../../decorators/withStyles';
-import { LANGUAGES, RESULTS } from '../../constants';
 import Location from '../../core/Location';
+import { LANGUAGES, RESULTS } from '../../constants';
 
 @withStyles(s)
 export default class SubmissionList extends Component {
@@ -81,9 +83,13 @@ export default class SubmissionList extends Component {
             primaryText={content}
           />
           <Divider />
-          {expanded ? (
-            <CodeBlock code={code} language={language} />
-          ) : null}
+          <Animate name="code" style={s} >
+            {expanded ? (
+              <Paper className={s.code}>
+                <CodeBlock code={code} language={language} />
+              </Paper>
+            ) : null}
+          </Animate>
         </div>
       );
     });

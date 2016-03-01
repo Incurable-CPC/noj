@@ -17,10 +17,29 @@
   width: 9%;
 }
 
+.date {
+  width: 13%;
+}
+
 .username, .result {
   width: 15%;
 }
 
-.date {
-  width: 13%;
+.code {
+  overflow: hidden;
+}
+
+.code-enter {
+  max-height: 0;
+}
+.code-enter-active {
+  max-height: 512px;
+  transition: max-height 500ms;
+}
+.code-leave {
+  max-height: 512px;
+}
+.code-leave-active {
+  max-height: 0;
+  transition: max-height 500ms;
 }
