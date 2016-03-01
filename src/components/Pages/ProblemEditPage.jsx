@@ -4,9 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import Paper from 'material-ui/lib/paper';
-import { connect } from 'react-redux';
 
-import { getProblem, initProblem } from '../../actions/ProblemActions';
 import s from './common.scss';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
@@ -14,21 +12,10 @@ import ProblemEditForm from '../Forms/ProblemEditForm.jsx';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
-@connect(() => ({}))
 export default class ProblemEditPage extends Component {
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
     params: PropTypes.object,
   };
-
-  componentWillMount() {
-    const { dispatch, params: { pid } } = this.props;
-    if (pid) {
-      dispatch(getProblem(pid));
-    } else {
-      dispatch(initProblem());
-    }
-  }
 
   render() {
     const { params: { pid } } = this.props;

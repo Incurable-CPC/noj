@@ -10,7 +10,7 @@ class Submission extends Model {
   code = String;
   language = { type: Number, default: 0 };
   username = { type: String, index: true };
-  result = { Number, default: 0 };
+  result = { type: Number, default: 0 };
   pid = { type: String, index: true };
   date = { type: Date, default: Date.now };
   codeLength = Number;

@@ -20,9 +20,7 @@ const handleError = async (res) => {
 
 function sleep() {
   return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 0);
+    setTimeout(resolve, 0);
   });
 }
 
@@ -62,7 +60,6 @@ export const getJSON = async (url, data = {}) => {
       'Content-Type': 'application/json',
     },
   };
-  let query = '';
   const { auth } = store.getState();
   if (auth.has('username')) data.auth = auth.toJS();
 

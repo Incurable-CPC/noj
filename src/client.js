@@ -23,6 +23,17 @@ import ProblemEditPage from './components/Pages/ProblemEditPage.jsx';
 import SubmissionListPage from './components/Pages/SubmissionListPage.jsx';
 import Test from './components/Test.jsx';
 
+import { getProblem, initProblem } from './actions/ProblemActions';
+
+const boundGetProblem = async (nextState, replace, next) => {
+  const { params: { pid } } = nextState;
+  if (await store.dispatch(getProblem(pid))) {
+    next();
+  }
+};
+
+const boundInitProblem = () => store.dispatch(initProblem());
+
 const appContainer = document.getElementById('app');
 ReactDOM.render((
   <Provider store={store}>
@@ -33,8 +44,8 @@ ReactDOM.render((
         <Route path="problems">
           <IndexRoute component={ProblemListPage} />
           <Route path="page/:page" component={ProblemListPage}/>
-          <Route path="add" component={ProblemEditPage}/>
-          <Route path=":pid">
+          <Route path="add" onEnter={boundInitProblem} component={ProblemEditPage}/>
+          <Route path=":pid" onEnter={boundGetProblem}>
             <IndexRoute component={ProblemPage} />
             <Route path="edit" component={ProblemEditPage} />
             <Route path="status" component={SubmissionListPage} />

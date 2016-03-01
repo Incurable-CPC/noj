@@ -45,21 +45,23 @@ export const postProblem = async (problem, dispatch) => {
     toast('error', err.message);
   }
 
-  nprogress.done();
+  await nprogress.done();
 };
 
 export const getProblem = (pid) => async (dispatch, getState) => {
   try {
     const state = getState();
-    if (state.problem.get('pid') === pid) return;
+    if (state.problem.get('pid') === pid) return true;
     nprogress.start();
     const res = await getJSON(`/api/problems/${pid}`);
     const { problem } = await res.json();
     dispatch(setProblem(problem));
+    await nprogress.done();
+    return true;
   } catch (err) {
-    toast('error', err.message);
     Location.push('/');
+    toast('error', err.message);
+    await nprogress.done();
+    return false;
   }
-
-  nprogress.done();
 };

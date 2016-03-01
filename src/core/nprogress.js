@@ -15,5 +15,6 @@ export default {
   done() {
     cnt--;
     if (cnt === 0) nprogress.done();
+    return new Promise((resolve) => setTimeout(resolve, 80));
   },
 };
