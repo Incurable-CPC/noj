@@ -24,9 +24,7 @@ export default class Animate extends Component {
         }}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={300}
-      >
-        {this.props.children}
-      </ReactCSSTransitionGroup>
+      >{this.props.children}</ReactCSSTransitionGroup>
     );
   }
 }

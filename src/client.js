@@ -37,6 +37,7 @@ ReactDOM.render((
           <Route path=":pid">
             <IndexRoute component={ProblemPage} />
             <Route path="edit" component={ProblemEditPage} />
+            <Route path="status" component={SubmissionListPage} />
           </Route>
         </Route>
         <Route path="contests" component={Test} />

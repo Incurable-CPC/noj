@@ -71,6 +71,7 @@ export default class Header extends Component {
     const rightPart = auth.has('username') ? (
       <div>
         <FlatButton
+          style={{ textTransform: '' }}
           className={s.button}
           label={auth.get('username')}
           onTouchTap={logout}

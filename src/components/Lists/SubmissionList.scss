@@ -1,32 +1,26 @@
 .row {
   text-align: center;
+  display:table;
+  width: 100%;
 }
 
-.id-col {
-  display: inline-block;
+.col {
+  display:table-cell;
+  vertical-align:middle;
+}
+
+.id, .language, .problem {
   width: 10%;
 }
 
-.problem-col {
-  display: inline-block;
+.time, .memory, .length {
+  width: 9%;
+}
+
+.username, .result {
   width: 15%;
 }
 
-.user-col {
-  display: inline-block;
-  width: 15%;
-}
-
-.result-col {
-  display: inline-block;
-  width: 20%;
-}
-
-.language-col {
-  display: inline-block;
-  width: 10%;
-}
-.date-col {
-  display: inline-block;
-  width: 30%;
+.date {
+  width: 13%;
 }

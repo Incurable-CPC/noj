@@ -11,7 +11,7 @@ import s from './common.scss';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import SubmissionList from '../Lists/SubmissionList.jsx';
-import { getSubmissionList } from '../../actions/SubmissionListActions';
+import { getSubmissionList, expandSubmission } from '../../actions/SubmissionListActions';
 
 @withTitle('NOJ - Submissions')
 @withStyles(s)
@@ -20,20 +20,24 @@ export default class SubmissionListPage extends Component {
   static propTypes = {
     submissionList: ImmutableTypes.list.isRequired,
     dispatch: PropTypes.func.isRequired,
+    params: PropTypes.object,
   };
 
   componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch(getSubmissionList());
+    const { dispatch, params } = this.props;
+    dispatch(getSubmissionList(params));
   }
 
   render() {
-    const { submissionList } = this.props;
+    const { submissionList, dispatch } = this.props;
     return (
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
-            <SubmissionList submissionList={submissionList}/>
+            <SubmissionList
+              expandSubmission={(index) => dispatch(expandSubmission(index))}
+              submissionList={submissionList}
+            />
           </Paper>
         </div>
         <div className={s.right}>
