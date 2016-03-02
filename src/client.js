@@ -24,15 +24,24 @@ import SubmissionListPage from './components/Pages/SubmissionListPage.jsx';
 import Test from './components/Test.jsx';
 
 import { getProblem, initProblem } from './actions/ProblemActions';
+import { getProblemList } from './actions/ProblemListActions';
+import { getSubmissionList } from './actions/SubmissionListActions';
 
 const boundGetProblem = async (nextState, replace, next) => {
   const { params: { pid } } = nextState;
-  if (await store.dispatch(getProblem(pid))) {
-    next();
-  }
+  if (await store.dispatch(getProblem(pid))) next();
 };
 
 const boundInitProblem = () => store.dispatch(initProblem());
+
+const boundGetProblemList = async (nextState, replace, next) => {
+  if (await store.dispatch(getProblemList())) next();
+};
+
+const boundGetSubmissionList = async(nextState, replace, next) => {
+  const { params } = nextState;
+  if (await store.dispatch(getSubmissionList(params))) next();
+};
 
 const appContainer = document.getElementById('app');
 ReactDOM.render((
@@ -42,17 +51,17 @@ ReactDOM.render((
         <IndexRoute component={Index}/>
         <Route path="login" component={LoginForm} />
         <Route path="problems">
-          <IndexRoute component={ProblemListPage} />
+          <IndexRoute onEnter={boundGetProblemList} component={ProblemListPage} />
           <Route path="page/:page" component={ProblemListPage}/>
           <Route path="add" onEnter={boundInitProblem} component={ProblemEditPage}/>
           <Route path=":pid" onEnter={boundGetProblem}>
             <IndexRoute component={ProblemPage} />
             <Route path="edit" component={ProblemEditPage} />
-            <Route path="status" component={SubmissionListPage} />
+            <Route path="status" onEnter={boundGetSubmissionList} component={SubmissionListPage} />
           </Route>
         </Route>
         <Route path="contests" component={Test} />
-        <Route path="status" component={SubmissionListPage} />
+        <Route path="status" onEnter={boundGetSubmissionList} component={SubmissionListPage} />
         <Route path="*" component={Index} />
       </Route>
     </Router>

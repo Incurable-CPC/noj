@@ -63,7 +63,11 @@ export default class SubmissionList extends Component {
             --
           </span>
           <span className={cs(s.col, s.language)}>
-            {LANGUAGES[language]}
+            <FlatButton
+              style={{ textTransform: '' }}
+              onTouchTap={() => expandSubmission(index)}
+              label={LANGUAGES[language]}
+            />
           </span>
           <span className={cs(s.col, s.length)}>
             {codeLength}
@@ -79,8 +83,8 @@ export default class SubmissionList extends Component {
           <ListItem
             style={{ background: '' }}
             innerDivStyle={{ paddingTop: 4, paddingBottom: 4 }}
-            onTouchTap={() => expandSubmission(index)}
             primaryText={content}
+            disabled
           />
           <Divider />
           <Animate name="code" style={s} >

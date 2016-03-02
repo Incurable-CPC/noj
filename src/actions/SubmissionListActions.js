@@ -29,11 +29,13 @@ export const getSubmissionList = (cond) => async (dispatch) => {
     const res = await getJSON(`/api/submissions`, cond);
     const submissionList = await res.json();
     dispatch(reciveSubmissionList(submissionList));
+    await nprogress.done();
+    return true;
   } catch (err) {
     toast('error', err.message);
+    await nprogress.done();
+    return false;
   }
-
-  nprogress.done();
 };
 
 function canSubmissionExpand(state, index) {
@@ -45,17 +47,19 @@ function canSubmissionExpand(state, index) {
 export const getSubmission = (index) => async(dispatch, getState) => {
   try {
     const state = getState();
-    if (!canSubmissionExpand(state, index)) return;
+    if (!canSubmissionExpand(state, index)) return true;
     nprogress.start();
     const sid = state.submissionList.get(index).get('sid');
     const res = await getJSON(`/api/submissions/${sid}`);
     const { code } = await res.json();
     dispatch(reciveSubmissionCode(index, code));
+    await nprogress.done();
+    return true;
   } catch (err) {
     toast('error', err.message);
+    await nprogress.done();
+    return false;
   }
-
-  nprogress.done();
 };
 
 export const expandSubmission = (index) => async (dispatch, getState) => {

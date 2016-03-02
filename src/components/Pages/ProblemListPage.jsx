@@ -2,7 +2,7 @@
  * Create by cpc on 1/12/16.
  **/
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/lib/paper';
 import RaisedButton from 'material-ui/lib/raised-button';
@@ -13,7 +13,6 @@ import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import ProblemTable from '../Lists/ProblemList.jsx';
 import Location from '../../core/Location';
-import { getProblemList } from '../../actions/ProblemListActions';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
@@ -21,13 +20,7 @@ import { getProblemList } from '../../actions/ProblemListActions';
 class ProblemsListPage extends Component {
   static propTypes = {
     problemList: ImmutableTypes.list.isRequired,
-    dispatch: PropTypes.func.isRequired,
   };
-
-  componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch(getProblemList());
-  }
 
   render() {
     const { problemList } = this.props;

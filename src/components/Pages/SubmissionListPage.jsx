@@ -23,11 +23,6 @@ export default class SubmissionListPage extends Component {
     params: PropTypes.object,
   };
 
-  componentWillMount() {
-    const { dispatch, params } = this.props;
-    dispatch(getSubmissionList(params));
-  }
-
   render() {
     const { submissionList, dispatch } = this.props;
     return (

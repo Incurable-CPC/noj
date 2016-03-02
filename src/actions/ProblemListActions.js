@@ -18,9 +18,11 @@ export const getProblemList = () => async (dispatch) => {
     const res = await getJSON(`/api/problems`);
     const { problemList } = await res.json();
     dispatch(reciveProblemList(problemList));
+    await nprogress.done();
+    return true;
   } catch (err) {
     toast('error', err.message);
+    await nprogress.done();
+    return false;
   }
-
-  nprogress.done();
 };

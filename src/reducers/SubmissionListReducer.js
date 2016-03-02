@@ -16,8 +16,7 @@ export default function reducer(state = initState, action) {
     case SubmissionListConstants.CODE_LOAD_SUCCESS:
       return state.update(index, (submission) => submission.set('code', code));
     case SubmissionListConstants.CHANGE_EXPAND_STATE:
-      return state.update(index, (submission) =>
-          submission.update('expanded', (expanded) => !expanded));
+      return state.updateIn([index, 'expanded'], (expanded) => !expanded);
     default:
       return state;
   }

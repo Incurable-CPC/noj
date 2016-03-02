@@ -7,7 +7,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 export default class Animate extends Component {
   static propTypes = {
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node,
     name: PropTypes.string.isRequired,
     style: PropTypes.object.isRequired,
   };
