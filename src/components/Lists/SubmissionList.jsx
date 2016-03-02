@@ -24,10 +24,11 @@ export default class SubmissionList extends Component {
   static propTypes = {
     submissionList: ImmutableTypes.list.isRequired,
     expandSubmission: PropTypes.func.isRequired,
+    withoutPid: PropTypes.bool,
   };
 
   render() {
-    const { submissionList, expandSubmission } = this.props;
+    const { submissionList, expandSubmission, withoutPid } = this.props;
     const submissionNodeList = submissionList.map((submission, index) => {
       const {
         sid, pid, username, language,
@@ -35,21 +36,24 @@ export default class SubmissionList extends Component {
         code, expanded,
         } = submission.toJS();
       const content = (
-        <div className={s.row}>
+        <div className={cs(s.row, withoutPid ? s['without-pid'] : s.normal)}>
           <span className={cs(s.col, s.id)}>
             {sid}
           </span>
-          <span className={cs(s.col, s.problem)}>
-            <FlatButton
-              style={{ textTransform: '' }}
-              onTouchTap={() => Location.push(`/problems/${pid}`)}
-              label={pid}
-            />
-          </span>
+          {withoutPid ? null : (
+            <span className={cs(s.col, s.problem)}>
+              <FlatButton
+                style={{ textTransform: '' }}
+                onTouchTap={() => Location.push(`/problems/${pid}`)}
+                label={pid}
+              />
+            </span>
+          )}
           <span className={cs(s.col, s.username)}>
             <FlatButton
               style={{ textTransform: '' }}
               onTouchTap={() => ({})}
+              labelStyle={{ paddingLeft: 2, paddingRight: 2 }}
               label={username}
             />
           </span>
@@ -98,34 +102,36 @@ export default class SubmissionList extends Component {
       );
     });
     const header = (
-      <div className={s.row}>
-          <span className={cs(s.col, s.id)}>
-            <strong>#</strong>
-          </span>
+      <div className={cs(s.row, withoutPid ? s['without-pid'] : s.normal)}>
+        <span className={cs(s.col, s.id)}>
+          <strong>#</strong>
+        </span>
+        {withoutPid ? null : (
           <span className={cs(s.col, s.problem)}>
             <strong>Problem</strong>
           </span>
-          <span className={cs(s.col, s.username)}>
-            <strong>User</strong>
-          </span>
-          <span className={cs(s.col, s.result)}>
-            <strong>Result</strong>
-          </span>
-          <span className={cs(s.col, s.memory)}>
-            <strong>Memory</strong>
-          </span>
-          <span className={cs(s.col, s.time)}>
-            <strong>Time</strong>
-          </span>
-          <span className={cs(s.col, s.language)}>
-            <strong>Language</strong>
-          </span>
-          <span className={cs(s.col, s.length)}>
-            <strong>Length</strong>
-          </span>
-          <span className={cs(s.col, s.date)}>
-            <strong>Date</strong>
-          </span>
+        )}
+        <span className={cs(s.col, s.username)}>
+          <strong>User</strong>
+        </span>
+        <span className={cs(s.col, s.result)}>
+          <strong>Result</strong>
+        </span>
+        <span className={cs(s.col, s.memory)}>
+          <strong>Memory</strong>
+        </span>
+        <span className={cs(s.col, s.time)}>
+          <strong>Time</strong>
+        </span>
+        <span className={cs(s.col, s.language)}>
+          <strong>Language</strong>
+        </span>
+        <span className={cs(s.col, s.length)}>
+          <strong>Length</strong>
+        </span>
+        <span className={cs(s.col, s.date)}>
+          <strong>Date</strong>
+        </span>
       </div>
     );
     return (

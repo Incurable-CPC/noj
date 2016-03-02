@@ -4,6 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
+import FlatButton from 'material-ui/lib/flat-button';
 import Paper from 'material-ui/lib/paper';
 import { connect } from 'react-redux';
 
@@ -12,34 +13,57 @@ import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import SubmissionList from '../Lists/SubmissionList.jsx';
 import { getSubmissionList, expandSubmission } from '../../actions/SubmissionListActions';
+import Location from '../../core/Location';
 
-@withTitle('NOJ - Submissions')
+@withTitle('NOJ - Status')
 @withStyles(s)
-@connect(state => ({ submissionList: state.submissionList }))
+@connect(state => ({
+  submissionList: state.submissionList,
+  problem: state.problem,
+}))
 export default class SubmissionListPage extends Component {
   static propTypes = {
     submissionList: ImmutableTypes.list.isRequired,
+    problem: ImmutableTypes.map.isRequired,
     dispatch: PropTypes.func.isRequired,
     params: PropTypes.object,
   };
 
   render() {
-    const { submissionList, dispatch } = this.props;
+    const { submissionList, problem, dispatch, params: { pid } } = this.props;
+    const submissionListNode = (
+      <SubmissionList
+        expandSubmission={(index) => dispatch(expandSubmission(index))}
+        submissionList={submissionList}
+        withoutPid={Boolean(pid)}
+      />
+    );
     return (
       <div className={s.div}>
-        <div className={s.left}>
+        {pid ? (
+          <div>
+            <div className={s['left-bg']}>
+              <Paper className={s.paper}>
+                <FlatButton
+                  onTouchTap={() => Location.push(`/problems/${pid}`)}
+                  label={`${pid} - ${problem.get('title')}`}
+                  labelStyle={{ fontSize: 20 }}
+                  style={{ textTransform: '' }}
+                />
+                {submissionListNode}
+              </Paper>
+            </div>
+            <div className={s['right-sm']}>
+              <Paper className={s.paper} style={{ height: 250 }}>
+                TEST
+              </Paper>
+            </div>
+          </div>
+        ) : (
           <Paper className={s.paper}>
-            <SubmissionList
-              expandSubmission={(index) => dispatch(expandSubmission(index))}
-              submissionList={submissionList}
-            />
+            {submissionListNode}
           </Paper>
-        </div>
-        <div className={s.right}>
-          <Paper className={s.paper} style={{ height: 250 }}>
-            TEST
-          </Paper>
-        </div>
+        )}
       </div>
     );
   }

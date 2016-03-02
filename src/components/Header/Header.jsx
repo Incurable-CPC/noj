@@ -88,7 +88,7 @@ export default class Header extends Component {
     return (
       <Paper className={s.header}>
         <div className={s.container}>
-          <Link className={s.title} to="/">NJUOJ</Link>
+          <Link className={s.title} to="/"><strong>NOJ</strong></Link>
           <Tabs className={s.left} value={active} inkBarStyle={styles.ink}>
             {leftPart}
           </Tabs>

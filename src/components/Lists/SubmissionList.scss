@@ -9,20 +9,26 @@
   vertical-align:middle;
 }
 
-.id, .language, .problem {
-  width: 10%;
+.normal {
+  .time, .memory, .length, .id, .language, .problem, .username {
+    width: 10%;
+  }
+
+  .result, .date {
+    width: 15%;
+  }
 }
 
-.time, .memory, .length {
-  width: 9%;
-}
-
-.date {
-  width: 13%;
-}
-
-.username, .result {
-  width: 15%;
+.without-pid {
+  .username {
+    width: 20%;
+  }
+  .result, .date, .time, .memory, .length, .language {
+    width: 12%;
+  }
+  .id {
+    width: 8%;
+  }
 }
 
 .code {
