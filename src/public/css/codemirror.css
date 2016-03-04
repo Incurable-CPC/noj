@@ -337,3 +337,7 @@ span.CodeMirror-selectedtext { background: none; }
 .auto-height .CodeMirror {
   height: auto;
 }
+
+.auto-height .CodeMirror-scroll {
+  max-height: 600px;
+}
