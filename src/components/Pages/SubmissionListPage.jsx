@@ -12,7 +12,7 @@ import s from './common.scss';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import SubmissionList from '../Lists/SubmissionList.jsx';
-import { getSubmissionList, expandSubmission } from '../../actions/SubmissionListActions';
+import { expandSubmission } from '../../actions/SubmissionListActions';
 import Location from '../../core/Location';
 
 @withTitle('NOJ - Status')

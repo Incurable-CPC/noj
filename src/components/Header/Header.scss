@@ -2,33 +2,33 @@ $height: 48px;
 
 .header {
   position: fixed;
-  height: $height;
-  left: 0;
   top: 0;
+  left: 0;
   z-index: 1000;
   width: 100%;
+  height: $height;
 }
 .container {
   max-width: 1280px;
-  margin: auto;
   height: $height;
+  margin: auto;
 }
 .title {
   position: relative;
   top: 9px;
   float: left;
-  margin-left: 20px;
   height: $height;
-  color: black;
-  font-weight: 300;
+  margin-left: 20px;
   font-size: 26px;
+  font-weight: 300;
+  color: black;
   text-decoration: none;
 }
 .left {
-  float: left;
-  margin-left: 20px;
   position: relative;
+  float: left;
   width: 360px;
+  margin-left: 20px;
 }
 .right {
   float: right;
