@@ -11,6 +11,7 @@ import toast from '../core/toast';
 
 const cookieOpt = {
   maxAge: 9000000,
+  path: '/',
 };
 
 export const loginSuccess = (auth) => {
@@ -24,8 +25,8 @@ export const loginSuccess = (auth) => {
 };
 
 export const logoutSuccess = () => {
-  cookie.remove('username');
-  cookie.remove('token');
+  cookie.remove('username', { path: '/' });
+  cookie.remove('token', { path: '/' });
   return {
     type: AuthConstants.LOGOUT_SUCCESS,
   };

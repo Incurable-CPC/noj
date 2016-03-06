@@ -6,8 +6,8 @@ import cookie from 'react-cookie';
 import { fromJS } from 'immutable';
 import AuthConstants from '../constants/AuthConstants';
 
-const username = cookie.load('username');
-const token = cookie.load('token');
+const username = cookie.load('username', { path: '/' });
+const token = cookie.load('token', { path: '/' });
 const initState = fromJS((username && token) ? {
   username,
   token,
