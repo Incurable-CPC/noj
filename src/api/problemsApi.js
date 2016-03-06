@@ -8,6 +8,7 @@ const router = new Router();
 import { requireAuth, requireAdmin } from './common';
 import Problem from '../models/problemModel';
 import { markWithMath } from '../common';
+import fetch from '../core/fetch';
 
 const getProblem = async (req, res, next) => {
   try {
@@ -27,6 +28,7 @@ const getProblemList = async (req, res, next) => {
   try {
     const problemList = await Problem.find({})
       .select('pid title accepted submit')
+      .limit(50)
       .sort({ pid: 1 });
     res.send({ problemList });
   } catch (err) {
@@ -45,9 +47,9 @@ const postProblem = async (req, res, next) => {
       }
     });
     if (problem.pid) {
-      await Problem.findOneAndUpdate({
+      problem = await Problem.findOneAndUpdate({
         pid: problem.pid,
-      }, problem);
+      }, problem, { upsert: true, new: true });
     } else {
       problem = new Problem(problem);
       await problem.save();
@@ -59,6 +61,38 @@ const postProblem = async (req, res, next) => {
   }
 };
 
+const getProblemFromPOJ = async () => {
+  for (let id = 1000; id < 1200; id++) {
+    const res = await fetch(`http://poj.org/problem?id=${id}`);
+    const html = await res.text();
+    const proRegex = {
+      title: /<title>\d{3,} -- ([\s\S]*?)<\/title>/,
+      description: /Description<\/p>([\s\S]*?)<p class="pst">/,
+      input: />Input<\/p>([\s\S]*?)<p class="pst">/,
+      output: />Output<\/p>([\s\S]*?)<p class="pst">/,
+      sampleInput: /Sample Input<\/p><pre class="sio">([\s\S]*?)<\/pre><p class="pst">/,
+      sampleOutput: /Sample Output<\/p><pre class="sio">([\s\S]*?)<\/pre><p class="pst">/,
+      hint: /Hint<\/p>([\s\S]*?)<p class="pst">/,
+      source: /Scoure<\/p>([\s\S]*?)<p class="pst">/,
+      timeLimit: /Time Limit:<\/b> (\d+)MS/,
+      memoryLimit: /Memory Limit:<\/b> (\d+)K/,
+    };
+    const handleImg = (str) =>
+      str.replace(/<img src="([\s\S]+)">/, '<img src="http://poj.org/$1">');
+    let problem = Object.keys(proRegex).reduce((pro, key) => {
+      const match = html.match(proRegex[key]);
+      if (match) pro[key] = handleImg(match[1]);
+      return pro;
+    }, {});
+    problem.samples = [{ input: problem.sampleInput, output: problem.sampleOutput }];
+    problem.pid = `POJ${id}`;
+    problem = await Problem.findOneAndUpdate({
+      pid: problem.pid,
+    }, problem, { upsert: true, new: true });
+    console.log(`${id - 999} / 200 done`);
+  }
+};
+
 router.get('/', getProblemList);
 router.get('/:pid', getProblem);
 
@@ -66,5 +100,6 @@ router.all('*', requireAuth);
 
 router.all('*', requireAdmin);
 router.post('/', postProblem);
+router.post('/poj', getProblemFromPOJ);
 
 export default router;

@@ -13,6 +13,7 @@ import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import ProblemTable from '../Lists/ProblemList.jsx';
 import Location from '../../core/Location';
+import { postJSON } from '../../core/fetchJSON';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
@@ -30,6 +31,7 @@ class ProblemsListPage extends Component {
           <Paper className={s.paper}>
             <ProblemTable problemList={problemList}/>
             <RaisedButton label="ADD" onTouchTap={() => Location.push('/problems/add')} />
+            <RaisedButton label="add from poj" onTouchTap={async() => postJSON('/api/problems/poj')} />
           </Paper>
         </div>
         <div className={s.right}>

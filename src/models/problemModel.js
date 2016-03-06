@@ -28,7 +28,7 @@ class Problem extends Model {
 
   @pre('save')
   static async getPid(next) {
-    if (this.pid) return;
+    if (this.pid) return next();
     const proCount = await Counter.add('Problem');
     this.pid = proCount + 1000;
     next();
