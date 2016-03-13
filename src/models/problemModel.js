@@ -25,6 +25,8 @@ class Problem extends Model {
   submit = { type: Number, default: 0 };
   accepted = { type: Number, default: 0 };
   specialJudge = Boolean;
+  originOJ = { type: String, default: 'local' };
+  originPid = String;
 
   @pre('save')
   static async getPid(next) {

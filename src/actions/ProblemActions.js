@@ -7,6 +7,7 @@ import { getJSON, postJSON } from '../core/fetchJSON';
 import toast from '../core/toast';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
+import checkProblem from '../check/problem';
 
 export const setProblem = (problem) => ({
   type: ProblemConstants.SET,
@@ -19,16 +20,7 @@ export const initProblem = () => ({
 
 export const postProblem = async (problem, dispatch) => {
   try {
-    const requiredField = [
-      'timeLimit', 'memoryLimit', 'title',
-      'outputSrc', 'inputSrc', 'descriptionSrc',
-    ];
-    let error = '';
-    requiredField.forEach((field) => {
-      if (!problem[field]) {
-        error = `Field '${field}' can't be empty`;
-      }
-    });
+    const error = checkProblem(problem);
     if (error) {
       toast('warning', error);
       return;
@@ -40,7 +32,7 @@ export const postProblem = async (problem, dispatch) => {
     const data = await res.json();
     dispatch(setProblem(data.problem));
     toast('success', `Problem ${action}`);
-    Location.push(`/problems/${problem.pid}`);
+    Location.push(`/problems/${data.problem.pid}`);
   } catch (err) {
     toast('error', err.message);
   }

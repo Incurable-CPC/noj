@@ -42,7 +42,7 @@ export default class ProblemPage extends Component {
         <div className={s.left}>
           <Paper className={s.paper}>
             <Problem problem={problem} />
-            <div style={{ textAlign: 'center' }}>
+            <div style={{ textAlign: 'center', paddingTop: 40 }}>
               {buttons}
             </div>
             <div style={{ marginTop: 40 }}>

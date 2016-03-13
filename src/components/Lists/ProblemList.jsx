@@ -22,7 +22,7 @@ export default class ProblemList extends Component {
     const { problemList } = this.props;
     const problemNodeList = problemList.map((problem, index) => {
       const { pid, title, submit, accepted } = problem.toJS();
-      const ratio = ((submit > 0) ? (100 * accepted / submit) : 0);
+      const ratio = ((submit > 0) ? (100 * accepted / submit) : 0).toFixed(2);
       const content = (
         <div>
           <span className={s['id-col']}>{pid}</span>

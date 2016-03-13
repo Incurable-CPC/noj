@@ -60,11 +60,15 @@ export default class SubmissionList extends Component {
           <span className={cs(s.col, s.result)}>
             {RESULTS[result]}
           </span>
-          <span className={cs(s.col, s.memory)}>
-            --
-          </span>
           <span className={cs(s.col, s.time)}>
-            --
+            {submission.has('timeUsage') ?
+              `${submission.get('timeUsage')}ms` :
+              '--'}
+          </span>
+          <span className={cs(s.col, s.memory)}>
+            {submission.has('memoryUsage') ?
+              `${submission.get('memoryUsage')}KB` :
+              '--'}
           </span>
           <span className={cs(s.col, s.language)}>
             <FlatButton
@@ -117,11 +121,11 @@ export default class SubmissionList extends Component {
         <span className={cs(s.col, s.result)}>
           <strong>Result</strong>
         </span>
-        <span className={cs(s.col, s.memory)}>
-          <strong>Memory</strong>
-        </span>
         <span className={cs(s.col, s.time)}>
           <strong>Time</strong>
+        </span>
+        <span className={cs(s.col, s.memory)}>
+          <strong>Memory</strong>
         </span>
         <span className={cs(s.col, s.language)}>
           <strong>Language</strong>

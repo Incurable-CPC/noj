@@ -52,7 +52,7 @@ const postProblem = async (req, res, next) => {
       }, problem, { upsert: true, new: true });
     } else {
       problem = new Problem(problem);
-      await problem.save();
+      problem = await problem.save();
     }
 
     res.send({ problem });
@@ -62,7 +62,7 @@ const postProblem = async (req, res, next) => {
 };
 
 const getProblemFromPOJ = async () => {
-  for (let id = 1000; id < 1200; id++) {
+  for (let id = 1000; id < 1050; id++) {
     const res = await fetch(`http://poj.org/problem?id=${id}`);
     const html = await res.text();
     const proRegex = {
@@ -72,20 +72,21 @@ const getProblemFromPOJ = async () => {
       output: />Output<\/p>([\s\S]*?)<p class="pst">/,
       sampleInput: /Sample Input<\/p><pre class="sio">([\s\S]*?)<\/pre><p class="pst">/,
       sampleOutput: /Sample Output<\/p><pre class="sio">([\s\S]*?)<\/pre><p class="pst">/,
-      hint: /Hint<\/p>([\s\S]*?)<p class="pst">/,
-      source: /Scoure<\/p>([\s\S]*?)<p class="pst">/,
       timeLimit: /Time Limit:<\/b> (\d+)MS/,
       memoryLimit: /Memory Limit:<\/b> (\d+)K/,
     };
-    const handleImg = (str) =>
-      str.replace(/<img src="([\s\S]+)">/, '<img src="http://poj.org/$1">');
+    const handleUrl = (str) =>
+      str.replace(/src="(.*?)"/, 'src="//poj.org/$1"')
+        .replace(/href="(.*?)"/, 'href="//poj.org/$1"');
     let problem = Object.keys(proRegex).reduce((pro, key) => {
       const match = html.match(proRegex[key]);
-      if (match) pro[key] = handleImg(match[1]);
+      if (match) pro[key] = handleUrl(match[1]);
       return pro;
     }, {});
     problem.samples = [{ input: problem.sampleInput, output: problem.sampleOutput }];
     problem.pid = `POJ${id}`;
+    problem.originOJ = 'POJ';
+    problem.originPid = id;
     problem = await Problem.findOneAndUpdate({
       pid: problem.pid,
     }, problem, { upsert: true, new: true });

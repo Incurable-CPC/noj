@@ -10,8 +10,8 @@ class User extends Model {
   password = String;
   tokens = [String];
   admin = Boolean;
-  solved = [Number];
-  tried = [Number];
+  solved = [String];
+  tried = [String];
   lastSubmit = Date;
 
   static async checkToekn(username, token) {

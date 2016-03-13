@@ -19,7 +19,7 @@ export default class Problem extends Component {
   render() {
     const { editting } = this.props;
     let { problem } = this.props;
-    const srcFields = ['description', 'input', 'output', 'source', 'hint'];
+    const srcFields = ['description', 'input', 'output', 'hint', 'source'];
     if (editting) {
       srcFields.forEach((field) => {
         const src = problem.get(`${field}Src`);
@@ -64,8 +64,8 @@ export default class Problem extends Component {
             </div>
           ))}
         </div>
-        {showField('source')}
         {showField('hint')}
+        {showField('source')}
       </div>
     );
   }

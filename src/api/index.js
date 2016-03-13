@@ -24,7 +24,7 @@ router.use((req, res) => {
 /*eslint-disable */
 router.use((err, req, res, next) => {
   console.log(err);
-  res.status(500).send({ err: 'Unknown error' });
+  res.status(500).send({ error: 'Unknown error' });
 });
 /*eslint-enable */
 

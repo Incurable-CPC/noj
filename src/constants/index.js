@@ -21,3 +21,4 @@ export const RESULTS = [
   'Runtime Error', 'Compile Error',
   'Compile OK', 'Test Running Done',
 ];
+export const RESULT_VALUES = arrToObj(RESULTS);

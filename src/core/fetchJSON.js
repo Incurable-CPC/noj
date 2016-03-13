@@ -15,7 +15,8 @@ const handleError = async (res) => {
     store.dispatch(logoutSuccess());
   }
 
-  throw new Error((await res.json()).error);
+  const { error } = await res.json();
+  throw new Error(error);
 };
 
 function sleep() {

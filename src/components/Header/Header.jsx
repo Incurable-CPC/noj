@@ -53,7 +53,7 @@ export default class Header extends Component {
         key={index}
         value={name}
         label={nameToLabel(name)}
-        onClick={() => Location.push(`/${name}`)}
+        onActive={() => Location.push(`/${name}`)}
       />
     );
     const DialogTab = (name, index) => (
@@ -63,7 +63,7 @@ export default class Header extends Component {
         key={index}
         value={name}
         label={nameToLabel(name)}
-        onClick={() => showDialog(name)}
+        onActive={() => showDialog(name)}
       />
     );
     const items = ['problems', 'contests', 'status', 'standing'];

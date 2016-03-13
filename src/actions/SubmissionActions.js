@@ -6,12 +6,14 @@ import toast from '../core/toast';
 import { postJSON } from '../core/fetchJSON';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
+import checkSubmission from '../check/submission';
 
 export const submit = async (submission) => {
   try {
-    const { code, pid } = submission;
-    if (!(code && code.trim())) {
-      toast('warning', 'Please input your source code');
+    const { pid } = submission;
+    const error = checkSubmission(submission);
+    if (error) {
+      toast('warning', error);
       return false;
     }
 
@@ -22,6 +24,7 @@ export const submit = async (submission) => {
     Location.push(`/problems/${pid}/status`);
     return true;
   } catch (err) {
+    console.log(err);
     toast('error', err.message);
     await nprogress.done();
     return false;

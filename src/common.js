@@ -2,6 +2,8 @@
  * Created by cpc on 1/3/16.
  */
 
+import { RESULT_VALUES } from './constants';
+
 export function nameToStr(str) {
   return (str.charAt(0).toUpperCase() + str.slice(1)).split(/(?=[A-Z])/).join(' ');
 }
@@ -60,3 +62,5 @@ renderer.codespan = (code) => {
 export const markWithMath = (src) => marked(src, {
   renderer,
 });
+
+export const isAccepted = (result) => result === RESULT_VALUES.Accepted;

@@ -20,7 +20,7 @@ class Submission extends Model {
   @pre('save')
   static async getSid(next) {
     this.codeLength = this.code.length;
-    if (this.sid) return;
+    if (this.sid) return next();
     const solCounter = await Counter.add('Submission');
     this.sid = solCounter + 100000;
     next();
