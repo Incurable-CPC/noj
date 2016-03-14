@@ -97,9 +97,11 @@ export default class SubmissionList extends Component {
           <Divider />
           <Animate name="code" style={s} >
             {expanded ? (
-              <Paper className={s.code}>
-                <CodeBlock code={code} language={language} />
-              </Paper>
+              <div className={s.code}>
+                <Paper>
+                  <CodeBlock code={code} language={language} />
+                </Paper>
+              </div>
             ) : null}
           </Animate>
         </div>

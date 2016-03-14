@@ -32,6 +32,8 @@
 }
 
 .code {
+  position: relative;
+  padding: 10px;
   overflow: hidden;
 }
 
@@ -48,4 +50,10 @@
 .code-leave-active {
   max-height: 0;
   transition: max-height 500ms;
+}
+
+.copy {
+  position: absolute;
+  right: 10px;
+  z-index: 5;
 }
