@@ -76,8 +76,7 @@ const getProblemFromPOJ = async () => {
       memoryLimit: /Memory Limit:<\/b> (\d+)K/,
     };
     const handleUrl = (str) =>
-      str.replace(/src="(.*?)"/, 'src="//poj.org/$1"')
-        .replace(/href="(.*?)"/, 'href="//poj.org/$1"');
+      str.replace(/(src|href)="(.*?)"/, '$1="//poj.org/$2"');
     let problem = Object.keys(proRegex).reduce((pro, key) => {
       const match = html.match(proRegex[key]);
       if (match) pro[key] = handleUrl(match[1]);
