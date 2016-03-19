@@ -29,9 +29,9 @@ const getSubmissionList = async (req, res, next) => {
 
 const getSubmission = async (req, res, next) => {
   try {
-    const { params: { sid }, query: { auth } } = req;
+    const { params: { sid }, cookies: { username } } = req;
     const submission = await Submission.findOne({ sid });
-    if (auth.username !== submission.username) {
+    if (username !== submission.username) {
       return res.status(401).send({ error: 'Unauthorized opeartion' });
     }
 
@@ -45,8 +45,8 @@ const postSubmission = async (req, res, next) => {
   try {
     const {
       submission: { pid, language, code },
-      auth: { username },
       } = req.body;
+    const { username } = req.cookie;
     let submission = new Submission({ username, pid, language, code });
     const error = checkSubmission(submission);
     if (error) {

@@ -32,9 +32,8 @@ export const postJSON = async (url, data = {}) => {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: 'same-origin',
   };
-  const { auth } = store.getState();
-  if (auth.has('username')) data.auth = auth.toJS();
   options.body = JSON.stringify(data);
 
   const res = await fetch(url, options);
@@ -59,10 +58,9 @@ export const getJSON = async (url, data = {}) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
+      credentials: 'same-origin',
     },
   };
-  const { auth } = store.getState();
-  if (auth.has('username')) data.auth = auth.toJS();
 
   const res = await fetch(`${url}?${serialize(data)}`, options);
   return handleError(res);

@@ -6,8 +6,7 @@ import User from '../models/userModel';
 
 export const requireAuth = async (req, res, next) => {
   try {
-    const { username, token } = ((req.method === 'GET') ?
-      req.query.auth : req.body.auth) || {};
+    const { username, token } = req.cookies || {};
     if (!(await User.checkToekn(username, token))) {
       res.status(401).send({ error: 'Please login first' });
     } else {
@@ -20,8 +19,7 @@ export const requireAuth = async (req, res, next) => {
 
 export const requireAdmin = async (req, res, next) => {
   try {
-    const { username, token } = ((req.method === 'GET') ?
-      req.query.auth : req.body.auth) || {};
+    const { username, token } = req.cookies || {};
     if (!(await User.checkAdminToken(username, token))) {
       res.status(401).send({ error: 'Unauthorized opeartion' });
     } else {
