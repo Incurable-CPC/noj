@@ -46,7 +46,7 @@ const postSubmission = async (req, res, next) => {
     const {
       submission: { pid, language, code },
       } = req.body;
-    const { username } = req.cookie;
+    const { username } = req.cookies;
     let submission = new Submission({ username, pid, language, code });
     const error = checkSubmission(submission);
     if (error) {

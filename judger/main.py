@@ -4,43 +4,43 @@ import requests
 import json
 import time
 
+username = 'CPCPC'
+token = 'gWaBosEu297UAo5P/xlbXw=='
 headers = {
     'Content-Type': 'application/json',
-}
-data = {
-    'auth': {
-        'username': 'CPCPC',
-        'token': 'gWaBosEu297UAo5P/xlbXw==',
-    }
+    'Cookie': 'username=' + username + '; token=' + token,
 }
 
-host = 'http://localhost:3000'
-res = requests.post(host+'/api/submissions/unjudged',
-                    data=json.dumps(data),
-                    headers=headers)
+config = json.load(open('config.json'))
+host = config['host']
+while True:
+    time.sleep(5)
+    response = requests.post('http://'+host+'/api/submissions/unjudged',
+                             headers=headers)
 
-submission = res.json()
+    submission = response.json()
+    if 'sid' in submission:
+        sid = submission['sid']
+        pid = submission['originPid']
+        language = submission['language']
+        code = submission['code']
 
-sid = submission['sid']
-pid = submission['originPid']
-language = submission['language']
-code = submission['code']
+        poj.submit(pid, language, code)
 
-print code
-poj.submit(pid, language, code)
+        submission = {}
+        while (len(submission) == 0) or (not is_completed(submission['result'])):
+            time.sleep(0.1)
+            submission = poj.get_result(pid, language)
 
-result = []
-while (len(result) == 0) or (not completed(result[1])):
-    time.sleep(0.1)
-    result = poj.get_result(pid, language)
+        result = submission['result']
+        if is_compile_error(result):
+            submission['CEInfo'] = poj.get_ce_info(submission['originSid'])
 
-data['submission'] = {
-    'result': RESULTS[result[1]]
-    # 'timeUsage': result[2],
-    # 'memoryUsage': result[3],
-}
+        submission['result'] = RESULTS[result]
+        data = {
+            'submission': submission
+        }
 
-res = requests.patch(host+'/api/submissions/'+str(sid),
-                     data=json.dumps(data),
-                     headers=headers)
-print res.text
+        res = requests.patch('http://'+host+'/api/submissions/'+str(sid),
+                             data=json.dumps(data),
+                             headers=headers)

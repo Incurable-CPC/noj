@@ -25,5 +25,13 @@ def index(string):
     return RESULTS[string]
 
 
-def completed(result):
+def is_completed(result):
     return index(result) >= 4
+
+
+def is_accepted(result):
+    return index(result) == 4
+
+
+def is_compile_error(result):
+    return index(result) == 11
