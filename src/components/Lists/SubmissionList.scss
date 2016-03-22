@@ -57,3 +57,21 @@
   right: 10px;
   z-index: 5;
 }
+
+$status-font: "source_sans", "Lucida Grande", "Lucida Sans", sans-serif;
+
+.status-accepted {
+  font-family: $status-font;
+  font-weight: 600;
+  color: green;
+}
+
+.status-other {
+  font-family: $status-font;
+  color: red;
+}
+
+.status-compile-error {
+  font-family: $status-font;
+  color: blue;
+}

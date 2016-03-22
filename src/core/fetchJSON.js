@@ -58,8 +58,8 @@ export const getJSON = async (url, data = {}) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      credentials: 'same-origin',
     },
+    credentials: 'same-origin',
   };
 
   const res = await fetch(`${url}?${serialize(data)}`, options);

@@ -9,6 +9,7 @@ import ListItem from 'material-ui/lib/lists/list-item';
 import Divider from 'material-ui/lib/divider';
 import List from 'material-ui/lib/lists/list';
 import Paper from 'material-ui/lib/paper';
+import CircularProgress from 'material-ui/lib/circular-progress';
 import moment from 'moment';
 
 import CodeBlock from '../CodeBlock.jsx';
@@ -18,6 +19,7 @@ import s from './SubmissionList.scss';
 import withStyles from '../../decorators/withStyles';
 import Location from '../../core/Location';
 import { LANGUAGES, RESULTS } from '../../constants';
+import { isCompleted, isCompileError, isAccepted } from '../../check/submission';
 
 @withStyles(s)
 export default class SubmissionList extends Component {
@@ -35,6 +37,9 @@ export default class SubmissionList extends Component {
         result, date, codeLength,
         code, expanded,
         } = submission.toJS();
+      let status = 'other';
+      if (isAccepted(result)) status = 'accepted';
+      if (isCompileError(result)) status = 'compile-error';
       const content = (
         <div className={cs(s.row, withoutPid ? s['without-pid'] : s.normal)}>
           <span className={cs(s.col, s.id)}>
@@ -58,7 +63,10 @@ export default class SubmissionList extends Component {
             />
           </span>
           <span className={cs(s.col, s.result)}>
-            {RESULTS[result]}
+            {isCompleted(result) ?
+              <span className={s[`status-${status}`]}>{RESULTS[result]}</span> :
+              <CircularProgress size={0.4} />
+            }
           </span>
           <span className={cs(s.col, s.time)}>
             {submission.has('timeUsage') ?

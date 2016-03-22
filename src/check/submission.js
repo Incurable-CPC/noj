@@ -16,3 +16,5 @@ export default (submission) => {
 };
 
 export const isCompleted = (result) => (result >= 4);
+export const isAccepted = (result) => (result === 4);
+export const isCompileError = (result) => (result === 11);

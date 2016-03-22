@@ -51,13 +51,15 @@ export const getSubmission = (index) => async(dispatch, getState) => {
 export const updateSubmissionResult = (index) => async (dispatch, getState) => {
   try {
     const state = getState();
-    let submission = state.submissionList.get(index);
+    const submission = state.submissionList.get(index);
     if (!isCompleted(submission.get('result'))) {
+      setTimeout(() => dispatch(updateSubmissionResult(index)), 200);
       const sid = submission.get('sid');
       const res = await getJSON(`/api/submissions/${sid}`);
-      submission = await res.json();
-      dispatch(reciveSubmission(index, submission));
-      setTimeout(() => dispatch(updateSubmissionResult(index)), 200);
+      const newSubmission = await res.json();
+      if (submission.get('result') !== newSubmission.result) {
+        dispatch(reciveSubmission(index, newSubmission));
+      }
     }
   } catch (err) {
     toast('error', err.message);
