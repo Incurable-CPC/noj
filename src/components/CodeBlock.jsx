@@ -6,6 +6,10 @@ import React, { Component, PropTypes } from 'react';
 import ContentCopyIcon from 'material-ui/lib/svg-icons/content/content-copy';
 import IconButton from 'material-ui/lib/icon-button';
 import Codemirror from 'react-codemirror';
+import 'codemirror/mode/clike/clike';
+import 'codemirror/mode/python/python';
+import 'codemirror/mode/pascal/pascal';
+import 'codemirror/mode/fortran/fortran';
 
 import { LANGUAGE_MODES } from '../constants';
 import withStyles from '../decorators/withStyles';
@@ -15,6 +19,7 @@ import s from './CodeBlock.scss';
 export default class CodeBlock extends Component {
   static propTypes = {
     code: PropTypes.string.isRequired,
+    OJ: PropTypes.string.isRequired,
     language: PropTypes.number,
   };
 
@@ -28,11 +33,11 @@ export default class CodeBlock extends Component {
   };
 
   render() {
-    const { code, language } = this.props;
+    const { code, OJ, language } = this.props;
     const options = {
       lineNumbers: true,
       readOnly: true,
-      mode: LANGUAGE_MODES[language],
+      mode: LANGUAGE_MODES[OJ][language],
     };
     return (
       <div className={s['code-block']}>

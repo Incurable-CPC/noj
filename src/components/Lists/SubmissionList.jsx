@@ -36,6 +36,7 @@ export default class SubmissionList extends Component {
         sid, pid, username, language,
         result, date, codeLength,
         code, expanded,
+        originOJ
         } = submission.toJS();
       let status = 'other';
       if (isAccepted(result)) status = 'accepted';
@@ -82,7 +83,7 @@ export default class SubmissionList extends Component {
             <FlatButton
               style={{ textTransform: '' }}
               onTouchTap={() => expandSubmission(index)}
-              label={LANGUAGES[language]}
+              label={LANGUAGES[originOJ][language]}
             />
           </span>
           <span className={cs(s.col, s.length)}>
@@ -107,7 +108,7 @@ export default class SubmissionList extends Component {
             {expanded ? (
               <div className={s.code}>
                 <Paper>
-                  <CodeBlock code={code} language={language} />
+                  <CodeBlock code={code} OJ={originOJ} language={language} />
                 </Paper>
               </div>
             ) : null}

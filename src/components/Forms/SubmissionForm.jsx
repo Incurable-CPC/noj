@@ -41,12 +41,12 @@ export default class SubmissionForm extends Component {
       fields: { code, language },
       } = this.props;
     const { pid, title } = problem.toJS();
-    const langs = LANGUAGES.map((lang, index) => (
+    const langs = LANGUAGES[problem.get('originOJ')].map((lang, index) => (
       <MenuItem value={index} key={index} primaryText={lang} />
     ));
     const options = {
       lineNumbers: true,
-      mode: LANGUAGE_MODES[language.value],
+      mode: LANGUAGE_MODES[problem.get('originOJ')][language.value],
     };
     return (
       <Paper>

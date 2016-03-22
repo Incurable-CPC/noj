@@ -56,6 +56,11 @@ const postSubmission = async (req, res, next) => {
       return res.status(400).send({ error });
     }
 
+    const problem = await Problem
+      .findOne({ pid })
+      .select('originOJ originPid');
+    submission.originOJ = problem.originOJ;
+    submission.originPid = problem.originPid;
     submission = await submission.save();
     await Problem.findOneAndUpdate(
       { pid },
@@ -75,13 +80,9 @@ const getUnjudgedSubmission = async (req, res, next) => {
       .findOne({ result: 0 })
       .sort({ sid: 1 });
     if (submission) {
-      const problem = await Problem
-        .findOne({ pid: submission.pid })
-        .select('originOJ originPid');
-      const data = Object.assign({}, submission.toObject(), problem.toObject());
       submission.result = RESULT_VALUES['Running & Judging'];
       await submission.save();
-      res.send(data);
+      res.send(submission);
     } else {
       res.send({});
     }

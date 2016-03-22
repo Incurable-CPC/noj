@@ -20,13 +20,13 @@
 }
 
 .without-pid {
-  .username {
-    width: 20%;
+  .result {
+    width: 16%;
   }
-  .result, .date, .time, .memory, .length, .language {
+  .username, .date {
     width: 12%;
   }
-  .id {
+  .time, .memory, .language, .id, .length {
     width: 8%;
   }
 }

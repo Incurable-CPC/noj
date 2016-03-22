@@ -16,6 +16,8 @@ class Submission extends Model {
   codeLength = Number;
   timeUsage = Number;
   memoryUsage = Number;
+  originOJ = String;
+  originPid = String;
 
   @pre('save')
   static async getSid(next) {
