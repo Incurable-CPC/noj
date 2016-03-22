@@ -29,15 +29,19 @@ export default class SubmissionList extends Component {
     withoutPid: PropTypes.bool,
   };
 
+  state = {
+    showCEInfo: [],
+  };
+
   render() {
     const { submissionList, expandSubmission, withoutPid } = this.props;
     const submissionNodeList = submissionList.map((submission, index) => {
       const {
         sid, pid, username, language,
         result, date, codeLength,
-        code, expanded,
-        originOJ
+        code, originOJ, CEInfo,
         } = submission.toJS();
+      const expandedContent = submission.get('content');
       let status = 'other';
       if (isAccepted(result)) status = 'accepted';
       if (isCompileError(result)) status = 'compile-error';
@@ -65,7 +69,13 @@ export default class SubmissionList extends Component {
           </span>
           <span className={cs(s.col, s.result)}>
             {isCompleted(result) ?
-              <span className={s[`status-${status}`]}>{RESULTS[result]}</span> :
+              <span className={s[`status-${status}`]}>
+                {isCompileError(result) ? (
+                  <a onClick={() => expandSubmission(index, 'CEInfo')} href="javaScript:void(0);">
+                    {RESULTS[result]}
+                  </a>
+                ) : RESULTS[result]}
+              </span> :
               <CircularProgress size={0.4} />
             }
           </span>
@@ -82,7 +92,7 @@ export default class SubmissionList extends Component {
           <span className={cs(s.col, s.language)}>
             <FlatButton
               style={{ textTransform: '' }}
-              onTouchTap={() => expandSubmission(index)}
+              onTouchTap={() => expandSubmission(index, 'code')}
               label={LANGUAGES[originOJ][language]}
             />
           </span>
@@ -94,6 +104,25 @@ export default class SubmissionList extends Component {
           </span>
         </div>
       );
+      let expanded = null;
+      if (expandedContent === 'code') {
+        expanded = (
+          <div className={s.code}>
+            <Paper>
+              <CodeBlock code={code} OJ={originOJ} language={language} />
+            </Paper>
+          </div>
+        );
+      } else if (expandedContent === 'CEInfo') {
+        expanded = (
+          <div className={s.code}>
+            <Paper>
+              <CodeBlock code={CEInfo} OJ={originOJ} language={language} />
+            </Paper>
+          </div>
+        );
+      }
+
       return (
         <div key={index}>
           <Divider />
@@ -105,13 +134,7 @@ export default class SubmissionList extends Component {
           />
           <Divider />
           <Animate name="code" style={s} >
-            {expanded ? (
-              <div className={s.code}>
-                <Paper>
-                  <CodeBlock code={code} OJ={originOJ} language={language} />
-                </Paper>
-              </div>
-            ) : null}
+            {expanded}
           </Animate>
         </div>
       );

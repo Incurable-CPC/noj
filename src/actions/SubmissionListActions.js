@@ -6,7 +6,7 @@ import SubmissionListConstants from '../constants/SubmissionListConstants';
 import { getJSON } from '../core/fetchJSON';
 import nprogress from '../core/nprogress';
 import toast from '../core/toast';
-import { isCompleted } from '../check/submission';
+import { isCompleted, isCompileError } from '../check/submission';
 
 export const reciveSubmissionList = (submissionList) => ({
   type: SubmissionListConstants.LOAD_SUCCESS,
@@ -19,9 +19,10 @@ export const reciveSubmission = (index, submission) => ({
   submission,
 });
 
-export const changeSubmissionState = (index) => ({
+export const changeSubmissionState = (index, content) => ({
   type: SubmissionListConstants.CHANGE_EXPAND_STATE,
   index,
+  content,
 });
 
 function canSubmissionExpand(state, index) {
@@ -84,16 +85,22 @@ export const getSubmissionList = (cond) => async (dispatch) => {
   }
 };
 
-export const expandSubmission = (index) => async (dispatch, getState) => {
+export const expandSubmission = (index, content) => async (dispatch, getState) => {
   try {
     const state = getState();
-    if (!canSubmissionExpand(state, index)) return;
-    if (!state.submissionList.get(index).has('code')) {
-      await dispatch(getSubmission(index));
+    if (content === 'code') {
+      if (!canSubmissionExpand(state, index)) return;
+      if (!state.submissionList.get(index).has('code')) {
+        await dispatch(getSubmission(index));
+      }
+    } else {
+      const { submissionList } = state;
+      if (!isCompileError(submissionList.getIn([index, 'result']))) return;
     }
 
-    dispatch(changeSubmissionState(index));
+    dispatch(changeSubmissionState(index, content));
   } catch (err) {
     toast('error', err.message);
   }
 };
+

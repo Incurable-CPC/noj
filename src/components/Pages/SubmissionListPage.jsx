@@ -33,7 +33,7 @@ export default class SubmissionListPage extends Component {
     const { submissionList, problem, dispatch, params: { pid } } = this.props;
     const submissionListNode = (
       <SubmissionList
-        expandSubmission={(index) => dispatch(expandSubmission(index))}
+        expandSubmission={(index, content) => dispatch(expandSubmission(index, content))}
         submissionList={submissionList}
         withoutPid={Boolean(pid)}
       />

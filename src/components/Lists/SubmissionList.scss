@@ -74,4 +74,7 @@ $status-font: "source_sans", "Lucida Grande", "Lucida Sans", sans-serif;
 .status-compile-error {
   font-family: $status-font;
   color: blue;
+  a:link, a:visited, a:hover {
+    color: blue;
+  }
 }

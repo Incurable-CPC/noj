@@ -18,6 +18,7 @@ class Submission extends Model {
   memoryUsage = Number;
   originOJ = String;
   originPid = String;
+  CEInfo = String;
 
   @pre('save')
   static async getSid(next) {

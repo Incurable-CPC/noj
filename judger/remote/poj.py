@@ -63,7 +63,7 @@ def get_result(pid, language):
 
 
 def get_ce_info(sid):
-    reg = r'<pre>.*</pre>'
+    reg = r'<pre>(.*)</pre>'
     res = s.get('http://poj.org/showcompileinfo?'
                 'solution_id=' + str(sid))
 
