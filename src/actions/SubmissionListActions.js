@@ -6,37 +6,23 @@ import SubmissionListConstants from '../constants/SubmissionListConstants';
 import { getJSON } from '../core/fetchJSON';
 import nprogress from '../core/nprogress';
 import toast from '../core/toast';
+import { isCompleted } from '../check/submission';
 
 export const reciveSubmissionList = (submissionList) => ({
   type: SubmissionListConstants.LOAD_SUCCESS,
   submissionList,
 });
 
-export const reciveSubmissionCode = (index, code) => ({
-  type: SubmissionListConstants.CODE_LOAD_SUCCESS,
+export const reciveSubmission = (index, submission) => ({
+  type: SubmissionListConstants.LOAD_ONE_SUCCESS,
   index,
-  code,
+  submission,
 });
 
 export const changeSubmissionState = (index) => ({
   type: SubmissionListConstants.CHANGE_EXPAND_STATE,
   index,
 });
-
-export const getSubmissionList = (cond) => async (dispatch) => {
-  try {
-    nprogress.start();
-    const res = await getJSON(`/api/submissions`, cond);
-    const submissionList = await res.json();
-    dispatch(reciveSubmissionList(submissionList));
-    await nprogress.done();
-    return true;
-  } catch (err) {
-    toast('error', err.message);
-    await nprogress.done();
-    return false;
-  }
-};
 
 function canSubmissionExpand(state, index) {
   const { submissionList, auth } = state;
@@ -51,8 +37,42 @@ export const getSubmission = (index) => async(dispatch, getState) => {
     nprogress.start();
     const sid = state.submissionList.get(index).get('sid');
     const res = await getJSON(`/api/submissions/${sid}`);
-    const { code } = await res.json();
-    dispatch(reciveSubmissionCode(index, code));
+    const submission = await res.json();
+    dispatch(reciveSubmission(index, submission));
+    await nprogress.done();
+    return true;
+  } catch (err) {
+    toast('error', err.message);
+    await nprogress.done();
+    return false;
+  }
+};
+
+export const updateSubmissionResult = (index) => async (dispatch, getState) => {
+  try {
+    const state = getState();
+    let submission = state.submissionList.get(index);
+    if (!isCompleted(submission.get('result'))) {
+      const sid = submission.get('sid');
+      const res = await getJSON(`/api/submissions/${sid}`);
+      submission = await res.json();
+      dispatch(reciveSubmission(index, submission));
+      setTimeout(() => dispatch(updateSubmissionResult(index)), 200);
+    }
+  } catch (err) {
+    toast('error', err.message);
+  }
+};
+
+export const getSubmissionList = (cond) => async (dispatch) => {
+  try {
+    nprogress.start();
+    const res = await getJSON(`/api/submissions`, cond);
+    const submissionList = await res.json();
+    dispatch(reciveSubmissionList(submissionList));
+    submissionList.forEach((submission, index) => {
+      setTimeout(() => dispatch(updateSubmissionResult(index)), 200);
+    });
     await nprogress.done();
     return true;
   } catch (err) {

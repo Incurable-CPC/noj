@@ -14,3 +14,5 @@ export default (submission) => {
 
   return '';
 };
+
+export const isCompleted = (result) => (result >= 4);

@@ -10,8 +10,7 @@ import Submission from '../models/submissionModel';
 import Problem from '../models/problemModel';
 import User from '../models/userModel';
 import { RESULT_VALUES } from '../constants';
-import { isAccepted } from '../common';
-import checkSubmission from '../check/submission';
+import checkSubmission, { isCompleted } from '../check/submission';
 
 const getSubmissionList = async (req, res, next) => {
   try {
@@ -30,9 +29,11 @@ const getSubmissionList = async (req, res, next) => {
 const getSubmission = async (req, res, next) => {
   try {
     const { params: { sid }, cookies: { username } } = req;
-    const submission = await Submission.findOne({ sid });
-    if (username !== submission.username) {
-      return res.status(401).send({ error: 'Unauthorized opeartion' });
+    let submission = await Submission
+      .findOne({ sid })
+      .select('-code');
+    if (username === submission.username) {
+      submission = await Submission.findOne({ sid });
     }
 
     res.send(submission);
@@ -44,9 +45,11 @@ const getSubmission = async (req, res, next) => {
 const postSubmission = async (req, res, next) => {
   try {
     const {
-      submission: { pid, language, code },
-      } = req.body;
-    const { username } = req.cookies;
+      body: {
+        submission: { pid, language, code },
+        },
+      cookies: { username },
+      } = req;
     let submission = new Submission({ username, pid, language, code });
     const error = checkSubmission(submission);
     if (error) {
@@ -91,7 +94,7 @@ const updateSubmissionResult = async (req, res, next) => {
   try {
     const { sid } = req.params;
     const oldSubmission = await Submission.findOne({ sid });
-    if (isAccepted(oldSubmission.result)) {
+    if (isCompleted(oldSubmission.result)) {
       return res.send(oldSubmission);
     }
 
@@ -99,7 +102,7 @@ const updateSubmissionResult = async (req, res, next) => {
       { sid },
       req.body.submission,
       { new: true });
-    if (isAccepted(submission.result)) {
+    if (isCompleted(submission.result)) {
       const { username, pid } = submission;
       await Problem.findOneAndUpdate(
         { pid },
@@ -116,9 +119,9 @@ const updateSubmissionResult = async (req, res, next) => {
 };
 
 router.get('/', getSubmissionList);
+router.get('/:sid', getSubmission);
 
 router.all('*', requireAuth);
-router.get('/:sid', getSubmission);
 router.post('/', postSubmission);
 
 router.all('*', requireAdmin);

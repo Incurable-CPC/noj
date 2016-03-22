@@ -59,7 +59,6 @@ def get_result(pid, language):
         submission['memoryUsage'] = result[2]
         submission['timeUsage'] = result[3]
 
-    print submission
     return submission
 
 
