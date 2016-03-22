@@ -1,7 +1,9 @@
 @import '../../../node_modules/normalize.css';
+$font-family-base: "source_sans", "Lucida Grande", "Lucida Sans", sans-serif;
 body {
   max-width: 1280px;
   padding: 56px 0 0 0;
   margin: auto;
   background-color: #f5f6f5;
+  font-family: $font-family-base;
 }

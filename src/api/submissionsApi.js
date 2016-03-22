@@ -10,7 +10,7 @@ import Submission from '../models/submissionModel';
 import Problem from '../models/problemModel';
 import User from '../models/userModel';
 import { RESULT_VALUES } from '../constants';
-import checkSubmission, { isCompleted } from '../check/submission';
+import checkSubmission, { isCompleted, isAccepted } from '../check/submission';
 
 const getSubmissionList = async (req, res, next) => {
   try {
@@ -102,7 +102,7 @@ const updateSubmissionResult = async (req, res, next) => {
       { sid },
       req.body.submission,
       { new: true });
-    if (isCompleted(submission.result)) {
+    if (isAccepted(submission.result)) {
       const { username, pid } = submission;
       await Problem.findOneAndUpdate(
         { pid },

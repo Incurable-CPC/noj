@@ -32,11 +32,14 @@ export default class Problem extends Component {
     const showField = (field) => (problem.has(field) &&
       <div>
         <h3>{nameToStr(field)}</h3>
-        <div dangerouslySetInnerHTML={{ __html: problem.get(field) }} />
+        <div
+          className={s.content}
+          dangerouslySetInnerHTML={{ __html: problem.get(field) }}
+        />
       </div>
     );
     return (
-      <div>
+      <div className={s.problem}>
         <div className={s.title}>
           <div>
             <h1>{problem.get('title')}</h1>

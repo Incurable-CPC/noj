@@ -1,3 +1,9 @@
+$font-family-base: "source_sans", "Lucida Grande", "Lucida Sans", sans-serif;
+
+.problem {
+  font-family: $font-family-base;
+}
+
 .title {
   text-align: center;
 }
@@ -5,6 +11,10 @@
 .center {
   margin-right: 10px;
   margin-left: 10px;
+}
+
+.content {
+  padding-left: 10px;
 }
 
 .sample {
