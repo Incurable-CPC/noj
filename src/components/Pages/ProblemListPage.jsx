@@ -17,7 +17,7 @@ import { postJSON } from '../../core/fetchJSON';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
-@connect(state => ({ problemList: state.problemList }))
+@connect(state => ({ problemList: state.problem.get('list') }))
 class ProblemsListPage extends Component {
   static propTypes = {
     problemList: ImmutableTypes.list.isRequired,

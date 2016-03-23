@@ -7,17 +7,25 @@ import { fromJS } from 'immutable';
 import ProblemConstants from '../constants/ProblemConstants';
 
 const initState = fromJS({
-  timeLimit: 1000,
-  memoryLimit: 256,
-  samples: [{ input: '', output: '' }],
+  detail: {
+    timeLimit: 1000,
+    memoryLimit: 256,
+    samples: [{ input: '', output: '' }],
+  },
+  condition: {},
+  list: [],
 });
 
 export default function reducer(state = initState, action) {
-  switch (action.type) {
+  const { type, problem, condition, list } = action;
+  switch (type) {
     case ProblemConstants.SET:
-      return fromJS(action.problem);
+      return state.set('detail', fromJS(problem));
     case ProblemConstants.INIT:
-      return initState;
+      return state.set('detail', initState.get('detail'));
+    case ProblemConstants.SET_LIST:
+      return state.set('list', fromJS(list))
+        .set('condition', fromJS(condition));
     default:
       return state;
   }

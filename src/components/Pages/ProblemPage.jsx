@@ -18,7 +18,7 @@ import SubmissionForm from '../Forms/SubmissionForm.jsx';
 @withTitle('NOJ - Problems')
 @withStyles(s)
 @connect((state) => ({
-  problem: state.problem,
+  problem: state.problem.get('detail'),
 }))
 export default class ProblemPage extends Component {
   static propTypes = {

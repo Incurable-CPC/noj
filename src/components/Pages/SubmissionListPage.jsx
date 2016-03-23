@@ -19,7 +19,7 @@ import Location from '../../core/Location';
 @withStyles(s)
 @connect(state => ({
   submissionList: state.submissionList,
-  problem: state.problem,
+  problem: state.problem.get('detail'),
 }))
 export default class SubmissionListPage extends Component {
   static propTypes = {

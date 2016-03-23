@@ -11,7 +11,6 @@ import thunk from 'redux-thunk';
 import dialogReducer from './reducers/DialogReducer';
 import authReducer from './reducers/AuthReducer';
 import problemReducer from './reducers/ProblemReducer';
-import problemListReducer from './reducers/ProblemListReducer';
 import submissionListReducer from './reducers/SubmissionListReducer';
 
 const reducer = combineReducers({
@@ -20,7 +19,6 @@ const reducer = combineReducers({
   auth: authReducer,
   form: formReducer,
   problem: problemReducer,
-  problemList: problemListReducer,
   submissionList: submissionListReducer,
 });
 

@@ -4,6 +4,6 @@
 
 export default {
   SET: 'problem-set',
-  LOAD: 'problem-load',
   INIT: 'problem-init',
+  SET_LIST: 'problem-list-set',
 };

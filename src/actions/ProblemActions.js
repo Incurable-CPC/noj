@@ -2,6 +2,8 @@
  * Created by cpc on 1/20/16.
  */
 
+import { fromJS, is } from 'immutable';
+
 import ProblemConstants from '../constants/ProblemConstants';
 import { getJSON, postJSON } from '../core/fetchJSON';
 import toast from '../core/toast';
@@ -43,7 +45,7 @@ export const postProblem = async (problem, dispatch) => {
 export const getProblem = (pid) => async (dispatch, getState) => {
   try {
     const state = getState();
-    if (state.problem.get('pid') === pid) return true;
+    if (state.problem.getIn(['detail', 'pid']) === pid) return true;
     nprogress.start();
     const res = await getJSON(`/api/problems/${pid}`);
     const { problem } = await res.json();
@@ -52,6 +54,31 @@ export const getProblem = (pid) => async (dispatch, getState) => {
     return true;
   } catch (err) {
     Location.push('/');
+    toast('error', err.message);
+    await nprogress.done();
+    return false;
+  }
+};
+
+export const setProblemList = (list, condition) => ({
+  type: ProblemConstants.SET_LIST,
+  list,
+  condition,
+});
+
+export const getProblemList = (condition) => async (dispatch, getState) => {
+  try {
+    const state = getState();
+    const oldCondition = state.problem.get('condition');
+    if (is(oldCondition, fromJS(condition))) return true;
+    nprogress.start();
+    const { page } = condition;
+    const res = await getJSON(`/api/problems`, { page });
+    const { problemList } = await res.json();
+    dispatch(setProblemList(problemList, condition));
+    await nprogress.done();
+    return true;
+  } catch (err) {
     toast('error', err.message);
     await nprogress.done();
     return false;

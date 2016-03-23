@@ -23,8 +23,7 @@ import ProblemEditPage from './components/Pages/ProblemEditPage.jsx';
 import SubmissionListPage from './components/Pages/SubmissionListPage.jsx';
 import Test from './components/Test.jsx';
 
-import { getProblem, initProblem } from './actions/ProblemActions';
-import { getProblemList } from './actions/ProblemListActions';
+import { getProblem, initProblem, getProblemList } from './actions/ProblemActions';
 import { getSubmissionList } from './actions/SubmissionListActions';
 
 const boundGetProblem = async (nextState, replace, next) => {
@@ -36,12 +35,18 @@ const boundInitProblem = () => store.dispatch(initProblem());
 
 const boundGetProblemList = async (nextState, replace, next) => {
   const { params } = nextState;
-  if (await store.dispatch(getProblemList(params))) next();
+  const condition = {
+    page: params.page || 1,
+  };
+  if (await store.dispatch(getProblemList(condition))) next();
 };
 
 const boundGetSubmissionList = async(nextState, replace, next) => {
   const { params } = nextState;
-  if (await store.dispatch(getSubmissionList(params))) next();
+  const condition = {
+    page: params.page || 1,
+  };
+  if (await store.dispatch(getSubmissionList(condition))) next();
 };
 
 const appContainer = document.getElementById('app');

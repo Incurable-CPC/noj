@@ -24,7 +24,7 @@ const fields = ['code', 'language', 'pid'];
 @reduxForm({
   form: 'submission',
   fields,
-}, (state) => ({ initialValues: { language: 0, pid: state.problem.get('pid') } }))
+}, (state) => ({ initialValues: { language: 0, pid: state.problem.getIn(['detail', 'pid']) } }))
 export default class SubmissionForm extends Component {
   static propTypes = {
     fields: PropTypes.object.isRequired,

@@ -34,7 +34,7 @@ const nextStatus = (status) => ((status === 'preview') ? 'edit' : 'preview');
 @reduxForm({
   form: 'problemEdit',
   fields,
-}, (state) => ({ initialValues: state.problem.toJS() }))
+}, (state) => ({ initialValues: state.problem.get('detail').toJS() }))
 @withStyles(s)
 export default class ProblemEditForm extends Component {
   static propTypes = {
