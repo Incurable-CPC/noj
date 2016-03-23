@@ -35,7 +35,8 @@ const boundGetProblem = async (nextState, replace, next) => {
 const boundInitProblem = () => store.dispatch(initProblem());
 
 const boundGetProblemList = async (nextState, replace, next) => {
-  if (await store.dispatch(getProblemList())) next();
+  const { params } = nextState;
+  if (await store.dispatch(getProblemList(params))) next();
 };
 
 const boundGetSubmissionList = async(nextState, replace, next) => {
@@ -52,7 +53,7 @@ ReactDOM.render((
         <Route path="login" component={LoginForm} />
         <Route path="problems">
           <IndexRoute onEnter={boundGetProblemList} component={ProblemListPage} />
-          <Route path="page/:page" component={ProblemListPage}/>
+          <Route path="page/:page" onEnter={boundGetProblemList} component={ProblemListPage}/>
           <Route path="add" onEnter={boundInitProblem} component={ProblemEditPage}/>
           <Route path=":pid" onEnter={boundGetProblem}>
             <IndexRoute component={ProblemPage} />

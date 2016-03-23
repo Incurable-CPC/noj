@@ -17,6 +17,10 @@ export default class ProblemEditPage extends Component {
     params: PropTypes.object,
   };
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
   render() {
     const { params: { pid } } = this.props;
     const action = pid ? 'save' : 'add';

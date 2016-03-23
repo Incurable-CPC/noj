@@ -26,10 +26,12 @@ const getProblem = async (req, res, next) => {
 
 const getProblemList = async (req, res, next) => {
   try {
+    let page = Number(req.query.page) || 1;
     const problemList = await Problem.find({})
       .select('pid title accepted submit')
-      .limit(50)
-      .sort({ pid: 1 });
+      .sort({ pid: 1 })
+      .skip((page - 1) * 50)
+      .limit(50);
     res.send({ problemList });
   } catch (err) {
     next(err);
@@ -62,7 +64,7 @@ const postProblem = async (req, res, next) => {
 };
 
 const getProblemFromPOJ = async () => {
-  for (let id = 1000; id < 1050; id++) {
+  for (let id = 1000; id < 2000; id++) {
     const res = await fetch(`http://poj.org/problem?id=${id}`);
     const html = await res.text();
     const proRegex = {
@@ -89,7 +91,7 @@ const getProblemFromPOJ = async () => {
     problem = await Problem.findOneAndUpdate({
       pid: problem.pid,
     }, problem, { upsert: true, new: true });
-    console.log(`${id - 999} / 200 done`);
+    console.log(`${id - 999} / 1000 done`);
   }
 };
 

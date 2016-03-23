@@ -12,10 +12,11 @@ export const reciveProblemList = (problemList) => ({
   problemList,
 });
 
-export const getProblemList = () => async (dispatch) => {
+export const getProblemList = (config) => async (dispatch) => {
   try {
     nprogress.start();
-    const res = await getJSON(`/api/problems`);
+    const { page } = config;
+    const res = await getJSON(`/api/problems`, { page });
     const { problemList } = await res.json();
     dispatch(reciveProblemList(problemList));
     await nprogress.done();

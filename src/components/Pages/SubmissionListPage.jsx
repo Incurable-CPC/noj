@@ -29,6 +29,10 @@ export default class SubmissionListPage extends Component {
     params: PropTypes.object,
   };
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
   render() {
     const { submissionList, problem, dispatch, params: { pid } } = this.props;
     const submissionListNode = (

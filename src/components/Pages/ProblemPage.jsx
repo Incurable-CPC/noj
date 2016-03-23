@@ -25,6 +25,10 @@ export default class ProblemPage extends Component {
     problem: ImmutableTypes.map.isRequired,
   };
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
   render() {
     const { problem } = this.props;
     let buttons = ['status', 'statistics', 'discuss', 'edit'];

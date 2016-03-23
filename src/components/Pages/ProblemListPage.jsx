@@ -23,6 +23,10 @@ class ProblemsListPage extends Component {
     problemList: ImmutableTypes.list.isRequired,
   };
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
   render() {
     const { problemList } = this.props;
     return (
