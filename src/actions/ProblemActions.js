@@ -60,10 +60,11 @@ export const getProblem = (pid) => async (dispatch, getState) => {
   }
 };
 
-export const setProblemList = (list, condition) => ({
+export const setProblemList = (condition, count, list) => ({
   type: ProblemConstants.SET_LIST,
-  list,
   condition,
+  count,
+  list,
 });
 
 export const getProblemList = (condition) => async (dispatch, getState) => {
@@ -74,8 +75,8 @@ export const getProblemList = (condition) => async (dispatch, getState) => {
     nprogress.start();
     const { page } = condition;
     const res = await getJSON(`/api/problems`, { page });
-    const { problemList } = await res.json();
-    dispatch(setProblemList(problemList, condition));
+    const { problemList, count } = await res.json();
+    dispatch(setProblemList(condition, count, problemList));
     await nprogress.done();
     return true;
   } catch (err) {
@@ -83,4 +84,10 @@ export const getProblemList = (condition) => async (dispatch, getState) => {
     await nprogress.done();
     return false;
   }
+};
+
+export const getProblemListByPage = (page) => async(dispatch, getState) => {
+  const state = getState();
+  const condition = state.problem.get('condition').set('page', page).toJS();
+  return await dispatch(getProblemList(condition));
 };

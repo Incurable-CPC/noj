@@ -36,7 +36,7 @@ const boundInitProblem = () => store.dispatch(initProblem());
 const boundGetProblemList = async (nextState, replace, next) => {
   const { params } = nextState;
   const condition = {
-    page: params.page || 1,
+    page: Number(params.page) || 1,
   };
   if (await store.dispatch(getProblemList(condition))) next();
 };
@@ -44,7 +44,7 @@ const boundGetProblemList = async (nextState, replace, next) => {
 const boundGetSubmissionList = async(nextState, replace, next) => {
   const { params } = nextState;
   const condition = {
-    page: params.page || 1,
+    page: Number(params.page) || 1,
   };
   if (await store.dispatch(getSubmissionList(condition))) next();
 };

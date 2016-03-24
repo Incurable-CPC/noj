@@ -2,25 +2,32 @@
  * Create by cpc on 1/12/16.
  **/
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/lib/paper';
 import RaisedButton from 'material-ui/lib/raised-button';
 import { connect } from 'react-redux';
 
 import s from './common.scss';
+import Pagination from '../Pagination.jsx';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
-import ProblemTable from '../Lists/ProblemList.jsx';
+import ProblemList from '../Lists/ProblemList.jsx';
 import Location from '../../core/Location';
 import { postJSON } from '../../core/fetchJSON';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
-@connect(state => ({ problemList: state.problem.get('list') }))
+@connect(state => ({
+  problemList: state.problem.get('list'),
+  count: state.problem.get('count'),
+  page: state.problem.getIn(['condition', 'page']),
+}))
 class ProblemsListPage extends Component {
   static propTypes = {
     problemList: ImmutableTypes.list.isRequired,
+    count: PropTypes.number.isRequired,
+    page: PropTypes.number.isRequired,
   };
 
   componentDidMount() {
@@ -28,14 +35,36 @@ class ProblemsListPage extends Component {
   }
 
   render() {
-    const { problemList } = this.props;
+    const { problemList, count, page } = this.props;
+    const pagination = [];
+    const begin = Math.max(1, Math.min(page - 2, count - 4));
+    const end = Math.min(count, begin + 4);
+    for (let index = begin; index <= end; index++) {
+      pagination.push({
+        isCurrent: index === page,
+        content: `${index}`,
+        href: `/problems/page/${index}`,
+      });
+    }
+
+    const first = { content: 'first', href: '/problems' };
+    const last = { content: 'last', href: `/problems/page/${count}` };
     return (
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
-            <ProblemTable problemList={problemList}/>
-            <RaisedButton label="ADD" onTouchTap={() => Location.push('/problems/add')} />
-            <RaisedButton label="add from poj" onTouchTap={async() => postJSON('/api/problems/poj')} />
+            <div>
+              <Pagination list={[first].concat(pagination, [last])} />
+            </div>
+            <ProblemList problemList={problemList}/>
+            <RaisedButton
+              label="ADD"
+              onTouchTap={() => Location.push('/problems/add')}
+            />
+            <RaisedButton
+              label="add from poj"
+              onTouchTap={() => postJSON('/api/problems/poj')}
+            />
           </Paper>
         </div>
         <div className={s.right}>

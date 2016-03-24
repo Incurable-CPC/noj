@@ -93,7 +93,7 @@ export const expandSubmission = (index, content) => async (dispatch, getState) =
       if (!state.submissionList.get(index).has('code')) {
         await dispatch(getSubmission(index));
       }
-    } else {
+    } else if (content === 'CEInfo') {
       const { submissionList } = state;
       if (!isCompileError(submissionList.getIn([index, 'result']))) return;
     }
@@ -103,4 +103,3 @@ export const expandSubmission = (index, content) => async (dispatch, getState) =
     toast('error', err.message);
   }
 };
-

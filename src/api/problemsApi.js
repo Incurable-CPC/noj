@@ -24,15 +24,20 @@ const getProblem = async (req, res, next) => {
   }
 };
 
+const NUM_PEER_PAGE = 25;
 const getProblemList = async (req, res, next) => {
   try {
     let page = Number(req.query.page) || 1;
     const problemList = await Problem.find({})
       .select('pid title accepted submit')
       .sort({ pid: 1 })
-      .skip((page - 1) * 50)
-      .limit(50);
-    res.send({ problemList });
+      .skip((page - 1) * NUM_PEER_PAGE)
+      .limit(NUM_PEER_PAGE);
+    const count = Math.floor((await Problem.find({}).count()) / NUM_PEER_PAGE);
+    res.send({
+      count,
+      problemList,
+    });
   } catch (err) {
     next(err);
   }
@@ -91,7 +96,6 @@ const getProblemFromPOJ = async () => {
     problem = await Problem.findOneAndUpdate({
       pid: problem.pid,
     }, problem, { upsert: true, new: true });
-    console.log(`${id - 999} / 1000 done`);
   }
 };
 

@@ -24,7 +24,6 @@ export const submit = async (submission) => {
     Location.push(`/problems/${pid}/status`);
     return true;
   } catch (err) {
-    console.log(err);
     toast('error', err.message);
     await nprogress.done();
     return false;
