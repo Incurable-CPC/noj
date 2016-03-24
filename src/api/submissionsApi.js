@@ -65,6 +65,7 @@ const postSubmission = async (req, res, next) => {
     await Problem.findOneAndUpdate(
       { pid },
       { $inc: { submit: 1 } });
+    await Problem.updateRatio(pid);
     await User.findOneAndUpdate(
       { username },
       { $addToSet: { tried: pid } });
@@ -108,6 +109,7 @@ const updateSubmissionResult = async (req, res, next) => {
       await Problem.findOneAndUpdate(
         { pid },
         { $inc: { accepted: 1 } });
+      await Problem.updateRatio(pid);
       await User.findOneAndUpdate(
         { username },
         { $addToSet: { solved: pid } });

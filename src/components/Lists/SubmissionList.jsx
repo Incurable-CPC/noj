@@ -71,9 +71,9 @@ export default class SubmissionList extends Component {
             {isCompleted(result) ?
               <span className={s[`status-${status}`]}>
                 {isCompileError(result) ? (
-                  <a onClick={() => expandSubmission(index, 'CEInfo')} href="javaScript:void(0);">
+                  <span onClick={() => expandSubmission(index, 'CEInfo')}>
                     {RESULTS[result]}
-                  </a>
+                  </span>
                 ) : RESULTS[result]}
               </span> :
               <CircularProgress size={0.4} />

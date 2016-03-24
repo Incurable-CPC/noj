@@ -22,6 +22,7 @@ class Problem extends Model {
   hintSrc = String;
   hint = String;
   testdataNum = Number;
+  ratio = { type: Number, default: 0 };
   submit = { type: Number, default: 0 };
   accepted = { type: Number, default: 0 };
   specialJudge = Boolean;
@@ -34,6 +35,13 @@ class Problem extends Model {
     const proCount = await Counter.add('Problem');
     this.pid = proCount + 1000;
     next();
+  }
+
+  static async updateRatio(pid) {
+    const problem = await this.findOne({ pid });
+    const { submit, accepted } = problem;
+    problem.ratio = (submit > 0) ? (100 * accepted / submit) : 0;
+    await problem.save();
   }
 }
 

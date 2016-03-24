@@ -2,7 +2,7 @@
  * Create by cpc on 1/11/16.
  **/
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
@@ -16,22 +16,22 @@ import Location from '../../core/Location';
 export default class ProblemList extends Component {
   static propTypes = {
     problemList: ImmutableTypes.list.isRequired,
+    sortBy: PropTypes.func.isRequired,
   };
 
   render() {
-    const { problemList } = this.props;
+    const { problemList, sortBy } = this.props;
+    const fields = ['pid', 'title', 'ratio', 'accepted', 'submit'];
+    const headers = ['ID', 'Title', 'Ratio', 'AC', 'ALL'];
     const problemNodeList = problemList.map((problem, index) => {
-      const { pid, title, submit, accepted } = problem.toJS();
-      const ratio = ((submit > 0) ? (100 * accepted / submit) : 0).toFixed(2);
+      const ratio = problem.get('ratio').toFixed(2);
       const content = (
         <div>
-          <span className={s['id-col']}>{pid}</span>
-          <span className={s['title-col']}>
-            {title}
-          </span>
-          <span className={s['ratio-col']}>
-            {ratio}%({accepted}/{submit})
-          </span>
+          {fields.map((field) => (
+            <span key={field} className={s[`${field}-col`]}>
+              {(field !== 'ratio') ? problem.get(field) : `${ratio}%` }
+            </span>
+          ))}
         </div>
       );
       return (
@@ -40,16 +40,20 @@ export default class ProblemList extends Component {
           <ListItem
             style={{ background: '' }}
             primaryText={content}
-            onTouchTap={() => Location.push(`/problems/${pid}`)}
+            onTouchTap={() => Location.push(`/problems/${problem.get('pid')}`)}
           />
         </div>
       );
     });
     const header = (
       <div>
-        <span className={s['id-col']}><strong>ID</strong></span>
-        <span className={s['title-col']}><strong>Title</strong></span>
-        <span className={s['ratio-col']}><strong>Ratio(AC/submit)</strong></span>
+        {fields.map((field, index) => (
+          <span className={s[`${field}-col`]} key={field}>
+            <strong className={s.header} onClick={() => sortBy(field)}>
+              {headers[index]}
+            </strong>
+          </span>
+        ))}
       </div>
     );
     return (

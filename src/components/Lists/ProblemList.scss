@@ -4,7 +4,7 @@
   color: black;
 }
 
-.id-col {
+.pid-col {
   display: inline-block;
   width: 15%;
 }
@@ -14,14 +14,21 @@
   width: 55%;
 }
 
-.problem {
+.accepted-col {
   display: inline-block;
-  width: 80%;
+  width: 10%;
 }
-
+.submit-col {
+  display: inline-block;
+  width: 10%;
+}
 .ratio-col {
   display: inline-block;
-  width: 30%;
+  width: 10%;
+}
+
+.header {
+  cursor: pointer;
 }
 
 .solved {

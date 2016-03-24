@@ -73,8 +73,7 @@ export const getProblemList = (condition) => async (dispatch, getState) => {
     const oldCondition = state.problem.get('condition');
     if (is(oldCondition, fromJS(condition))) return true;
     nprogress.start();
-    const { page } = condition;
-    const res = await getJSON(`/api/problems`, { page });
+    const res = await getJSON(`/api/problems`, condition);
     const { problemList, count } = await res.json();
     dispatch(setProblemList(condition, count, problemList));
     await nprogress.done();
@@ -88,6 +87,20 @@ export const getProblemList = (condition) => async (dispatch, getState) => {
 
 export const getProblemListByPage = (page) => async(dispatch, getState) => {
   const state = getState();
-  const condition = state.problem.get('condition').set('page', page).toJS();
+  const condition = state.problem.get('condition').toJS();
+  condition.page = Number(page) || 1;
+  return await dispatch(getProblemList(condition));
+};
+
+export const getProblemListSortBy = (sortKey) => async(dispatch, getState) => {
+  const state = getState();
+  const condition = state.problem.get('condition').toJS();
+  if (sortKey === condition.sortKey) {
+    condition.order = -condition.order;
+  } else {
+    condition.sortKey = sortKey;
+    condition.order = 1;
+  }
+
   return await dispatch(getProblemList(condition));
 };

@@ -15,6 +15,7 @@ import withStyles from '../../decorators/withStyles';
 import ProblemList from '../Lists/ProblemList.jsx';
 import Location from '../../core/Location';
 import { postJSON } from '../../core/fetchJSON';
+import { getProblemListSortBy } from '../../actions/ProblemActions';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
@@ -28,6 +29,7 @@ class ProblemsListPage extends Component {
     problemList: ImmutableTypes.list.isRequired,
     count: PropTypes.number.isRequired,
     page: PropTypes.number.isRequired,
+    dispatch: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -35,7 +37,7 @@ class ProblemsListPage extends Component {
   }
 
   render() {
-    const { problemList, count, page } = this.props;
+    const { problemList, count, page, dispatch } = this.props;
     const pagination = [];
     const begin = Math.max(1, Math.min(page - 2, count - 4));
     const end = Math.min(count, begin + 4);
@@ -49,14 +51,25 @@ class ProblemsListPage extends Component {
 
     const first = { content: 'first', href: '/problems' };
     const last = { content: 'last', href: `/problems/page/${count}` };
+    const previous = {
+      content: '<',
+      href: `/problems/page/${Math.max(1, page - 1)}`,
+    };
+    const next = {
+      content: '>',
+      href: `/problems/page/${Math.min(page + 1, count)}`,
+    };
     return (
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
             <div>
-              <Pagination list={[first].concat(pagination, [last])} />
+              <Pagination list={[first, previous].concat(pagination, [next, last])} />
             </div>
-            <ProblemList problemList={problemList}/>
+            <ProblemList
+              problemList={problemList}
+              sortBy={(key) => dispatch(getProblemListSortBy(key))}
+            />
             <RaisedButton
               label="ADD"
               onTouchTap={() => Location.push('/problems/add')}
