@@ -5,7 +5,7 @@
 import { getValues } from 'redux-form';
 import cookie from 'react-cookie';
 import AuthConstants from '../constants/AuthConstants';
-import { postJSON } from '../core/fetchJSON';
+import { getJSON, postJSON } from '../core/fetchJSON';
 import nprogress from '../core/nprogress';
 import toast from '../core/toast';
 
@@ -14,27 +14,33 @@ const cookieOpt = {
   path: '/',
 };
 
-export const loginSuccess = (auth) => {
+const loginSuccess = (auth) => {
   const { username, token } = auth;
   cookie.save('username', username, cookieOpt);
   cookie.save('token', token, cookieOpt);
-  return {
-    type: AuthConstants.LOGIN_SUCCESS,
-    auth,
-  };
 };
 
-export const logoutSuccess = () => {
-  cookie.remove('username', { path: '/' });
-  cookie.remove('token', { path: '/' });
-  return {
-    type: AuthConstants.LOGOUT_SUCCESS,
-  };
-};
-
-export const authFailed = () => ({
-  type: AuthConstants.FAILED,
+const setUserInfo = (user) => ({
+  type: AuthConstants.SET,
+  user,
 });
+
+const clearUserInfo = () => {
+  cookie.remove('username', cookieOpt);
+  cookie.remove('token', cookieOpt);
+  return ({ type: AuthConstants.CLEAR });
+};
+
+export const loadUserInfo = () => async (dispatch) => {
+  try {
+    if (!cookie.load('username', cookieOpt)) return;
+    const res = await getJSON('/api/auth/info');
+    const user = await res.json();
+    dispatch(setUserInfo(user));
+  } catch (err) {
+    toast('error', err.message);
+  }
+};
 
 export const login = () => async(dispatch, getState) => {
   try {
@@ -53,17 +59,16 @@ export const login = () => async(dispatch, getState) => {
       });
       const { token } = await res.json();
       toast('success', 'Login succeed', 'Welcome to NJU Online Judge !');
-      dispatch(loginSuccess({ username, token }));
+      loginSuccess({ username, token });
+      await dispatch(loadUserInfo());
       nprogress.done();
       return true;
     }
   } catch (err) {
     toast('error', err.message);
+    nprogress.done();
+    return false;
   }
-
-  nprogress.done();
-  dispatch(authFailed());
-  return false;
 };
 
 export const logout = () => async(dispatch) => {
@@ -71,7 +76,7 @@ export const logout = () => async(dispatch) => {
     nprogress.start();
     await postJSON('/api/auth/logout');
     toast('success', 'Logout succeed');
-    dispatch(logoutSuccess());
+    dispatch(clearUserInfo());
     nprogress.done();
   } catch (err) {
     toast('error', err.message);
@@ -98,14 +103,13 @@ export const register = () => async(dispatch, getState) => {
       });
       const { token } = await res.json();
       toast('success', 'Register succeed', 'Welcome to NJU Online Judge !');
-      dispatch(loginSuccess({ username, token }));
+      loginSuccess({ username, token });
+      await dispatch(loadUserInfo());
       nprogress.done();
       return true;
     }
   } catch (err) {
     toast('error', err.message);
+    nprogress.done();
   }
-
-  nprogress.done();
-  dispatch(authFailed());
 };

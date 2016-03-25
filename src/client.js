@@ -23,8 +23,9 @@ import ProblemEditPage from './components/Pages/ProblemEditPage.jsx';
 import SubmissionListPage from './components/Pages/SubmissionListPage.jsx';
 import Test from './components/Test.jsx';
 
-import { getProblem, initProblem, getProblemListByPage, getProblemListSortBy } from './actions/ProblemActions';
+import { getProblem, initProblem, getProblemListByPage } from './actions/ProblemActions';
 import { getSubmissionList } from './actions/SubmissionListActions';
+import { loadUserInfo } from './actions/AuthActions';
 
 const boundGetProblem = async (nextState, replace, next) => {
   const { params: { pid } } = nextState;
@@ -47,11 +48,16 @@ const boundGetSubmissionList = async(nextState, replace, next) => {
   if (await store.dispatch(getSubmissionList(condition))) next();
 };
 
+const boundLoadUserInfo = async(nextState, replace, next) => {
+  await store.dispatch(loadUserInfo());
+  next();
+};
+
 const appContainer = document.getElementById('app');
 ReactDOM.render((
   <Provider store={store}>
     <Router history={browserHistory}>
-      <Route path="/" component={App}>
+      <Route path="/" onEnter={boundLoadUserInfo} component={App}>
         <IndexRoute component={Index}/>
         <Route path="login" component={LoginForm} />
         <Route path="problems">
