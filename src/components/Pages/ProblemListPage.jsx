@@ -13,6 +13,7 @@ import Pagination from '../Pagination.jsx';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import ProblemList from '../Lists/ProblemList.jsx';
+import SearchBar from '../SearchBar.jsx';
 import Location from '../../core/Location';
 import { postJSON } from '../../core/fetchJSON';
 import { getProblemListSortBy } from '../../actions/ProblemActions';
@@ -75,7 +76,10 @@ class ProblemsListPage extends Component {
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
-            <div>
+            <div style={{ float: 'right' }}>
+              <SearchBar width={280}/>
+            </div>
+            <div style={{ marginRight: 320, padding: 16 }}>
               <Pagination list={[first, previous].concat(pagination, [next, last])} />
             </div>
             <ProblemList

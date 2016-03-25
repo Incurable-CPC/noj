@@ -26,6 +26,7 @@ export default class Pagination extends Component {
         <RaisedButton
           key={index}
           label={content}
+          labelStyle={{ paddingLeft: 12, paddingRight: 12 }}
           style={{ minWidth: 40, marginLeft: 1 }}
           onTouchTap={() => Location.push(href)}
           secondary={isCurrent}
