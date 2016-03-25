@@ -25,6 +25,7 @@ export default class ProblemList extends Component {
     const headers = ['ID', 'Title', 'Ratio', 'AC', 'ALL'];
     const problemNodeList = problemList.map((problem, index) => {
       const ratio = problem.get('ratio').toFixed(2);
+      const pid = problem.get('pid');
       const content = (
         <div>
           {fields.map((field) => (
@@ -38,9 +39,10 @@ export default class ProblemList extends Component {
         <div key={index}>
           <Divider />
           <ListItem
+            className={s[problem.get('status')]}
             style={{ background: '' }}
             primaryText={content}
-            onTouchTap={() => Location.push(`/problems/${problem.get('pid')}`)}
+            onTouchTap={() => Location.push(`/problems/${pid}`)}
           />
         </div>
       );

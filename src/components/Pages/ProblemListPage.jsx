@@ -23,10 +23,14 @@ import { getProblemListSortBy } from '../../actions/ProblemActions';
   problemList: state.problem.get('list'),
   count: state.problem.get('count'),
   page: state.problem.getIn(['condition', 'page']),
+  solved: state.auth.get('solved'),
+  tried: state.auth.get('tried'),
 }))
 class ProblemsListPage extends Component {
   static propTypes = {
     problemList: ImmutableTypes.list.isRequired,
+    solved: ImmutableTypes.list.isRequired,
+    tried: ImmutableTypes.list.isRequired,
     count: PropTypes.number.isRequired,
     page: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired,
@@ -37,7 +41,7 @@ class ProblemsListPage extends Component {
   }
 
   render() {
-    const { problemList, count, page, dispatch } = this.props;
+    const { count, page, dispatch, tried, solved } = this.props;
     const pagination = [];
     const begin = Math.max(1, Math.min(page - 2, count - 4));
     const end = Math.min(count, begin + 4);
@@ -59,6 +63,14 @@ class ProblemsListPage extends Component {
       content: '>',
       href: `/problems/page/${Math.min(page + 1, count)}`,
     };
+
+    const problemList = this.props.problemList.map((problem) => {
+      const pid = problem.get('pid');
+      let ret = problem.set('statu', 'normal');
+      if (tried.toJS().indexOf(pid) >= 0) ret = ret.set('status', 'tried');
+      if (solved.toJS().indexOf(pid) >= 0) ret = ret.set('status', 'solved');
+      return ret;
+    });
     return (
       <div className={s.div}>
         <div className={s.left}>
