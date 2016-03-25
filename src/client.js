@@ -42,9 +42,8 @@ const boundGetProblemList = async (nextState, replace, next) => {
 
 const boundGetSubmissionList = async(nextState, replace, next) => {
   const { params } = nextState;
-  const condition = {
-    page: Number(params.page) || 1,
-  };
+  const condition = Object.assign({}, params);
+  condition.page = Number(condition.page) || 1;
   if (await store.dispatch(getSubmissionList(condition))) next();
 };
 
