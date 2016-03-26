@@ -6,6 +6,7 @@ import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/lib/paper';
 import RaisedButton from 'material-ui/lib/raised-button';
+import { List } from 'immutable';
 import { connect } from 'react-redux';
 
 import s from './common.scss';
@@ -42,7 +43,9 @@ class ProblemsListPage extends Component {
   }
 
   render() {
-    const { count, page, dispatch, tried, solved } = this.props;
+    const { count, page, dispatch } = this.props;
+    const tried = (this.props.tried || new List()).toJS();
+    const solved = (this.props.solved || new List()).toJS();
     const pagination = [];
     const begin = Math.max(1, Math.min(page - 2, count - 4));
     const end = Math.min(count, begin + 4);
@@ -68,8 +71,8 @@ class ProblemsListPage extends Component {
     const problemList = this.props.problemList.map((problem) => {
       const pid = problem.get('pid');
       let ret = problem.set('statu', 'normal');
-      if (tried.toJS().indexOf(pid) >= 0) ret = ret.set('status', 'tried');
-      if (solved.toJS().indexOf(pid) >= 0) ret = ret.set('status', 'solved');
+      if (tried.indexOf(pid) >= 0) ret = ret.set('status', 'tried');
+      if (solved.indexOf(pid) >= 0) ret = ret.set('status', 'solved');
       return ret;
     });
     return (
