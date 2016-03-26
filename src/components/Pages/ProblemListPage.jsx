@@ -16,7 +16,7 @@ import ProblemList from '../Lists/ProblemList.jsx';
 import SearchBar from '../SearchBar.jsx';
 import Location from '../../core/Location';
 import { postJSON } from '../../core/fetchJSON';
-import { getProblemListSortBy } from '../../actions/ProblemActions';
+import { getProblemListSortBy, getProblemByKeyword } from '../../actions/ProblemActions';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
@@ -77,10 +77,15 @@ class ProblemsListPage extends Component {
         <div className={s.left}>
           <Paper className={s.paper}>
             <div style={{ float: 'right' }}>
-              <SearchBar width={280}/>
+              <SearchBar
+                search={(key) => dispatch(getProblemByKeyword(key))}
+                width={280}
+              />
             </div>
             <div style={{ marginRight: 320, padding: 16 }}>
-              <Pagination list={[first, previous].concat(pagination, [next, last])} />
+              <Pagination
+                list={[first, previous].concat(pagination, [next, last])}
+              />
             </div>
             <ProblemList
               problemList={problemList}

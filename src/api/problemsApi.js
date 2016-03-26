@@ -30,12 +30,21 @@ const getProblemList = async (req, res, next) => {
     const page = Number(req.query.page) || 1;
     const order = Number(req.query.order) || 1;
     const sortKey = req.query.sortKey || 'pid';
-    const problemList = await Problem.find({})
+    const { searchKey } = req.query;
+    const condition = {};
+    if (searchKey) {
+      condition.$or = [
+        { pid: { $regex: searchKey, $options: 'i' } },
+        { title: { $regex: searchKey, $options: 'i' } },
+      ];
+    }
+
+    const problemList = await Problem.find(condition)
       .select('pid title accepted submit ratio')
       .sort({ [sortKey]: order })
       .skip((page - 1) * NUM_PEER_PAGE)
       .limit(NUM_PEER_PAGE);
-    const count = Math.ceil((await Problem.find({}).count()) / NUM_PEER_PAGE);
+    const count = Math.ceil((await Problem.find(condition).count()) / NUM_PEER_PAGE);
     res.send({
       count,
       problemList,
@@ -98,7 +107,8 @@ const getProblemFromPOJ = async () => {
     problem = await Problem.findOneAndUpdate({
       pid: problem.pid,
     }, problem, { upsert: true, new: true });
-    console.log(`${id - 1000} / 1000 Done.`);
+
+    // console.log(`${id - 1000} / 1000 Done.`);
   }
 };
 

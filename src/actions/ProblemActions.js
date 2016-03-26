@@ -95,6 +95,7 @@ export const getProblemListByPage = (page) => async(dispatch, getState) => {
 export const getProblemListSortBy = (sortKey) => async(dispatch, getState) => {
   const state = getState();
   const condition = state.problem.get('condition').toJS();
+  condition.page = 1;
   if (sortKey === condition.sortKey) {
     condition.order = -condition.order;
   } else {
@@ -102,5 +103,13 @@ export const getProblemListSortBy = (sortKey) => async(dispatch, getState) => {
     condition.order = 1;
   }
 
+  return await dispatch(getProblemList(condition));
+};
+
+export const getProblemByKeyword = (searchKey) => async(dispatch, getState) => {
+  const state = getState();
+  const condition = state.problem.get('condition').toJS();
+  condition.page = 1;
+  condition.searchKey = searchKey;
   return await dispatch(getProblemList(condition));
 };
