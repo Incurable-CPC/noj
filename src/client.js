@@ -21,6 +21,7 @@ import ProblemPage from './components/Pages/ProblemPage.jsx';
 import ProblemListPage from './components/Pages/ProblemListPage.jsx';
 import ProblemEditPage from './components/Pages/ProblemEditPage.jsx';
 import SubmissionListPage from './components/Pages/SubmissionListPage.jsx';
+import ContestEditForm from './components/Forms/ContestEditForm.jsx';
 import Test from './components/Test.jsx';
 
 import { getProblem, initProblem, getProblemListByPage } from './actions/ProblemActions';
@@ -69,7 +70,7 @@ ReactDOM.render((
             <Route path="status" onEnter={boundGetSubmissionList} component={SubmissionListPage} />
           </Route>
         </Route>
-        <Route path="contests" component={Test} />
+        <Route path="contests" component={ContestEditForm} />
         <Route path="status" onEnter={boundGetSubmissionList} component={SubmissionListPage} />
         <Route path="*" component={Index} />
       </Route>

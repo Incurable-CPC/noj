@@ -22,10 +22,9 @@ class Contest extends Model {
 
   @pre('save')
   static async getCid(next) {
-    this.codeLength = this.code.length;
     if (this.cid) return next();
-    const contCounter = await Counter.add('Contest');
-    this.cid = contCounter + 10000;
+    const contestCounter = await Counter.add('Contest');
+    this.cid = contestCounter + 10000;
     next();
   }
 }

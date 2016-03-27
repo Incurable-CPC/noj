@@ -29,7 +29,7 @@ export const postProblem = async (problem, dispatch) => {
     }
 
     nprogress.start();
-    const action = problem.pid ? 'Saved' : 'Added';
+    const action = problem.pid ? 'saved' : 'added';
     const res = await postJSON('/api/problems', { problem });
     const data = await res.json();
     dispatch(setProblem(data.problem));

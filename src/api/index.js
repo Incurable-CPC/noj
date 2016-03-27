@@ -11,11 +11,13 @@ import { Router } from 'express';
 import authApi from './authApi';
 import problemApi from './problemsApi';
 import submissionApi from './submissionsApi';
+import contestApi from './contestApi';
 const router = new Router();
 
 router.use('/auth', authApi);
 router.use('/problems', problemApi);
 router.use('/submissions', submissionApi);
+router.use('/contests', contestApi);
 
 router.use((req, res) => {
   res.status(404).send({ error: 'API not found' });
