@@ -18,8 +18,9 @@ while True:
     response = requests.post('http://'+host+'/api/submissions/unjudged',
                              headers=headers)
 
-    submission = response.json()
-    if 'sid' in submission:
+    data = response.json()
+    if 'submission' in data:
+        submission = data['submission']
         sid = submission['sid']
         pid = submission['originPid']
         language = submission['language']

@@ -38,7 +38,7 @@ export const getSubmission = (index) => async(dispatch, getState) => {
     nprogress.start();
     const sid = state.submissionList.get(index).get('sid');
     const res = await getJSON(`/api/submissions/${sid}`);
-    const submission = await res.json();
+    const { submission } = await res.json();
     dispatch(reciveSubmission(index, submission));
     await nprogress.done();
     return true;
@@ -57,9 +57,9 @@ export const updateSubmissionResult = (index) => async (dispatch, getState) => {
       setTimeout(() => dispatch(updateSubmissionResult(index)), 200);
       const sid = submission.get('sid');
       const res = await getJSON(`/api/submissions/${sid}`);
-      const newSubmission = await res.json();
-      if (submission.get('result') !== newSubmission.result) {
-        dispatch(reciveSubmission(index, newSubmission));
+      const data = await res.json();
+      if (submission.get('result') !== data.submission.result) {
+        dispatch(reciveSubmission(index, data.submission));
       }
     }
   } catch (err) {
@@ -71,7 +71,7 @@ export const getSubmissionList = (cond) => async (dispatch) => {
   try {
     nprogress.start();
     const res = await getJSON(`/api/submissions`, cond);
-    const submissionList = await res.json();
+    const { submissionList } = await res.json();
     dispatch(reciveSubmissionList(submissionList));
     submissionList.forEach((submission, index) => {
       setTimeout(() => dispatch(updateSubmissionResult(index)), 200);

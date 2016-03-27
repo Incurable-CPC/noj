@@ -20,7 +20,7 @@ const getSubmissionList = async (req, res, next) => {
     const submissionList = await Submission.find(cond).
       select('-code').
       sort({ sid: -1 });
-    res.send(submissionList);
+    res.send({ submissionList });
   } catch (err) {
     next(err);
   }
@@ -36,7 +36,7 @@ const getSubmission = async (req, res, next) => {
       submission = await Submission.findOne({ sid });
     }
 
-    res.send(submission);
+    res.send({ submission });
   } catch (err) {
     next(err);
   }
@@ -83,7 +83,7 @@ const getUnjudgedSubmission = async (req, res, next) => {
     if (submission) {
       submission.result = RESULT_VALUES['Running & Judging'];
       await submission.save();
-      res.send(submission);
+      res.send({ submission });
     } else {
       res.send({});
     }
@@ -95,12 +95,12 @@ const getUnjudgedSubmission = async (req, res, next) => {
 const updateSubmissionResult = async (req, res, next) => {
   try {
     const { sid } = req.params;
-    const oldSubmission = await Submission.findOne({ sid });
-    if (isCompleted(oldSubmission.result)) {
-      return res.send(oldSubmission);
+    let submission = await Submission.findOne({ sid });
+    if (isCompleted(submission.result)) {
+      return res.send({ submission });
     }
 
-    const submission = await Submission.findOneAndUpdate(
+    submission = await Submission.findOneAndUpdate(
       { sid },
       req.body.submission,
       { new: true });
@@ -115,7 +115,7 @@ const updateSubmissionResult = async (req, res, next) => {
         { $addToSet: { solved: pid } });
     }
 
-    res.send(submission);
+    res.send({ submission });
   } catch (err) {
     next(err);
   }
