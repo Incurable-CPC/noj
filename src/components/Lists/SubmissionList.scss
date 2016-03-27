@@ -10,7 +10,11 @@
 }
 
 .normal {
-  .time, .memory, .length, .id, .language, .problem, .username {
+  .id {
+    width: 8%;
+  }
+
+  .time, .memory, .length, .language, .problem, .username {
     width: 10%;
   }
 

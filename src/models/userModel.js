@@ -5,14 +5,18 @@
 import { Model } from 'mongoose-babelmodel';
 import { createHash } from 'crypto';
 
+export const userSchema = {
+  username: { type: String, index: { unique: true } },
+  password: String,
+  tokens: [String],
+  admin: Boolean,
+  solved: [String],
+  tried: [String],
+  lastSubmit: Date,
+};
+
 class User extends Model {
-  username = { type: String, index: { unique: true } };
-  password = String;
-  tokens = [String];
-  admin = Boolean;
-  solved = [String];
-  tried = [String];
-  lastSubmit = Date;
+  _schema = userSchema;
 
   static async checkToekn(username, token) {
     const cnt = await this.find({ username, tokens: token }).count();

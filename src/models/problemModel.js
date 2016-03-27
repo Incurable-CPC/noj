@@ -5,29 +5,33 @@
 import { Model, pre } from 'mongoose-babelmodel';
 import Counter from './counterModel';
 
+export const problemSchema = {
+  pid: { type: String, index: { unique: true } },
+  title: String,
+  timeLimit: { type: Number, default: 1000 },
+  memoryLimit: { type: Number, default: 256 },
+  descriptionSrc: String,
+  description: String,
+  inputSrc: String,
+  input: String,
+  outputSrc: String,
+  output: String,
+  samples: [{ input: String, output: String }],
+  sourceSrc: String,
+  source: String,
+  hintSrc: String,
+  hint: String,
+  testdataNum: Number,
+  ratio: { type: Number, default: 0 },
+  submit: { type: Number, default: 0 },
+  accepted: { type: Number, default: 0 },
+  specialJudge: Boolean,
+  originOJ: { type: String, default: 'local' },
+  originPid: String,
+};
+
 class Problem extends Model {
-  pid = { type: String, index: { unique: true } };
-  title = String;
-  timeLimit = { type: Number, default: 1000 };
-  memoryLimit = { type: Number, default: 256 };
-  descriptionSrc = String;
-  description = String;
-  inputSrc = String;
-  input = String;
-  outputSrc = String;
-  output = String;
-  samples = [{ input: String, output: String }];
-  sourceSrc = String;
-  source = String;
-  hintSrc = String;
-  hint = String;
-  testdataNum = Number;
-  ratio = { type: Number, default: 0 };
-  submit = { type: Number, default: 0 };
-  accepted = { type: Number, default: 0 };
-  specialJudge = Boolean;
-  originOJ = { type: String, default: 'local' };
-  originPid = String;
+  _schema = problemSchema;
 
   @pre('save')
   static async getPid(next) {

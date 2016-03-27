@@ -31,8 +31,8 @@ import { getProblemListSortBy, getProblemByKeyword } from '../../actions/Problem
 class ProblemsListPage extends Component {
   static propTypes = {
     problemList: ImmutableTypes.list.isRequired,
-    solved: ImmutableTypes.list.isRequired,
-    tried: ImmutableTypes.list.isRequired,
+    solved: ImmutableTypes.list,
+    tried: ImmutableTypes.list,
     count: PropTypes.number.isRequired,
     page: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired,
