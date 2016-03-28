@@ -11,7 +11,7 @@ import thunk from 'redux-thunk';
 import dialogReducer from './reducers/DialogReducer';
 import authReducer from './reducers/AuthReducer';
 import problemReducer from './reducers/ProblemReducer';
-import submissionListReducer from './reducers/SubmissionListReducer';
+import submissionReducer from './reducers/SubmissionReducer';
 
 const reducer = combineReducers({
   routing: routeReducer,
@@ -19,7 +19,7 @@ const reducer = combineReducers({
   auth: authReducer,
   form: formReducer,
   problem: problemReducer,
-  submissionList: submissionListReducer,
+  submission: submissionReducer,
 });
 
 // Sync dispatched route actions to the history

@@ -25,7 +25,7 @@ import ContestEditForm from './components/Forms/ContestEditForm.jsx';
 import Test from './components/Test.jsx';
 
 import { getProblem, initProblem, getProblemListByPage } from './actions/ProblemActions';
-import { getSubmissionList } from './actions/SubmissionListActions';
+import { getSubmissionList } from './actions/SubmissionActions';
 import { loadUserInfo } from './actions/AuthActions';
 
 const boundGetProblem = async (nextState, replace, next) => {

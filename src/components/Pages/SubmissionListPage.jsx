@@ -12,13 +12,13 @@ import s from './common.scss';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import SubmissionList from '../Lists/SubmissionList.jsx';
-import { expandSubmission } from '../../actions/SubmissionListActions';
+import { expandSubmission } from '../../actions/SubmissionActions';
 import Location from '../../core/Location';
 
 @withTitle('NOJ - Status')
 @withStyles(s)
 @connect(state => ({
-  submissionList: state.submissionList,
+  submissionList: state.submission.get('list'),
   problem: state.problem.get('detail'),
 }))
 export default class SubmissionListPage extends Component {
