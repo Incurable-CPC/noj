@@ -4,10 +4,24 @@
 
 
 import { getJSON, postJSON } from '../core/fetchJSON';
+import { is, fromJS } from 'immutable';
 import toast from '../core/toast';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
 import checkContest from '../check/contest';
+import ContestConstants from '../constants/contestConstants';
+
+const setContest = (contest) => ({
+  type: ContestConstants.SET,
+  contest,
+});
+
+const setContestList = (condition, count, list) => ({
+  type: ContestConstants.SET_LIST,
+  condition,
+  count,
+  list,
+});
 
 export const postContest = async (contest, dispatch) => {
   try {
@@ -21,7 +35,7 @@ export const postContest = async (contest, dispatch) => {
     const action = contest.cid ? 'saved' : 'added';
     const res = await postJSON('/api/contests', { contest });
     const data = await res.json();
-    // dispatch(setProblem(data.problem));
+    dispatch(setContest(data.contest));
     toast('success', `Contest ${action}`);
     // Location.push(`/contest/${data.contest.cid}`);
     Location.push('/');
@@ -30,4 +44,22 @@ export const postContest = async (contest, dispatch) => {
   }
 
   await nprogress.done();
+};
+
+export const getContestList = (condition) => async (dispatch, getState) => {
+  try {
+    const state = getState();
+    const oldCondition = state.contest.get('condition');
+    if (is(oldCondition, fromJS(condition))) return true;
+    nprogress.start();
+    const res = await getJSON(`/api/contests`, condition);
+    const { contestList, count } = await res.json();
+    dispatch(setContestList(condition, count, contestList));
+    await nprogress.done();
+    return true;
+  } catch (err) {
+    toast('error', err.message);
+    await nprogress.done();
+    return false;
+  }
 };
