@@ -21,10 +21,11 @@ import ProblemPage from './components/Pages/ProblemPage.jsx';
 import ProblemListPage from './components/Pages/ProblemListPage.jsx';
 import ProblemEditPage from './components/Pages/ProblemEditPage.jsx';
 import SubmissionListPage from './components/Pages/SubmissionListPage.jsx';
+import ContestListPage from './components/Pages/ContestListPage.jsx';
 import ContestEditForm from './components/Forms/ContestEditForm.jsx';
-import Test from './components/Test.jsx';
 
 import { getProblem, initProblem, getProblemListByPage } from './actions/ProblemActions';
+import { getContestListByPage } from './actions/ContestActions';
 import { getSubmissionList } from './actions/SubmissionActions';
 import { loadUserInfo } from './actions/AuthActions';
 
@@ -35,10 +36,16 @@ const boundGetProblem = async (nextState, replace, next) => {
 
 const boundInitProblem = () => store.dispatch(initProblem());
 
-const boundGetProblemList = async (nextState, replace, next) => {
+const boundGetProblemListByPage = async (nextState, replace, next) => {
   const { params } = nextState;
   const page = Number(params.page) || 1;
   if (await store.dispatch(getProblemListByPage(page))) next();
+};
+
+const boundGetContestListByPage = async (nextState, replace, next) => {
+  const { params } = nextState;
+  const page = Number(params.page) || 1;
+  if (await store.dispatch(getContestListByPage(page))) next();
 };
 
 const boundGetSubmissionList = async(nextState, replace, next) => {
@@ -61,8 +68,8 @@ ReactDOM.render((
         <IndexRoute component={Index}/>
         <Route path="login" component={LoginForm} />
         <Route path="problems">
-          <IndexRoute onEnter={boundGetProblemList} component={ProblemListPage} />
-          <Route path="page/:page" onEnter={boundGetProblemList} component={ProblemListPage}/>
+          <IndexRoute onEnter={boundGetProblemListByPage} component={ProblemListPage} />
+          <Route path="page/:page" onEnter={boundGetProblemListByPage} component={ProblemListPage}/>
           <Route path="add" onEnter={boundInitProblem} component={ProblemEditPage}/>
           <Route path=":pid" onEnter={boundGetProblem}>
             <IndexRoute component={ProblemPage} />
@@ -70,7 +77,11 @@ ReactDOM.render((
             <Route path="status" onEnter={boundGetSubmissionList} component={SubmissionListPage} />
           </Route>
         </Route>
-        <Route path="contests" component={ContestEditForm} />
+        <Route path="contests">
+          <IndexRoute onEnter={boundGetContestListByPage} component={ContestListPage} />
+          <Route path="page/:page" onEnter={boundGetContestListByPage} component={ContestListPage}/>
+          <Route path="add" component={ContestEditForm} />
+        </Route>
         <Route path="status" onEnter={boundGetSubmissionList} component={SubmissionListPage} />
         <Route path="*" component={Index} />
       </Route>

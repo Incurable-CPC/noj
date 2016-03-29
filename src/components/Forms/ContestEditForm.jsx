@@ -18,7 +18,7 @@ const fields = [
   'sid',
   'title',
   'start',
-  'length',
+  'duration',
 ];
 
 @reduxForm({ form: 'contestEdit', fields })
@@ -51,7 +51,7 @@ export default class ContestEditForm extends Component {
 
   render() {
     const {
-      fields: { title, length },
+      fields: { title, start, duration },
       handleSubmit,
       submitting,
     } = this.props;
@@ -64,6 +64,7 @@ export default class ContestEditForm extends Component {
           />
           <div style={{ paddingTop: 24 }}>
             <DatePicker
+              value={start.value}
               mode="landscape"
               hintText="Start Date"
               style={{ display: 'inline-block', width: 150, marginRight: 60 }}
@@ -71,6 +72,7 @@ export default class ContestEditForm extends Component {
               onChange={this.changeStartDate}
             />
             <TimePicker
+              value={start.value}
               format="24hr"
               hintText="Time"
               style={{ display: 'inline-block', width: 150 }}
@@ -79,8 +81,8 @@ export default class ContestEditForm extends Component {
           </div>
           <div>
             <TextField
-              floatingLabelText="Length"
-              {...length}
+              floatingLabelText="Duration"
+              {...duration}
             />
           </div>
         </div>

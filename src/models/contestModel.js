@@ -11,7 +11,7 @@ export const contestSchema = {
   cid: { type: Number, index: { unique: true } },
   title: String,
   start: { type: Date, default: Date.now },
-  end: { type: Date, default: Date.now },
+  duration: Number,
   manager: String,
   problems: [problemSchema],
   submissions: [submissionSchema],

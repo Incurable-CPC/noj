@@ -1,0 +1,36 @@
+.header-col {
+  font-size: 15px;
+  font-weight: 500;
+  color: black;
+}
+
+.cid-col {
+  display: inline-block;
+  width: 15%;
+}
+
+.title-col {
+  display: inline-block;
+  width: 35%;
+}
+
+.start-col {
+  display: inline-block;
+  width: 30%;
+}
+.duration-col {
+  display: inline-block;
+  width: 20%;
+}
+
+.header {
+  cursor: pointer;
+}
+
+.solved {
+  background-color: rgba(212, 237, 201, 0.55);
+}
+
+.tried {
+  background-color: rgba(221, 238, 255, 0.55);
+}

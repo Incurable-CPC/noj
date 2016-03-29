@@ -12,10 +12,11 @@ export default class SearchBar extends Component {
   static propTypes = {
     width: PropTypes.number.isRequired,
     search: PropTypes.func.isRequired,
+    initialValue: PropTypes.string,
   };
 
   state = {
-    keyword: '',
+    keyword: this.props.initialValue,
   };
 
   handleSearch = async () => {

@@ -106,7 +106,7 @@ export const getProblemListSortBy = (sortKey) => async(dispatch, getState) => {
   return await dispatch(getProblemList(condition));
 };
 
-export const getProblemByKeyword = (searchKey) => async(dispatch, getState) => {
+export const getProblemListByKeyword = (searchKey) => async(dispatch, getState) => {
   const state = getState();
   const condition = state.problem.get('condition').toJS();
   condition.page = 1;

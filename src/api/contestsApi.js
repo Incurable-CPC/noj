@@ -13,13 +13,12 @@ const postContest = async (req, res, next) => {
   try {
     const {
       body: {
-        contest: { title, start, length },
+        contest: { title, start, duration },
       },
       cookies: { username },
     } = req;
-    const end = moment(start).add(length, 'hour').toDate();
     let contest = new Contest({
-      title, start, end,
+      title, start, duration,
       manger: username,
     });
     contest = await contest.save();
@@ -38,14 +37,14 @@ const getContestList = async (req, res, next) => {
     const { searchKey } = req.query;
     const condition = {};
     if (searchKey) {
-      condition.$title = {
+      condition.title = {
         $regex: searchKey,
         $options: 'i',
       };
     }
 
     const contestList = await Contest.find(condition)
-      .select('cid title start end')
+      .select('cid title start duration')
       .sort({ [sortKey]: order })
       .skip((page - 1) * NUM_PEER_PAGE)
       .limit(NUM_PEER_PAGE);

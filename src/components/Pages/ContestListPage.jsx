@@ -1,43 +1,37 @@
 /**
- * Create by cpc on 1/12/16.
+ * Create by cpc on 3/28/16.
  **/
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/lib/paper';
 import RaisedButton from 'material-ui/lib/raised-button';
-import { List } from 'immutable';
 import { connect } from 'react-redux';
 
 import s from './common.scss';
+import ContestList from '../Lists/ContestList.jsx';
 import Pagination from '../Pagination.jsx';
+import SearchBar from '../SearchBar.jsx';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
-import ProblemList from '../Lists/ProblemList.jsx';
-import SearchBar from '../SearchBar.jsx';
 import Location from '../../core/Location';
-import { postJSON } from '../../core/fetchJSON';
-import { getProblemListSortBy, getProblemListByKeyword } from '../../actions/ProblemActions';
+import { getContestListSortBy, getContestListByKeyword } from '../../actions/ContestActions';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
 @connect(state => ({
-  problemList: state.problem.get('list'),
-  count: state.problem.get('count'),
-  page: state.problem.getIn(['condition', 'page']),
-  searchKey: state.problem.getIn(['condition', 'searchKey']),
-  solved: state.auth.get('solved'),
-  tried: state.auth.get('tried'),
+  searchKey: state.contest.getIn(['condition', 'searchKey']),
+  contestList: state.contest.get('list'),
+  count: state.contest.get('count'),
+  page: state.contest.getIn(['condition', 'page']),
 }))
-class ProblemsListPage extends Component {
+class ContestListPage extends Component {
   static propTypes = {
-    problemList: ImmutableTypes.list.isRequired,
-    searchKey: PropTypes.string,
-    solved: ImmutableTypes.list,
-    tried: ImmutableTypes.list,
+    contestList: ImmutableTypes.list.isRequired,
     count: PropTypes.number.isRequired,
     page: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired,
+    searchKey: PropTypes.string,
   };
 
   componentDidMount() {
@@ -45,13 +39,11 @@ class ProblemsListPage extends Component {
   }
 
   render() {
-    const { count, page, dispatch, searchKey } = this.props;
-    const tried = (this.props.tried || new List()).toJS();
-    const solved = (this.props.solved || new List()).toJS();
+    const { count, page, dispatch, contestList, searchKey } = this.props;
     const pagination = [];
     const begin = Math.max(1, Math.min(page - 2, count - 4));
     const end = Math.min(count, begin + 4);
-    const pageUrl = (pageId) => `/problems/page/${pageId}`;
+    const pageUrl = (pageId) => `/contests/page/${pageId}`;
     for (let index = begin; index <= end; index++) {
       pagination.push({
         isCurrent: index === page,
@@ -70,14 +62,6 @@ class ProblemsListPage extends Component {
       content: '>',
       href: pageUrl(Math.min(page + 1, count)),
     };
-
-    const problemList = this.props.problemList.map((problem) => {
-      const pid = problem.get('pid');
-      let ret = problem.set('statu', 'normal');
-      if (tried.indexOf(pid) >= 0) ret = ret.set('status', 'tried');
-      if (solved.indexOf(pid) >= 0) ret = ret.set('status', 'solved');
-      return ret;
-    });
     return (
       <div className={s.div}>
         <div className={s.left}>
@@ -85,7 +69,7 @@ class ProblemsListPage extends Component {
             <div style={{ float: 'right' }}>
               <SearchBar
                 initialValue={searchKey}
-                search={(key) => dispatch(getProblemListByKeyword(key))}
+                search={(key) => dispatch(getContestListByKeyword(key))}
                 width={280}
               />
             </div>
@@ -94,17 +78,13 @@ class ProblemsListPage extends Component {
                 list={[first, previous].concat(pagination, [next, last])}
               />
             </div>
-            <ProblemList
-              problemList={problemList}
-              sortBy={(key) => dispatch(getProblemListSortBy(key))}
+            <ContestList
+              contestList={contestList}
+              sortBy={(key) => dispatch(getContestListSortBy(key))}
             />
             <RaisedButton
               label="ADD"
-              onTouchTap={() => Location.push('/problems/add')}
-            />
-            <RaisedButton
-              label="add from poj"
-              onTouchTap={() => postJSON('/api/problems/poj')}
+              onTouchTap={() => Location.push('/contests/add')}
             />
           </Paper>
         </div>
@@ -118,4 +98,4 @@ class ProblemsListPage extends Component {
   }
 }
 
-export default ProblemsListPage;
+export default ContestListPage;

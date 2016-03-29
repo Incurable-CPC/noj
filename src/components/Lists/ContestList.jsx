@@ -1,5 +1,5 @@
 /**
- * Create by cpc on 1/11/16.
+ * Create by cpc on 3/29/16.
  **/
 
 import React, { Component, PropTypes } from 'react';
@@ -7,31 +7,33 @@ import ImmutableTypes from 'react-immutable-proptypes';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import Divider from 'material-ui/lib/divider';
+import moment from 'moment';
 
 import withStyles from '../../decorators/withStyles';
-import s from './ProblemList.scss';
+import s from './ContestList.scss';
 import Location from '../../core/Location';
 
 @withStyles(s)
 export default class ProblemList extends Component {
   static propTypes = {
-    problemList: ImmutableTypes.list.isRequired,
+    contestList: ImmutableTypes.list.isRequired,
     sortBy: PropTypes.func.isRequired,
   };
 
   render() {
-    const { problemList, sortBy } = this.props;
-    const fields = ['pid', 'title', 'ratio', 'accepted', 'submit'];
-    const headers = ['ID', 'Title', 'Ratio', 'AC', 'ALL'];
-    const problemNodeList = problemList.map((problem, index) => {
-      const showProblem = problem
-        .update('ratio', (ratio) => `${ratio.toFixed(2)}%`);
-      const pid = problem.get('pid');
+    const { contestList, sortBy } = this.props;
+    const fields = ['cid', 'title', 'start', 'duration'];
+    const headers = ['ID', 'Title', 'Start Time', 'Duration'];
+    const contestNodeList = contestList.map((contest, index) => {
+      const cid = contest.get('cid');
+      const showContest = contest
+        .update('start', (start) => moment(start).format('YYYY-MM-DD hh:mm'))
+        .update('duration', (duration) => `${duration} h`);
       const content = (
         <div>
           {fields.map((field) => (
             <span key={field} className={s[`${field}-col`]}>
-              {showProblem.get(field)}
+              {showContest.get(field)}
             </span>
           ))}
         </div>
@@ -40,10 +42,9 @@ export default class ProblemList extends Component {
         <div key={index}>
           <Divider />
           <ListItem
-            className={s[problem.get('status')]}
             style={{ background: '' }}
             primaryText={content}
-            onTouchTap={() => Location.push(`/problems/${pid}`)}
+            onTouchTap={() => Location.push(`/contests/${cid}`)}
           />
         </div>
       );
@@ -62,7 +63,7 @@ export default class ProblemList extends Component {
     return (
       <List>
         <ListItem primaryText={header} disabled />
-        {problemNodeList}
+        {contestNodeList}
       </List>
     );
   }

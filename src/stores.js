@@ -12,6 +12,7 @@ import dialogReducer from './reducers/DialogReducer';
 import authReducer from './reducers/AuthReducer';
 import problemReducer from './reducers/ProblemReducer';
 import submissionReducer from './reducers/SubmissionReducer';
+import contestReducer from './reducers/ContestReducer';
 
 const reducer = combineReducers({
   routing: routeReducer,
@@ -19,6 +20,7 @@ const reducer = combineReducers({
   auth: authReducer,
   form: formReducer,
   problem: problemReducer,
+  contest: contestReducer,
   submission: submissionReducer,
 });
 

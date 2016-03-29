@@ -63,3 +63,32 @@ export const getContestList = (condition) => async (dispatch, getState) => {
     return false;
   }
 };
+
+export const getContestListByPage = (page) => async(dispatch, getState) => {
+  const state = getState();
+  const condition = state.contest.get('condition').toJS();
+  condition.page = Number(page) || 1;
+  return await dispatch(getContestList(condition));
+};
+
+export const getContestListSortBy = (sortKey) => async(dispatch, getState) => {
+  const state = getState();
+  const condition = state.contest.get('condition').toJS();
+  condition.page = 1;
+  if (sortKey === condition.sortKey) {
+    condition.order = -condition.order;
+  } else {
+    condition.sortKey = sortKey;
+    condition.order = 1;
+  }
+
+  return await dispatch(getContestList(condition));
+};
+
+export const getContestListByKeyword = (searchKey) => async(dispatch, getState) => {
+  const state = getState();
+  const condition = state.contest.get('condition').toJS();
+  condition.page = 1;
+  condition.searchKey = searchKey;
+  return await dispatch(getContestList(condition));
+};
