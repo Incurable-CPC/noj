@@ -11,8 +11,8 @@ import 'codemirror/mode/python/python';
 import 'codemirror/mode/pascal/pascal';
 import 'codemirror/mode/fortran/fortran';
 
-import { LANGUAGE_MODES } from '../constants';
-import withStyles from '../decorators/withStyles';
+import { LANGUAGE_MODES } from '../../constants';
+import withStyles from '../../decorators/withStyles';
 import s from './CodeBlock.scss';
 
 @withStyles(s)

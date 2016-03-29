@@ -12,7 +12,7 @@ import { fromJS } from 'immutable';
 import { nameToStr } from '../../common';
 import s from './ProblemEditForm.scss';
 import withStyles from '../../decorators/withStyles';
-import Animate from '../Animate.jsx';
+import Animate from '../Lib/Animate.jsx';
 import Problem from '../Problem.jsx';
 import { postProblem } from '../../actions/ProblemActions';
 

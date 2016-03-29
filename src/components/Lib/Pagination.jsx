@@ -5,7 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import RaisedButton from 'material-ui/lib/raised-button';
 
-import Location from '../core/Location';
+import Location from '../../core/Location';
 
 export default class Pagination extends Component {
   static propTypes = {

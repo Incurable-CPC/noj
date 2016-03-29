@@ -84,9 +84,7 @@ export const updateSubmissionResult = (index) => async (dispatch, getState) => {
         dispatch(reciveSubmission(index, data.submission));
       }
     }
-  } catch (err) {
-    toast('error', err.message);
-  }
+  } catch (err) {}
 };
 
 export const getSubmissionList = (cond) => async (dispatch) => {

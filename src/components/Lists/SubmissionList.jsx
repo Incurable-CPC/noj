@@ -12,8 +12,8 @@ import Paper from 'material-ui/lib/paper';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import moment from 'moment';
 
-import CodeBlock from '../CodeBlock.jsx';
-import Animate from '../Animate.jsx';
+import CodeBlock from '../Lib/CodeBlock.jsx';
+import Animate from '../Lib/Animate.jsx';
 import cs from 'classnames';
 import s from './SubmissionList.scss';
 import withStyles from '../../decorators/withStyles';

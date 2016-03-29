@@ -10,11 +10,11 @@ import { List } from 'immutable';
 import { connect } from 'react-redux';
 
 import s from './common.scss';
-import Pagination from '../Pagination.jsx';
+import Pagination from '../Lib/Pagination.jsx';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import ProblemList from '../Lists/ProblemList.jsx';
-import SearchBar from '../SearchBar.jsx';
+import SearchBar from '../Lib/SearchBar.jsx';
 import Location from '../../core/Location';
 import { postJSON } from '../../core/fetchJSON';
 import { getProblemListSortBy, getProblemListByKeyword } from '../../actions/ProblemActions';

@@ -3,7 +3,7 @@
  **/
 
 import React, { Component } from 'react';
-import Marked from './Marked.jsx';
+import Marked from './Lib/Marked.jsx';
 
 export default class Test extends Component {
   state = {

@@ -10,8 +10,8 @@ import { connect } from 'react-redux';
 
 import s from './common.scss';
 import ContestList from '../Lists/ContestList.jsx';
-import Pagination from '../Pagination.jsx';
-import SearchBar from '../SearchBar.jsx';
+import Pagination from '../Lib/Pagination.jsx';
+import SearchBar from '../Lib/SearchBar.jsx';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import Location from '../../core/Location';
