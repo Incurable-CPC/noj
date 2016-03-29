@@ -3,7 +3,6 @@
  */
 
 import { Router } from 'express';
-import moment from 'moment';
 const router = new Router();
 
 import { requireAuth, requireAdmin } from './common';
@@ -32,7 +31,7 @@ const NUM_PEER_PAGE = 25;
 const getContestList = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
-    const order = Number(req.query.order) || 1;
+    const order = Number(req.query.order) || -1;
     const sortKey = req.query.sortKey || 'cid';
     const { searchKey } = req.query;
     const condition = {};

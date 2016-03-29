@@ -13,7 +13,7 @@ export const contestSchema = {
   start: { type: Date, default: Date.now },
   duration: Number,
   manager: String,
-  problems: [problemSchema],
+  problems: [Object.assign({ pid: String }, problemSchema)],
   submissions: [submissionSchema],
 };
 

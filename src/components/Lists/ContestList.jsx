@@ -28,7 +28,9 @@ export default class ProblemList extends Component {
       const cid = contest.get('cid');
       const showContest = contest
         .update('start', (start) => moment(start).format('YYYY-MM-DD hh:mm'))
-        .update('duration', (duration) => `${duration} h`);
+        .update('duration', (duration) => (duration > 24) ?
+          `${(duration / 24).toFixed(1)} days` :
+          `${duration} hours`);
       const content = (
         <div>
           {fields.map((field) => (

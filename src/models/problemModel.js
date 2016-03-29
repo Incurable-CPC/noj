@@ -6,7 +6,6 @@ import { Model, pre } from 'mongoose-babelmodel';
 import Counter from './counterModel';
 
 export const problemSchema = {
-  pid: { type: String, index: { unique: true } },
   title: String,
   timeLimit: { type: Number, default: 1000 },
   memoryLimit: { type: Number, default: 256 },
@@ -31,7 +30,9 @@ export const problemSchema = {
 };
 
 class Problem extends Model {
-  _schema = problemSchema;
+  _schema = Object.assign({
+    pid: { type: String, index: { unique: true } },
+  }, problemSchema);
 
   @pre('save')
   static async getPid(next) {

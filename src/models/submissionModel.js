@@ -6,7 +6,6 @@ import { Model, pre } from 'mongoose-babelmodel';
 import Counter from './counterModel';
 
 export const submissionSchema = {
-  sid: { type: Number, index: { unique: true } },
   code: String,
   language: { type: Number, default: 0 },
   username: { type: String, index: true },
@@ -22,7 +21,9 @@ export const submissionSchema = {
 };
 
 class Submission extends Model {
-  _schema = submissionSchema;
+  _schema = Object.assign({
+    sid: { type: Number, index: { unique: true } },
+  }, submissionSchema);
 
   @pre('save')
   static async getSid(next) {
