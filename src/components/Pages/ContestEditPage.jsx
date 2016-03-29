@@ -10,9 +10,9 @@ import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import ContestEditForm from '../Forms/ContestEditForm.jsx';
 
-@withTitle('NOJ - Problems')
+@withTitle('NOJ - Contests')
 @withStyles(s)
-export default class ProblemEditPage extends Component {
+export default class ContestEditPage extends Component {
   static propTypes = {
     params: PropTypes.object,
   };
@@ -22,8 +22,8 @@ export default class ProblemEditPage extends Component {
   }
 
   render() {
-    const { params: { pid } } = this.props;
-    const action = pid ? 'save' : 'add';
+    const { params: { cid } } = this.props;
+    const action = cid ? 'save' : 'add';
 
     return (
       <div className={s.div}>

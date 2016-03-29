@@ -8,19 +8,31 @@ const router = new Router();
 import { requireAuth, requireAdmin } from './common';
 import Contest from '../models/contestModel';
 
+const getContest = async (req, res, next) => {
+  try {
+    const { cid } = req.params;
+    const contest = await Contest.findOne({ cid });
+    res.send({ contest });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const postContest = async (req, res, next) => {
   try {
-    const {
-      body: {
-        contest: { title, start, duration },
-      },
+    let {
+      body: { contest },
       cookies: { username },
     } = req;
-    let contest = new Contest({
-      title, start, duration,
-      manger: username,
-    });
-    contest = await contest.save();
+    if (contest.cid) {
+      contest = await Contest.findOneAndUpdate({
+        cid: contest.cid,
+      }, contest, { upsert: true, new: true });
+    } else {
+      contest.manger = username;
+      contest = new Contest(contest);
+      contest = await contest.save();
+    }
     res.send({ contest });
   } catch (err) {
     next(err);
@@ -57,6 +69,7 @@ const getContestList = async (req, res, next) => {
   }
 };
 
+router.get('/:cid', getContest);
 router.get('/', getContestList);
 
 router.all('*', requireAuth);

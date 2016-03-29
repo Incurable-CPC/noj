@@ -46,7 +46,7 @@ export default class ProblemList extends Component {
           <ListItem
             style={{ background: '' }}
             primaryText={content}
-            onTouchTap={() => Location.push(`/contests/${cid}`)}
+            onTouchTap={() => Location.push(`/contests/${cid}/edit`)}
           />
         </div>
       );

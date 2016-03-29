@@ -9,7 +9,8 @@ import toast from '../core/toast';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
 import checkContest from '../check/contest';
-import ContestConstants from '../constants/contestConstants';
+import ContestConstants from '../constants/ContestConstants';
+
 
 const setContest = (contest) => ({
   type: ContestConstants.SET,
@@ -22,6 +23,26 @@ const setContestList = (condition, count, list) => ({
   count,
   list,
 });
+
+export const initContest = () => ({ type: ContestConstants.INIT });
+
+export const getContest = (cid) => async (dispatch, getState) => {
+  try {
+    const state = getState();
+    if (state.contest.getIn(['detail', 'cid']) === cid) return true;
+    nprogress.start();
+    const res = await getJSON(`/api/contests/${cid}`);
+    const { contest } = await res.json();
+    dispatch(setContest(contest));
+    await nprogress.done();
+    return true;
+  } catch (err) {
+    Location.push('/');
+    toast('error', err.message);
+    await nprogress.done();
+    return false;
+  }
+};
 
 export const postContest = async (contest, dispatch) => {
   try {
@@ -49,7 +70,7 @@ export const getContestList = (condition) => async (dispatch, getState) => {
   try {
     const state = getState();
     const oldCondition = state.contest.get('condition');
-    if (is(oldCondition, fromJS(condition))) return true;
+    // if (is(oldCondition, fromJS(condition))) return true;
     nprogress.start();
     const res = await getJSON(`/api/contests`, condition);
     const { contestList, count } = await res.json();

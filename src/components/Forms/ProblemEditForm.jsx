@@ -10,7 +10,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import { fromJS } from 'immutable';
 
 import { nameToStr } from '../../common';
-import s from './ProblemEditForm.scss';
+import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
 import Animate from '../Lib/Animate.jsx';
 import Problem from '../Problem.jsx';
@@ -60,6 +60,7 @@ export default class ProblemEditForm extends Component {
       handleSubmit,
       submitting,
       values,
+      action,
       } = this.props;
     const textarea = (field, row) => {
       const src = this.props.fields[`${field}Src`];
@@ -140,7 +141,7 @@ export default class ProblemEditForm extends Component {
           <RaisedButton
             secondary
             type="submit"
-            label={this.props.action}
+            label={action}
             disabled={submitting}
           />
         </div>

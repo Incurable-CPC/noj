@@ -22,10 +22,10 @@ import ProblemListPage from './components/Pages/ProblemListPage.jsx';
 import ProblemEditPage from './components/Pages/ProblemEditPage.jsx';
 import SubmissionListPage from './components/Pages/SubmissionListPage.jsx';
 import ContestListPage from './components/Pages/ContestListPage.jsx';
-import ContestEditForm from './components/Forms/ContestEditForm.jsx';
+import ContestEditPage from './components/Pages/ContestEditPage.jsx';
 
 import { getProblem, initProblem, getProblemListByPage } from './actions/ProblemActions';
-import { getContestListByPage } from './actions/ContestActions';
+import { getContest, initContest, getContestListByPage } from './actions/ContestActions';
 import { getSubmissionList } from './actions/SubmissionActions';
 import { loadUserInfo } from './actions/AuthActions';
 
@@ -40,6 +40,13 @@ const boundGetProblemListByPage = async (nextState, replace, next) => {
   const { params } = nextState;
   const page = Number(params.page) || 1;
   if (await store.dispatch(getProblemListByPage(page))) next();
+};
+
+const boundInitContest = () => store.dispatch(initContest());
+
+const boundGetContest = async (nextState, replace, next) => {
+  const { params: { cid } } = nextState;
+  if (await store.dispatch(getContest(cid))) next();
 };
 
 const boundGetContestListByPage = async (nextState, replace, next) => {
@@ -80,7 +87,10 @@ ReactDOM.render((
         <Route path="contests">
           <IndexRoute onEnter={boundGetContestListByPage} component={ContestListPage} />
           <Route path="page/:page" onEnter={boundGetContestListByPage} component={ContestListPage}/>
-          <Route path="add" component={ContestEditForm} />
+          <Route path="add" onEnter={boundInitContest} component={ContestEditPage} />
+          <Route path=":cid" onEnter={boundGetContest}>
+            <Route path="edit" component={ContestEditPage} />
+          </Route>
         </Route>
         <Route path="status" onEnter={boundGetSubmissionList} component={SubmissionListPage} />
         <Route path="*" component={Index} />

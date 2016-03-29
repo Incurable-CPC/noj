@@ -11,17 +11,20 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import moment from 'moment';
 
 import { postContest } from '../../actions/ContestActions';
-import s from './ProblemEditForm.scss';
+import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
 
 const fields = [
-  'sid',
+  'cid',
   'title',
   'start',
   'duration',
 ];
 
-@reduxForm({ form: 'contestEdit', fields })
+@reduxForm({
+  form: 'contestEdit',
+  fields,
+}, (state) => ({ initialValues: state.contest.get('detail').toJS() }))
 @withStyles(s)
 export default class ContestEditForm extends Component {
   static propTypes = {
@@ -34,27 +37,37 @@ export default class ContestEditForm extends Component {
 
   changeStartTime = (evt, date) => {
     const { fields: { start } } = this.props;
-    const newDate = start.value || moment();
-    newDate.setHours(date.getHours());
-    newDate.setMinutes(date.getMinutes());
+    const newDate = moment(start.value);
+    newDate.hour(date.getHours());
+    newDate.minute(date.getMinutes());
+    newDate.second(0);
+    newDate.millisecond(0);
     start.onChange(newDate);
   };
 
   changeStartDate = (evt, date) => {
     const { fields: { start } } = this.props;
-    const newDate = start.value || new Date();
-    newDate.setYear(date.getFullYear());
-    newDate.setMonth(date.getMonth());
-    newDate.setDate(date.getDate());
+    const newDate = moment(start.value);
+    newDate.year(date.getFullYear());
+    newDate.month(date.getMonth());
+    newDate.date(date.getDate());
     start.onChange(newDate);
   };
 
   render() {
     const {
-      fields: { title, start, duration },
+      fields: { title, duration, start },
       handleSubmit,
       submitting,
+      action,
     } = this.props;
+    const startDate = { onChange: this.changeStartDate };
+    const startTime = { onChange: this.changeStartTime };
+    const value = start.value || start.initialValue;
+    if (value) {
+      startDate.value = startTime.defaultTime =
+        moment(value).toDate();
+    }
     return (
       <form className={s.form} onSubmit={handleSubmit(postContest)}>
         <div>
@@ -64,19 +77,20 @@ export default class ContestEditForm extends Component {
           />
           <div style={{ paddingTop: 24 }}>
             <DatePicker
-              value={start.value}
+              autoOk
               mode="landscape"
               hintText="Start Date"
               style={{ display: 'inline-block', width: 150, marginRight: 60 }}
               formatDate={(date) => moment(date).format('YYYY-MM-DD')}
-              onChange={this.changeStartDate}
+              {...startDate}
             />
             <TimePicker
-              value={start.value}
+              autoOk
+              mode="landscape"
               format="24hr"
               hintText="Time"
               style={{ display: 'inline-block', width: 150 }}
-              onChange={this.changeStartTime}
+              {...startTime}
             />
           </div>
           <div>
@@ -90,7 +104,7 @@ export default class ContestEditForm extends Component {
           <RaisedButton
             secondary
             type="submit"
-            label="add"
+            label={action}
             disabled={submitting}
           />
         </div>

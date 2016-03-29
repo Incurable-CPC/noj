@@ -19,10 +19,10 @@ const initState = fromJS({
 export default function reducer(state = initState, action) {
   const { type, problem, condition, count, list } = action;
   switch (type) {
-    case ProblemConstants.SET:
-      return state.set('detail', fromJS(problem));
     case ProblemConstants.INIT:
       return state.set('detail', initState.get('detail'));
+    case ProblemConstants.SET:
+      return state.set('detail', fromJS(problem));
     case ProblemConstants.SET_LIST:
       return state.set('list', fromJS(list))
         .set('condition', fromJS(condition))
