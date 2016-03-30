@@ -100,7 +100,7 @@ export default class SubmissionList extends Component {
             {codeLength}
           </span>
           <span className={cs(s.col, s.date)}>
-            {moment(date).format('YYYY-MM-DD hh:mm:ss')}
+            {moment(date).format('YYYY-MM-DD HH:mm:ss')}
           </span>
         </div>
       );
