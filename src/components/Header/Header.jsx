@@ -43,9 +43,14 @@ export default class Header extends Component {
     logout: PropTypes.func.isRequired,
     register: PropTypes.func.isRequired,
     auth: ImmutableTypes.map.isRequired,
+    cid: PropTypes.string,
   };
   render() {
-    const { dialog, active, showDialog, hideDialog, login, logout, register, auth } = this.props;
+    const {
+      dialog, showDialog, hideDialog,
+      login, logout, register, auth,
+      active, cid,
+    } = this.props;
     const LinkTab = (name, index) => (
       <Tab
         className={s.tab}
@@ -53,7 +58,7 @@ export default class Header extends Component {
         key={index}
         value={name}
         label={nameToLabel(name)}
-        onActive={() => Location.push(`/${name}`)}
+        onActive={() => Location.push((cid && `/contests/${cid}/${name}`) || `/${name}`)}
       />
     );
     const DialogTab = (name, index) => (
@@ -66,7 +71,9 @@ export default class Header extends Component {
         onActive={() => showDialog(name)}
       />
     );
-    const items = ['problems', 'contests', 'status', 'standing'];
+    const items = (cid) ?
+      ['overview', 'problems', 'standing', 'clarify'] :
+      ['problems', 'contests', 'status', 'standing'];
     const leftPart = items.map(LinkTab);
     const rightPart = auth.has('username') ? (
       <div>

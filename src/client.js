@@ -90,6 +90,7 @@ ReactDOM.render((
           <Route path="add" onEnter={boundInitContest} component={ContestEditPage} />
           <Route path=":cid" onEnter={boundGetContest}>
             <Route path="edit" component={ContestEditPage} />
+            <Route path="*" component={ContestEditPage} />
           </Route>
         </Route>
         <Route path="status" onEnter={boundGetSubmissionList} component={SubmissionListPage} />

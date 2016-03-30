@@ -49,6 +49,7 @@ export default class App extends Component {
     dialog: PropTypes.string.isRequired,
     auth: ImmutableTypes.map,
     location: PropTypes.object,
+    params: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
   };
   static childContextTypes = {
@@ -70,12 +71,15 @@ export default class App extends Component {
   }
 
   render() {
-    const { dialog, location, dispatch, auth } = this.props;
-    const match = location.pathname.match(/\/([^\/]*)/);
+    const { dialog, location, params, dispatch, auth } = this.props;
+    const match = location.pathname.match((params.cid) ?
+      /\/contests\/\d*\/([^\/]*)/ :
+      /\/([^\/]*)/);
     const active = (match) ? match[1] : 'empty';
     return (
       <div>
         <Header
+          cid={params.cid}
           auth={auth}
           dialog={dialog}
           active={active}
