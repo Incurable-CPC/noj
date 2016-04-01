@@ -12,11 +12,11 @@
   padding-top: 20px;
 }
 
-.sample {
+.sample, .problem {
   overflow: hidden;
 }
 
-.sample-enter {
+.sample-enter, .problem-enter {
   max-height: 0;
 }
 .sample-enter-active {
@@ -26,7 +26,14 @@
 .sample-leave {
   max-height: 200px;
 }
-.sample-leave-active {
+.problem-enter-active {
+  max-height: 72px;
+  transition: max-height 500ms;
+}
+.problem-leave {
+  max-height: 72px;
+}
+.sample-leave-active, .problem-leave-active {
   max-height: 0;
   transition: max-height 500ms;
 }

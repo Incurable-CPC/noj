@@ -11,7 +11,7 @@ import 'babel-core/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, IndexRoute, Route, browserHistory } from 'react-router';
+import { Router, IndexRoute, IndexRedirect, Route, browserHistory } from 'react-router';
 
 import store from './stores';
 import App from './components/App';
@@ -89,6 +89,7 @@ ReactDOM.render((
           <Route path="page/:page" onEnter={boundGetContestListByPage} component={ContestListPage}/>
           <Route path="add" onEnter={boundInitContest} component={ContestEditPage} />
           <Route path=":cid" onEnter={boundGetContest}>
+            <IndexRedirect to="overview" />
             <Route path="edit" component={ContestEditPage} />
             <Route path="*" component={ContestEditPage} />
           </Route>

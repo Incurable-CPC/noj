@@ -58,7 +58,7 @@ export const postContest = async (contest, dispatch) => {
     const data = await res.json();
     dispatch(setContest(data.contest));
     toast('success', `Contest ${action}`);
-    Location.push(`/contest/${data.contest.cid}`);
+    Location.push(`/contests/${data.contest.cid}`);
   } catch (err) {
     toast('error', err.message);
   }

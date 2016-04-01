@@ -7,11 +7,19 @@ const router = new Router();
 
 import { requireAuth, requireAdmin } from './common';
 import Contest from '../models/contestModel';
+import Problem from '../models/problemModel';
 
 const getContest = async (req, res, next) => {
   try {
     const { cid } = req.params;
     const contest = await Contest.findOne({ cid });
+    const { problems } = contest;
+    for (let i = 0; i < problems.length; i++) {
+      let { pid } = problems[i];
+      if (pid) {
+        problems[i] = await Problem.findOne({ pid });
+      }
+    }
     res.send({ contest });
   } catch (err) {
     next(err);

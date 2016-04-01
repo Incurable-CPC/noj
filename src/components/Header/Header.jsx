@@ -2,10 +2,6 @@
  * Create by cpc on 1/8/16.
  **/
 
-/**
- * Create by Cai on 12/6/2015.
- **/
-
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Styles from 'material-ui/lib/styles';
