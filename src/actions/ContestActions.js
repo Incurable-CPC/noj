@@ -24,6 +24,11 @@ const setContestList = (condition, count, list) => ({
   list,
 });
 
+export const setContestPid = (pid) => ({
+  type: ContestConstants.SET_PID,
+  pid,
+});
+
 export const initContest = () => ({ type: ContestConstants.INIT });
 
 export const getContest = (cid) => async (dispatch, getState) => {

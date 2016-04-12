@@ -15,7 +15,7 @@ export default class Pagination extends Component {
         href: PropTypes.string,
       })
     ),
-    current: PropTypes.bool,
+    current: PropTypes.string,
   };
 
   render() {

@@ -11,7 +11,7 @@ import 'babel-core/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, IndexRoute, IndexRedirect, Route, browserHistory } from 'react-router';
+import { Router, IndexRoute, IndexRedirect, Route, Redirect, browserHistory } from 'react-router';
 
 import store from './stores';
 import App from './components/App';
@@ -23,10 +23,11 @@ import ProblemEditPage from './components/Pages/ProblemEditPage.jsx';
 import SubmissionListPage from './components/Pages/SubmissionListPage.jsx';
 import ContestListPage from './components/Pages/ContestListPage.jsx';
 import ContestEditPage from './components/Pages/ContestEditPage.jsx';
-import ContestOverviewPage from './components/Pages/ContestOverviewPage.jsx';
+import ContestOverviewPage from './components/Pages/Contest/ContestOverviewPage.jsx';
+import ContestProblemPage from './components/Pages/Contest/ContestProblemPage.jsx';
 
 import { getProblem, initProblem, getProblemListByPage } from './actions/ProblemActions';
-import { getContest, initContest, getContestListByPage } from './actions/ContestActions';
+import { setContestPid, getContest, initContest, getContestListByPage } from './actions/ContestActions';
 import { getSubmissionList } from './actions/SubmissionActions';
 import { loadUserInfo } from './actions/AuthActions';
 
@@ -49,6 +50,11 @@ const boundGetContest = async (nextState, replace, next) => {
   const { params: { cid } } = nextState;
   if (await store.dispatch(getContest(cid))) next();
 };
+
+const boundSetContestPid = (nextState) =>  {
+  const { params: { pid } } = nextState;
+  store.dispatch(setContestPid(pid));
+}
 
 const boundGetContestListByPage = async (nextState, replace, next) => {
   const { params } = nextState;
@@ -92,6 +98,9 @@ ReactDOM.render((
           <Route path=":cid" onEnter={boundGetContest}>
             <IndexRedirect to="overview" />
             <Route path="overview" component={ContestOverviewPage} />
+            <Route path="problems" component={ContestProblemPage}>
+              <Route path=":pid" onEnter={boundSetContestPid} />
+            </Route>
             <Route path="edit" component={ContestEditPage} />
             <Route path="*" component={ContestEditPage} />
           </Route>

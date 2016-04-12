@@ -4,15 +4,15 @@
 
 import React, { Component } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import Paper from 'material-ui/lib/paper';
+import Paper from '../../../../node_modules/material-ui/lib/paper';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/lib/raised-button';
 
-import s from './common.scss';
-import withTitle from '../../decorators/withTitle';
-import withStyles from '../../decorators/withStyles';
-import Location from '../../core/Location';
-import Contest from '../Contest.jsx';
+import s from '../common.scss';
+import withTitle from '../../../decorators/withTitle';
+import withStyles from '../../../decorators/withStyles';
+import Location from '../../../core/Location';
+import Contest from '../../Contest.jsx';
 
 @withTitle('NOJ - Contests')
 @withStyles(s)

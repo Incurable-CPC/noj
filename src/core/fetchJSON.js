@@ -4,7 +4,7 @@
 
 import fetch from './fetch';
 import store from '../stores';
-import { logoutSuccess } from '../actions/AuthActions';
+import { logout } from '../actions/AuthActions';
 
 const handleError = async (res) => {
   if (res.ok) {
@@ -12,7 +12,7 @@ const handleError = async (res) => {
   }
 
   if (res.status === 401) {
-    store.dispatch(logoutSuccess());
+    store.dispatch(logout());
   }
 
   const { error } = await res.json();

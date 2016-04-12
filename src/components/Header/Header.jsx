@@ -54,7 +54,7 @@ export default class Header extends Component {
         key={index}
         value={name}
         label={nameToLabel(name)}
-        onActive={() => Location.push((cid && `/contests/${cid}/${name}`) || `/${name}`)}
+        onActive={() => Location.push(cid ? `/contests/${cid}/${name}` : `/${name}`)}
       />
     );
     const DialogTab = (name, index) => (
@@ -68,7 +68,7 @@ export default class Header extends Component {
       />
     );
     const items = (cid) ?
-      ['overview', 'problems', 'standing', 'clarify'] :
+      ['overview', 'problems', 'status', 'standing', 'clarify'] :
       ['problems', 'contests', 'status', 'standing'];
     const leftPart = items.map(LinkTab);
     const rightPart = auth.has('username') ? (
@@ -87,9 +87,10 @@ export default class Header extends Component {
         </Tabs>
       </div>
     );
+    const rootClassName = s.header + (cid ? ` ${s['contest-header']}` : '');
 
     return (
-      <Paper className={s.header}>
+      <Paper className={rootClassName}>
         <div className={s.container}>
           <Link className={s.title} to="/"><strong>NOJ</strong></Link>
           <Tabs className={s.left} value={active} inkBarStyle={styles.ink}>

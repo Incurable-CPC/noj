@@ -9,16 +9,25 @@ import { requireAuth, requireAdmin } from './common';
 import Contest from '../models/contestModel';
 import Problem from '../models/problemModel';
 
+const checkManager = async (cid, username) => {
+  const { manager } = await Contest.findOne({ cid });
+  return (username !== manager) ?
+    'Unauthorized opeartion' : '';
+};
+
 const getContest = async (req, res, next) => {
   try {
-    const { cid } = req.params;
+    const { params: { cid }, cookies: { username } } = req;
     const contest = await Contest.findOne({ cid });
+    const isManager = contest.manager === username;
     const { problems } = contest;
     for (let i = 0; i < problems.length; i++) {
       let { pid } = problems[i];
       if (pid) {
         problems[i] = await Problem.findOne({ pid });
-        problems[i].pid = String.fromCharCode(i + 'A'.charCodeAt(0));
+        if (!isManager) {
+          problems[i].pid = null;
+        }
       }
     }
     res.send({ contest });
@@ -33,12 +42,16 @@ const postContest = async (req, res, next) => {
       body: { contest },
       cookies: { username },
     } = req;
+    const { cid } = contest;
     if (contest.cid) {
-      contest = await Contest.findOneAndUpdate({
-        cid: contest.cid,
-      }, contest, { upsert: true, new: true });
+      const error = await checkManager(cid, username);
+      if (error) {
+        return res.status(401).send({ error });
+      }
+      contest = await Contest.findOneAndUpdate({ cid },
+        contest, { upsert: true, new: true });
     } else {
-      contest.manger = username;
+      contest.manager = username;
       contest = new Contest(contest);
       contest = await contest.save();
     }

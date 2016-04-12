@@ -23,9 +23,10 @@ export default class Contest extends Component {
     const duration = Number(contest.get('duration'));
     const end = moment(start).add(duration, 'hours');
     const problemList = contest.get('problems')
-      .map((problem) => {
-        const url = `/contests/${cid}/problems/${problem.get('pid')}`;
-        return problem.set('url', url);
+      .map((problem, index) => {
+        const pid = String.fromCharCode(index + 'A'.charCodeAt(0));
+        const url = `/contests/${cid}/problems/${pid}`;
+        return problem.set('pid', pid).set('url', url);
       });
 
     return (

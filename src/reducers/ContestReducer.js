@@ -12,16 +12,18 @@ const initState = fromJS({
 });
 
 export default (state = initState, action) => {
-  const { type, contest, condition, count, list } = action;
-  switch (type) {
+  switch (action.type) {
     case ContestContants.INIT:
       return state.set('detail', initState.get('detail'));
     case ContestContants.SET:
-      return state.set('detail', fromJS(contest));
+      return state.set('detail', fromJS(action.contest))
+        .setIn(['detail', 'pid'], 'A');
+    case ContestContants.SET_PID:
+      return state.setIn(['detail', 'pid'], action.pid);
     case ContestContants.SET_LIST:
-      return state.set('list', fromJS(list))
-        .set('condition', fromJS(condition))
-        .set('count', count);
+      return state.set('list', fromJS(action.list))
+        .set('condition', fromJS(action.condition))
+        .set('count', action.count);
     default: return state;
   }
 };
