@@ -18,6 +18,7 @@ const getContest = async (req, res, next) => {
       let { pid } = problems[i];
       if (pid) {
         problems[i] = await Problem.findOne({ pid });
+        problems[i].pid = String.fromCharCode(i + 'A'.charCodeAt(0));
       }
     }
     res.send({ contest });

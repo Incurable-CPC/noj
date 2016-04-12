@@ -46,7 +46,7 @@ export default class ProblemList extends Component {
           <ListItem
             style={{ background: '' }}
             primaryText={content}
-            onTouchTap={() => Location.push(`/contests/${cid}/edit`)}
+            onTouchTap={() => Location.push(`/contests/${cid}`)}
           />
         </div>
       );
@@ -63,7 +63,7 @@ export default class ProblemList extends Component {
       </div>
     );
     return (
-      <List>
+      <List className={s.list}>
         <ListItem primaryText={header} disabled />
         {contestNodeList}
       </List>

@@ -23,6 +23,7 @@ import ProblemEditPage from './components/Pages/ProblemEditPage.jsx';
 import SubmissionListPage from './components/Pages/SubmissionListPage.jsx';
 import ContestListPage from './components/Pages/ContestListPage.jsx';
 import ContestEditPage from './components/Pages/ContestEditPage.jsx';
+import ContestOverviewPage from './components/Pages/ContestOverviewPage.jsx';
 
 import { getProblem, initProblem, getProblemListByPage } from './actions/ProblemActions';
 import { getContest, initContest, getContestListByPage } from './actions/ContestActions';
@@ -90,6 +91,7 @@ ReactDOM.render((
           <Route path="add" onEnter={boundInitContest} component={ContestEditPage} />
           <Route path=":cid" onEnter={boundGetContest}>
             <IndexRedirect to="overview" />
+            <Route path="overview" component={ContestOverviewPage} />
             <Route path="edit" component={ContestEditPage} />
             <Route path="*" component={ContestEditPage} />
           </Route>

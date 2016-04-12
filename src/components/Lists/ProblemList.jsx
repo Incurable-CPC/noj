@@ -16,7 +16,7 @@ import Location from '../../core/Location';
 export default class ProblemList extends Component {
   static propTypes = {
     problemList: ImmutableTypes.list.isRequired,
-    sortBy: PropTypes.func.isRequired,
+    sortBy: PropTypes.func,
   };
 
   render() {
@@ -27,6 +27,7 @@ export default class ProblemList extends Component {
       const showProblem = problem
         .update('ratio', (ratio) => `${ratio.toFixed(2)}%`);
       const pid = problem.get('pid');
+      const url = problem.get('url') || `/problems/${pid}`;
       const content = (
         <div>
           {fields.map((field) => (
@@ -43,7 +44,7 @@ export default class ProblemList extends Component {
             className={s[problem.get('status')]}
             style={{ background: '' }}
             primaryText={content}
-            onTouchTap={() => Location.push(`/problems/${pid}`)}
+            onTouchTap={() => Location.push(url)}
           />
         </div>
       );
@@ -52,15 +53,17 @@ export default class ProblemList extends Component {
       <div>
         {fields.map((field, index) => (
           <span className={s[`${field}-col`]} key={field}>
-            <strong className={s.header} onClick={() => sortBy(field)}>
-              {headers[index]}
-            </strong>
+            {sortBy ? (
+              <strong className={s.header} onClick={() => sortBy(field)}>
+                {headers[index]}
+              </strong>
+            ) : <strong>{headers[index]}</strong>}
           </span>
         ))}
       </div>
     );
     return (
-      <List>
+      <List className={s.list}>
         <ListItem primaryText={header} disabled />
         {problemNodeList}
       </List>
