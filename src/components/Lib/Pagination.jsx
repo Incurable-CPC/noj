@@ -11,15 +11,15 @@ export default class Pagination extends Component {
   static propTypes = {
     list: PropTypes.arrayOf(
       PropTypes.shape({
-        isCurrent: PropTypes.bool,
         content: PropTypes.string,
         href: PropTypes.string,
       })
     ),
+    current: PropTypes.bool,
   };
 
   render() {
-    const { list } = this.props;
+    const { list, current } = this.props;
     const nodeList = list.map((node, index) => {
       const { content, href, isCurrent, ...props } = node;
       return (
@@ -29,7 +29,7 @@ export default class Pagination extends Component {
           labelStyle={{ paddingLeft: 12, paddingRight: 12 }}
           style={{ minWidth: 40, marginLeft: 1 }}
           onTouchTap={() => Location.push(href)}
-          secondary={isCurrent}
+          secondary={current === content}
           {...props}
         />
       );

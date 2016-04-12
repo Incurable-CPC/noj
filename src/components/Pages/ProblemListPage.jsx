@@ -54,7 +54,6 @@ class ProblemsListPage extends Component {
     const pageUrl = (pageId) => `/problems/page/${pageId}`;
     for (let index = begin; index <= end; index++) {
       pagination.push({
-        isCurrent: index === page,
         content: `${index}`,
         href: pageUrl(index),
       });
@@ -91,6 +90,7 @@ class ProblemsListPage extends Component {
             </div>
             <div style={{ marginRight: 320, padding: 16 }}>
               <Pagination
+                current={`${page}`}
                 list={[first, previous].concat(pagination, [next, last])}
               />
             </div>

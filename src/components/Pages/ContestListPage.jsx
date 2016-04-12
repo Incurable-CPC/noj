@@ -46,7 +46,6 @@ class ContestListPage extends Component {
     const pageUrl = (pageId) => `/contests/page/${pageId}`;
     for (let index = begin; index <= end; index++) {
       pagination.push({
-        isCurrent: index === page,
         content: `${index}`,
         href: pageUrl(index),
       });
@@ -76,6 +75,7 @@ class ContestListPage extends Component {
             <div style={{ marginRight: 320, padding: 16 }}>
               <Pagination
                 list={[first, previous].concat(pagination, [next, last])}
+                current={`${page}`}
               />
             </div>
             <ContestList
