@@ -11,7 +11,7 @@ import 'babel-core/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, IndexRoute, IndexRedirect, Route, Redirect, browserHistory } from 'react-router';
+import { Router, IndexRoute, IndexRedirect, Route, browserHistory } from 'react-router';
 
 import store from './stores';
 import App from './components/App';
@@ -30,7 +30,7 @@ import { getProblem, initProblem, getProblemListByPage } from './actions/Problem
 import { setContestPid, getContest, initContest, getContestListByPage } from './actions/ContestActions';
 import { getSubmissionList } from './actions/SubmissionActions';
 import { loadUserInfo } from './actions/AuthActions';
-import { timeInit } from './actions/CurActions';
+import { timeInit } from './actions/TimeActions';
 
 const boundGetProblem = async (nextState, replace, next) => {
   const { params: { pid } } = nextState;

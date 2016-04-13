@@ -3,6 +3,5 @@
  */
 
 export default {
-  INIT: 'cur-init',
-  INCREASE: 'cur-increase',
+  SET: 'time-set',
 };

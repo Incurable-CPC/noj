@@ -39,7 +39,6 @@ export default class ContestProblemPage extends Component {
   render() {
     const { problems, cid, pid } = this.props;
     const index = pid.charCodeAt(0) - 'A'.charCodeAt(0);
-    console.log(problems);
     const problem = problems.get(index);
     const pagination = problems.map((prob, idx) => {
       let content = String.fromCharCode(idx + 'A'.charCodeAt(0));

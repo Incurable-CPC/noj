@@ -19,12 +19,12 @@ import Contest from '../../Contest.jsx';
 @withStyles(s)
 @connect((state) => ({
   contest: state.contest.get('detail'),
-  cur: state.cur,
+  time: state.time,
 }))
 export default class ContestOverviewPage extends Component {
   static propTypes = {
     contest: ImmutableTypes.map.isRequired,
-    cur: PropTypes.object.isRequired,
+    time: PropTypes.string.isRequired,
   };
 
   componentDidMount() {
@@ -32,12 +32,12 @@ export default class ContestOverviewPage extends Component {
   }
 
   render() {
-    const { contest, cur } = this.props;
+    const { contest, time } = this.props;
     return (
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
-            <Contest contest={contest} cur={moment(cur)} />
+            <Contest contest={contest} cur={moment(time)} />
           </Paper>
         </div>
         <div className={s.right}>

@@ -12,13 +12,14 @@ import authApi from './authApi';
 import problemApi from './problemsApi';
 import submissionApi from './submissionsApi';
 import contestsApi from './contestsApi';
+import moment from 'moment';
 const router = new Router();
 
 router.use('/auth', authApi);
 router.use('/problems', problemApi);
 router.use('/submissions', submissionApi);
 router.use('/contests', contestsApi);
-router.get('/cur', (req, res) => res.send({ cur: new Date() }));
+router.get('/time', (req, res) => res.send({ time: moment() }));
 
 router.use((req, res) => {
   res.status(404).send({ error: 'API not found' });
