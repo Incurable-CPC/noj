@@ -9,29 +9,29 @@ import moment from 'moment';
 
 import withStyle from '../decorators/withStyles';
 import ProblemList from './Lists/ProblemList.jsx';
+import Time from './Lib/Time.jsx';
 import s from './Contest.scss';
 
 @withStyle(s)
 export default class Contest extends Component {
   static propTypes = {
     contest: ImmutableTypes.map.isRequired,
-    cur: PropTypes.object.isRequired,
   };
 
   render() {
-    let { contest, cur } = this.props;
+    let { contest } = this.props;
     const cid = contest.get('cid');
     const start = moment(contest.get('start'));
     const duration = Number(contest.get('duration'));
     const end = moment(start).add(duration, 'hours');
     let progress = 0;
-    if (cur.isAfter(end)) {
-      progress = 100;
-    } else if (cur.isAfter(start)) {
-      progress = 100 * cur.diff(start) / end.diff(start);
-    } else {
-      progress = 0;
-    }
+    // if (cur.isAfter(end)) {
+    //   progress = 100;
+    // } else if (cur.isAfter(start)) {
+    //   progress = 100 * cur.diff(start) / end.diff(start);
+    // } else {
+    //   progress = 0;
+    // }
     const problemList = contest.get('problems')
       .map((problem, index) => {
         const pid = String.fromCharCode(index + 'A'.charCodeAt(0));
@@ -54,12 +54,12 @@ export default class Contest extends Component {
             </span>
           </div>
           <div>
-            Current Time: {cur.format('YYYY-MM-DD HH:mm:ss')}
+            Current Time: <Time />
           </div>
         </div>
-        <br />
-        <LinearProgress mode="determinate" value={progress} />
         <div className={s.problems}>
+          <LinearProgress mode="determinate" value={progress} />
+          <br/>
           <ProblemList problemList={problemList} />
         </div>
       </div>

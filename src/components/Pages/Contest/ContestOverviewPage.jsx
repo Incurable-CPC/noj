@@ -4,27 +4,23 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import Paper from '../../../../node_modules/material-ui/lib/paper';
+import Paper from 'material-ui/lib/paper';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import RaisedButton from 'material-ui/lib/raised-button';
 
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
-import Location from '../../../core/Location';
 import Contest from '../../Contest.jsx';
 
 @withTitle('NOJ - Contests')
 @withStyles(s)
 @connect((state) => ({
   contest: state.contest.get('detail'),
-  time: state.time,
 }))
 export default class ContestOverviewPage extends Component {
   static propTypes = {
     contest: ImmutableTypes.map.isRequired,
-    time: PropTypes.string.isRequired,
   };
 
   componentDidMount() {
@@ -37,7 +33,7 @@ export default class ContestOverviewPage extends Component {
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
-            <Contest contest={contest} cur={moment(time)} />
+            <Contest contest={contest} />
           </Paper>
         </div>
         <div className={s.right}>

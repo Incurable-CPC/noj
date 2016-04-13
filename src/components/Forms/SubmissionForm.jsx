@@ -20,25 +20,46 @@ import { reduxForm } from 'redux-form';
 import { submit } from '../../actions/SubmissionActions';
 import { LANGUAGES, LANGUAGE_MODES } from '../../constants/index';
 
-const fields = ['code', 'language', 'pid'];
+const fields = ['code', 'language', 'pid', 'cid'];
 @reduxForm({
   form: 'submission',
   fields,
-}, (state) => ({ initialValues: { language: 0, pid: state.problem.getIn(['detail', 'pid']) } }))
+}, () => ({
+  initialValues: {
+    language: 0,
+  },
+}))
 export default class SubmissionForm extends Component {
   static propTypes = {
     fields: PropTypes.object.isRequired,
-    problem: ImmutableTypes.map.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     submitting: PropTypes.bool.isRequired,
+    problem: ImmutableTypes.map.isRequired,
+    cid: PropTypes.number,
   };
+
+  componentDidMount() {
+    this.updateInfo();
+  }
+  componentDidUpdate() {
+  }
+
+  updateInfo = () => {
+    const { fields: { pid, cid }, problem } = this.props;
+    pid.onChange(problem.get('pid'));
+    if (this.props.cid) {
+      cid.onChange(this.props.cid);
+    }
+    setTimeout(() => console.log(this.props.values), 1000);
+  }
 
   render() {
     const {
+      fields: { code, language },
       handleSubmit,
       submitting,
       problem,
-      fields: { code, language },
+      cid,
       } = this.props;
     const { pid, title } = problem.toJS();
     const langs = LANGUAGES[problem.get('originOJ')].map((lang, index) => (

@@ -6,14 +6,13 @@ import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/lib/paper';
 import { connect } from 'react-redux';
-import RaisedButton from 'material-ui/lib/raised-button';
 
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
-import Location from '../../../core/Location';
 import Problem from '../../Problem.jsx';
 import Pagination from '../../Lib/Pagination.jsx';
+import SubmissionForm from '../../Forms/SubmissionForm.jsx';
 
 @withTitle('NOJ - Contests')
 @withStyles(s)
@@ -39,7 +38,7 @@ export default class ContestProblemPage extends Component {
   render() {
     const { problems, cid, pid } = this.props;
     const index = pid.charCodeAt(0) - 'A'.charCodeAt(0);
-    const problem = problems.get(index);
+    const problem = problems.get(index).set('pid', pid);
     const pagination = problems.map((prob, idx) => {
       let content = String.fromCharCode(idx + 'A'.charCodeAt(0));
       return {
@@ -55,6 +54,12 @@ export default class ContestProblemPage extends Component {
               <Pagination list={pagination} current={pid} />
             </div>
             <Problem problem={problem} />
+            <div style={{ marginTop: 40 }}>
+              <SubmissionForm
+                problem={problem}
+                cid={cid}
+              />
+            </div>
           </Paper>
         </div>
         <div className={s.right}>

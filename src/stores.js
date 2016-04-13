@@ -14,7 +14,6 @@ import authReducer from './reducers/AuthReducer';
 import problemReducer from './reducers/ProblemReducer';
 import submissionReducer from './reducers/SubmissionReducer';
 import contestReducer from './reducers/ContestReducer';
-import timeReducer from './reducers/TimeReducer';
 
 const reducer = combineReducers({
   routing: routeReducer,
@@ -24,7 +23,6 @@ const reducer = combineReducers({
   problem: problemReducer,
   contest: contestReducer,
   submission: submissionReducer,
-  time: timeReducer,
 });
 
 // Sync dispatched route actions to the history

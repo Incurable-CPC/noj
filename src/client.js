@@ -72,7 +72,7 @@ const boundGetSubmissionList = async(nextState, replace, next) => {
 
 const boundInit = async(nextState, replace, next) => {
   await store.dispatch(loadUserInfo());
-  await store.dispatch(timeInit());
+  // await store.dispatch(timeInit());
   next();
 };
 
@@ -104,7 +104,7 @@ ReactDOM.render((
               <Route path=":pid" onEnter={boundSetContestPid} />
             </Route>
             <Route path="edit" component={ContestEditPage} />
-            <Route path="*" component={ContestEditPage} />
+            <Route path="*" component={ContestOverviewPage} />
           </Route>
         </Route>
         <Route path="status" onEnter={boundGetSubmissionList} component={SubmissionListPage} />
