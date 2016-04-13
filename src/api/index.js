@@ -18,6 +18,7 @@ router.use('/auth', authApi);
 router.use('/problems', problemApi);
 router.use('/submissions', submissionApi);
 router.use('/contests', contestsApi);
+router.get('/cur', (req, res) => res.send({ cur: new Date() }));
 
 router.use((req, res) => {
   res.status(404).send({ error: 'API not found' });

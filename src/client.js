@@ -30,6 +30,7 @@ import { getProblem, initProblem, getProblemListByPage } from './actions/Problem
 import { setContestPid, getContest, initContest, getContestListByPage } from './actions/ContestActions';
 import { getSubmissionList } from './actions/SubmissionActions';
 import { loadUserInfo } from './actions/AuthActions';
+import { timeInit } from './actions/CurActions';
 
 const boundGetProblem = async (nextState, replace, next) => {
   const { params: { pid } } = nextState;
@@ -51,10 +52,10 @@ const boundGetContest = async (nextState, replace, next) => {
   if (await store.dispatch(getContest(cid))) next();
 };
 
-const boundSetContestPid = (nextState) =>  {
+const boundSetContestPid = (nextState) => {
   const { params: { pid } } = nextState;
   store.dispatch(setContestPid(pid));
-}
+};
 
 const boundGetContestListByPage = async (nextState, replace, next) => {
   const { params } = nextState;
@@ -69,8 +70,9 @@ const boundGetSubmissionList = async(nextState, replace, next) => {
   if (await store.dispatch(getSubmissionList(condition))) next();
 };
 
-const boundLoadUserInfo = async(nextState, replace, next) => {
+const boundInit = async(nextState, replace, next) => {
   await store.dispatch(loadUserInfo());
+  await store.dispatch(timeInit());
   next();
 };
 
@@ -78,7 +80,7 @@ const appContainer = document.getElementById('app');
 ReactDOM.render((
   <Provider store={store}>
     <Router history={browserHistory}>
-      <Route path="/" onEnter={boundLoadUserInfo} component={App}>
+      <Route path="/" onEnter={boundInit} component={App}>
         <IndexRoute component={Index}/>
         <Route path="login" component={LoginForm} />
         <Route path="problems">

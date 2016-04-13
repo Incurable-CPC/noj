@@ -7,12 +7,14 @@ import { syncHistory, routeReducer } from 'react-router-redux';
 import { browserHistory } from 'react-router';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
+import moment from 'moment';
 
 import dialogReducer from './reducers/DialogReducer';
 import authReducer from './reducers/AuthReducer';
 import problemReducer from './reducers/ProblemReducer';
 import submissionReducer from './reducers/SubmissionReducer';
 import contestReducer from './reducers/ContestReducer';
+import curReducer from './reducers/CurReducer';
 
 const reducer = combineReducers({
   routing: routeReducer,
@@ -22,6 +24,7 @@ const reducer = combineReducers({
   problem: problemReducer,
   contest: contestReducer,
   submission: submissionReducer,
+  cur: curReducer,
 });
 
 // Sync dispatched route actions to the history
