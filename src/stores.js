@@ -7,7 +7,6 @@ import { syncHistory, routeReducer } from 'react-router-redux';
 import { browserHistory } from 'react-router';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
-import moment from 'moment';
 
 import dialogReducer from './reducers/DialogReducer';
 import authReducer from './reducers/AuthReducer';

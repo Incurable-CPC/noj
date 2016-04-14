@@ -8,30 +8,32 @@ import LinearProgress from 'material-ui/lib/linear-progress';
 import moment from 'moment';
 
 import withStyle from '../decorators/withStyles';
+import withTime from '../decorators/withTime';
 import ProblemList from './Lists/ProblemList.jsx';
-import Time from './Lib/Time.jsx';
 import s from './Contest.scss';
 
+@withTime()
 @withStyle(s)
 export default class Contest extends Component {
   static propTypes = {
     contest: ImmutableTypes.map.isRequired,
+    time: PropTypes.object.isRequired,
   };
 
   render() {
-    let { contest } = this.props;
+    let { contest, time } = this.props;
     const cid = contest.get('cid');
     const start = moment(contest.get('start'));
     const duration = Number(contest.get('duration'));
     const end = moment(start).add(duration, 'hours');
     let progress = 0;
-    // if (cur.isAfter(end)) {
-    //   progress = 100;
-    // } else if (cur.isAfter(start)) {
-    //   progress = 100 * cur.diff(start) / end.diff(start);
-    // } else {
-    //   progress = 0;
-    // }
+    if (time.isAfter(end)) {
+      progress = 100;
+    } else if (time.isAfter(start)) {
+      progress = 100 * time.diff(start) / end.diff(start);
+    } else {
+      progress = 0;
+    }
     const problemList = contest.get('problems')
       .map((problem, index) => {
         const pid = String.fromCharCode(index + 'A'.charCodeAt(0));
@@ -54,7 +56,7 @@ export default class Contest extends Component {
             </span>
           </div>
           <div>
-            Current Time: <Time />
+            Current Time: {time.format('YYYY-MM-DD HH:mm:ss')}
           </div>
         </div>
         <div className={s.problems}>
