@@ -8,6 +8,7 @@ const router = new Router();
 import { requireAuth, requireAdmin } from './common';
 import Submission from '../models/submissionModel';
 import Problem from '../models/problemModel';
+import Contest from '../models/contestModel';
 import User from '../models/userModel';
 import { RESULT_VALUES } from '../constants';
 import checkSubmission, { isCompleted, isAccepted } from '../check/submission';
@@ -46,29 +47,36 @@ const postSubmission = async (req, res, next) => {
   try {
     const {
       body: {
-        submission: { pid, language, code },
+        submission: { cid, pid, language, code },
         },
       cookies: { username },
       } = req;
-    let submission = new Submission({ username, pid, language, code });
+    let submission = { username, pid, language, code };
     const error = checkSubmission(submission);
     if (error) {
       return res.status(400).send({ error });
     }
 
-    const problem = await Problem
-      .findOne({ pid })
-      .select('originOJ originPid');
-    submission.originOJ = problem.originOJ;
-    submission.originPid = problem.originPid;
-    submission = await submission.save();
-    await Problem.findOneAndUpdate(
-      { pid },
-      { $inc: { submit: 1 } });
-    await Problem.updateRatio(pid);
-    await User.findOneAndUpdate(
-      { username },
-      { $addToSet: { tried: pid } });
+    if (cid) {
+      const contest = await Contest.findOne({ cid });
+      contest.submissions.push(submission);
+      contest.save();
+    } else {
+      const problem = await Problem
+        .findOne({ pid })
+        .select('originOJ originPid');
+      submission.originOJ = problem.originOJ;
+      submission.originPid = problem.originPid;
+      submission = new Submission(submission);
+      submission = await submission.save();
+      await Problem.findOneAndUpdate(
+        { pid },
+        { $inc: { submit: 1 } });
+      await Problem.updateRatio(pid);
+      await User.findOneAndUpdate(
+        { username },
+        { $addToSet: { tried: pid } });
+    }
     res.send({ submission });
   } catch (err) {
     next(err);

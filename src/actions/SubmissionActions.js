@@ -6,6 +6,7 @@ import checkSubmission, { isCompleted, isCompileError } from '../check/submissio
 import SubmissionConstants from '../constants/SubmissionConstants';
 import { getJSON, postJSON } from '../core/fetchJSON';
 import nprogress from '../core/nprogress';
+import Location from '../core/Location';
 import toast from '../core/toast';
 
 export const reciveSubmissionList = (submissionList) => ({
@@ -27,7 +28,7 @@ export const changeSubmissionState = (index, content) => ({
 
 export const submit = async (submission) => {
   try {
-    const { pid } = submission;
+    const { pid, cid } = submission;
     const error = checkSubmission(submission);
     if (error) {
       toast('warning', error);
@@ -38,7 +39,7 @@ export const submit = async (submission) => {
     await postJSON('/api/submissions', { submission });
     toast('success', 'Submit succeed');
     await nprogress.done();
-    Location.push(`/problems/${pid}/status`);
+    Location.push(cid ? `/contests/${cid}/status` : `/problems/${pid}/status`);
     return true;
   } catch (err) {
     toast('error', err.message);

@@ -24,9 +24,11 @@ const fields = ['code', 'language', 'pid', 'cid'];
 @reduxForm({
   form: 'submission',
   fields,
-}, () => ({
+}, (state, props) => ({
   initialValues: {
     language: 0,
+    pid: props.problem.get('pid'),
+    cid: props.cid,
   },
 }))
 export default class SubmissionForm extends Component {
@@ -38,28 +40,12 @@ export default class SubmissionForm extends Component {
     cid: PropTypes.number,
   };
 
-  componentDidMount() {
-    this.updateInfo();
-  }
-  componentDidUpdate() {
-  }
-
-  updateInfo = () => {
-    const { fields: { pid, cid }, problem } = this.props;
-    pid.onChange(problem.get('pid'));
-    if (this.props.cid) {
-      cid.onChange(this.props.cid);
-    }
-    setTimeout(() => console.log(this.props.values), 1000);
-  }
-
   render() {
     const {
       fields: { code, language },
       handleSubmit,
       submitting,
       problem,
-      cid,
       } = this.props;
     const { pid, title } = problem.toJS();
     const langs = LANGUAGES[problem.get('originOJ')].map((lang, index) => (
