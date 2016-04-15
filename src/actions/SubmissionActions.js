@@ -36,10 +36,16 @@ export const submit = async (submission) => {
     }
 
     nprogress.start();
-    await postJSON('/api/submissions', { submission });
+    const postUrl = (cid) ?
+      `/api/contests/${cid}/submissions` :
+      `/api/submissions`;
+    const retUrl = (cid) ?
+      `/contests/${cid}/status` :
+      `/problems/${pid}/status`;
+    await postJSON(postUrl, { submission });
     toast('success', 'Submit succeed');
     await nprogress.done();
-    Location.push(cid ? `/contests/${cid}/status` : `/problems/${pid}/status`);
+    Location.push(retUrl);
     return true;
   } catch (err) {
     toast('error', err.message);

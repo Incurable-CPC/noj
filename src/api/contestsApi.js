@@ -8,6 +8,7 @@ const router = new Router();
 import { requireAuth, requireAdmin } from './common';
 import Contest from '../models/contestModel';
 import Problem from '../models/problemModel';
+import checkSubmission from '../check/submission';
 
 const checkManager = async (cid, username) => {
   const { manager } = await Contest.findOne({ cid });
@@ -95,9 +96,33 @@ const getContestList = async (req, res, next) => {
   }
 };
 
+const postSubmission = async (req, res, next) => {
+  try {
+    const {
+      body: {
+        submission: { cid, pid, language, code },
+      },
+      cookies: { username },
+    } = req;
+    let submission = { username, cid, pid, language, code };
+    const error = checkSubmission(submission);
+    if (error) {
+      return res.status(400).send({ error });
+    }
+    await Contest
+      .findOneAndUpdate(
+        { cid },
+        { $push: { submissions: submission } });
+    res.send({ submission });
+  } catch (err) {
+    next(err);
+  }
+};
+
 router.get('/:cid', getContest);
 router.get('/', getContestList);
 
 router.all('*', requireAuth);
 router.post('/', postContest);
+router.post('/:cid/submissions', postSubmission);
 export default router;
