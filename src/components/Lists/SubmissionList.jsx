@@ -41,6 +41,7 @@ export default class SubmissionList extends Component {
         result, date, codeLength,
         code, originOJ, CEInfo,
         } = submission.toJS();
+      const problemUrl = submission.get('problemUrl') || `/problems/${pid}`;
       const expandedContent = submission.get('content');
       let status = 'other';
       if (isAccepted(result)) status = 'accepted';
@@ -54,7 +55,7 @@ export default class SubmissionList extends Component {
             <span className={cs(s.col, s.problem)}>
               <FlatButton
                 style={{ textTransform: '' }}
-                onTouchTap={() => Location.push(`/problems/${pid}`)}
+                onTouchTap={() => Location.push(problemUrl)}
                 label={pid}
               />
             </span>

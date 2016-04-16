@@ -19,9 +19,10 @@ const checkManager = async (cid, username) => {
 const getContest = async (req, res, next) => {
   try {
     const { params: { cid }, cookies: { username } } = req;
-    const contest = await Contest.findOne({ cid });
+    const contest = await Contest
+      .findOne({ cid });
     const isManager = contest.manager === username;
-    const { problems } = contest;
+    const { problems, submissions } = contest;
     for (let i = 0; i < problems.length; i++) {
       let { pid } = problems[i];
       if (pid) {
@@ -31,6 +32,7 @@ const getContest = async (req, res, next) => {
         }
       }
     }
+    submissions.forEach((submission) => submission.code = null);
     res.send({ contest });
   } catch (err) {
     next(err);
@@ -105,6 +107,13 @@ const postSubmission = async (req, res, next) => {
     if (error) {
       return res.status(400).send({ error });
     }
+    const index = pid.charCodeAt(0) - 'A'.charCodeAt(0);
+    const contest = await Contest.findOne({ cid });
+    const problem = await Problem
+      .findOne({ pid: contest.problems[index].pid })
+      .select('originOJ originPid');
+    submission.originOJ = problem.originOJ;
+    submission.originPid = problem.originPid;
     await Contest
       .findOneAndUpdate(
         { cid },

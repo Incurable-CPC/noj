@@ -25,12 +25,12 @@ import ContestListPage from './components/Pages/ContestListPage.jsx';
 import ContestEditPage from './components/Pages/ContestEditPage.jsx';
 import ContestOverviewPage from './components/Pages/Contest/ContestOverviewPage.jsx';
 import ContestProblemPage from './components/Pages/Contest/ContestProblemPage.jsx';
+import ContestSubmissionListPage from './components/Pages/Contest/ContestSubmissionListPage.jsx';
 
 import { getProblem, initProblem, getProblemListByPage } from './actions/ProblemActions';
 import { setContestPid, getContest, initContest, getContestListByPage } from './actions/ContestActions';
 import { getSubmissionList } from './actions/SubmissionActions';
 import { loadUserInfo } from './actions/AuthActions';
-import { timeInit } from './actions/TimeActions';
 
 const boundGetProblem = async (nextState, replace, next) => {
   const { params: { pid } } = nextState;
@@ -103,6 +103,7 @@ ReactDOM.render((
             <Route path="problems" component={ContestProblemPage}>
               <Route path=":pid" onEnter={boundSetContestPid} />
             </Route>
+            <Route path="status" component={ContestSubmissionListPage} />
             <Route path="edit" component={ContestEditPage} />
             <Route path="*" component={ContestOverviewPage} />
           </Route>

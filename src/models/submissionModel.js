@@ -15,6 +15,8 @@ export const submissionSchema = {
   codeLength: Number,
   timeUsage: Number,
   memoryUsage: Number,
+  originOJ: String,
+  originPid: String,
   CEInfo: String,
 };
 
