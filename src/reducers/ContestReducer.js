@@ -5,6 +5,7 @@
 import { fromJS } from 'immutable';
 import ContestContants from '../constants/ContestConstants';
 import { RESULT_VALUES } from '../constants';
+import { isAccepted } from '../check/submission';
 
 const initState = fromJS({
   detail: {},
@@ -31,10 +32,9 @@ export default (state = initState, action) => {
                 .set('ratio', 0)));
             contest = contest.updateIn(['problems', index], (problem) => {
               const inc = (v) => (x) => (x + v);
-              const isAccepted = submission.result === RESULT_VALUES.AC;
               problem = problem
                 .update('submit', inc(1))
-                .update('accepted', inc(isAccepted));
+                .update('accepted', inc(isAccepted(submission.get('result'))));
               const { accepted, submit } = problem.toJS();
               return problem.set('ratio', 100 * accepted / submit);
             });
@@ -47,6 +47,12 @@ export default (state = initState, action) => {
       return state.set('list', fromJS(action.list))
         .set('condition', fromJS(action.condition))
         .set('count', action.count);
+    case ContestContants.SET_SUBMISSION:
+      return state.setIn(['detail', 'submissions', action.index, 'code'],
+        fromJS(action.submission));
+    case ContestContants.CHANGE_SUBMISSION_EXPAND_STATE:
+      return state.updateIn(['detail', 'submissions', action.index, 'content'],
+        (oldContent) => (oldContent === action.content) ? '' : action.content);
     default: return state;
   }
 };

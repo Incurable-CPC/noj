@@ -11,7 +11,7 @@ import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
 import SubmissionList from '../../Lists/SubmissionList.jsx';
-import { expandSubmission } from '../../../actions/SubmissionActions';
+import { expandContestSubmission } from '../../../actions/ContestActions';
 
 @withTitle('NOJ - Contests')
 @withStyles(s)
@@ -21,6 +21,7 @@ import { expandSubmission } from '../../../actions/SubmissionActions';
 export default class SubmissionListPage extends Component {
   static propTypes = {
     submissionList: ImmutableTypes.list.isRequired,
+    dispatch: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
   };
 
@@ -29,17 +30,19 @@ export default class SubmissionListPage extends Component {
   }
 
   render() {
-    let { submissionList, params: { cid } } = this.props;
+    let { submissionList, dispatch, params: { cid } } = this.props;
     submissionList = submissionList
       .map((submission, index) => submission
         .set('sid', index + 10000)
         .set('problemUrl', `/contests/${cid}/problems/${submission.get('pid')}`)
       );
+    const boundExpand = (index, content) =>
+      dispatch(expandContestSubmission(index, content));
     return (
       <div className={s.div}>
         <Paper className={s.paper}>
           <SubmissionList
-            expandSubmission={() => {}}
+            expandSubmission={boundExpand}
             submissionList={submissionList}
           />
         </Paper>

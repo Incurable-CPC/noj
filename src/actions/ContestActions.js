@@ -10,6 +10,7 @@ import nprogress from '../core/nprogress';
 import Location from '../core/Location';
 import checkContest from '../check/contest';
 import ContestConstants from '../constants/ContestConstants';
+import { isCompileError } from '../check/submission';
 
 
 const setContest = (contest) => ({
@@ -73,8 +74,8 @@ export const postContest = async (contest, dispatch) => {
 
 export const getContestList = (condition) => async (dispatch, getState) => {
   try {
-    const state = getState();
-    const oldCondition = state.contest.get('condition');
+    // const state = getState();
+    // const oldCondition = state.contest.get('condition');
     // if (is(oldCondition, fromJS(condition))) return true;
     nprogress.start();
     const res = await getJSON(`/api/contests`, condition);
@@ -116,4 +117,61 @@ export const getContestListByKeyword = (searchKey) => async(dispatch, getState) 
   condition.page = 1;
   condition.searchKey = searchKey;
   return await dispatch(getContestList(condition));
+};
+
+export const reciveContestSubmission = (index, submission) => ({
+  type: ContestConstants.SET_SUBMISSION,
+  index,
+  submission,
+});
+
+export const changeContestSubmissionState = (index, content) => ({
+  type: ContestConstants.CHANGE_SUBMISSION_EXPAND_STATE,
+  index,
+  content,
+});
+
+function canContestSubmissionExpand(state, index) {
+  const { contest, auth } = state;
+  const username = contest.getIn(['detail', 'submissions', index, 'username']);
+  return (username === auth.get('username'));
+}
+
+export const getContestSubmission = (index) => async(dispatch, getState) => {
+  try {
+    const state = getState();
+    if (!canContestSubmissionExpand(state, index)) return true;
+    nprogress.start();
+    const cid = state.contest.getIn(['detail', 'cid']);
+    const sid = state.contest.getIn(['detail', 'submissions', index, 'sid']);
+    const res = await getJSON(`/api/contests/${cid}/submissions/${sid}`);
+    const { submission } = await res.json();
+    dispatch(reciveContestSubmission(index, submission));
+    await nprogress.done();
+    return true;
+  } catch (err) {
+    toast('error', err.message);
+    await nprogress.done();
+    return false;
+  }
+};
+
+export const expandContestSubmission = (index, content) => async (dispatch, getState) => {
+  try {
+    const state = getState();
+    const submission = state.contest.getIn(['detail', 'submissions', index]);
+    if (content === 'code') {
+      if (!canContestSubmissionExpand(state, index)) return;
+      if (!submission.has('code')) {
+        await dispatch(getContestSubmission(index));
+      }
+    } else if (content === 'CEInfo') {
+      const result = submission.get('result');
+      if (!isCompileError((result))) return;
+    }
+
+    dispatch(changeContestSubmissionState(index, content));
+  } catch (err) {
+    toast('error', err.message);
+  }
 };

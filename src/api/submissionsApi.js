@@ -31,10 +31,9 @@ const getSubmission = async (req, res, next) => {
   try {
     const { params: { sid }, cookies: { username } } = req;
     let submission = await Submission
-      .findOne({ sid })
-      .select('-code');
-    if (username === submission.username) {
-      submission = await Submission.findOne({ sid });
+      .findOne({ sid });
+    if (username !== submission.username) {
+      submission.code = null;
     }
 
     res.send({ submission });

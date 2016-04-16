@@ -28,11 +28,15 @@ const getContest = async (req, res, next) => {
       if (pid) {
         problems[i] = await Problem.findOne({ pid });
         if (!isManager) {
-          problems[i].pid = null;
+          problems[i].pid = undefined;
         }
       }
     }
-    submissions.forEach((submission) => submission.code = null);
+    submissions.forEach((submission) => {
+      if (submission.username !== username) {
+        submission.code = undefined;
+      }
+    });
     res.send({ contest });
   } catch (err) {
     next(err);
@@ -124,8 +128,25 @@ const postSubmission = async (req, res, next) => {
   }
 };
 
+const getSubmission = async(req, res, next) => {
+  try {
+    const { params: { cid, sid }, cookies: { username } } = req;
+    let submission = await Contest
+      .findOne({ cid })
+      .select(`submissions.${sid}`);
+    if (username !== submission.username) {
+      submission.code = undefined;
+    }
+
+    res.send({ submission });
+  } catch (err) {
+    next(err);
+  }
+};
+
 router.get('/:cid', getContest);
 router.get('/', getContestList);
+router.get('/:cid/submissions/:sid', getSubmission);
 
 router.all('*', requireAuth);
 router.post('/', postContest);

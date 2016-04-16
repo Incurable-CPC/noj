@@ -7,4 +7,6 @@ export default {
   SET_PID: 'contest-set-pid',
   INIT: 'contest-init',
   SET_LIST: 'contest-list-set',
+  SET_SUBMISSION: 'contest-submission-set',
+  CHANGE_SUBMISSION_EXPAND_STATE: 'contest-submission-change-state',
 };
