@@ -25,11 +25,7 @@ const getContest = async (req, res, next) => {
     for (let i = 0; i < problems.length; i++) {
       let { pid } = problems[i];
       if (pid) {
-        const { ratio, submit, accepted } = problems[i];
         problems[i] = await Problem.findOne({ pid });
-        problems[i].submit = submit;
-        problems[i].accepted = accepted;
-        problems[i].ratio = ratio;
         if (!isManager) {
           problems[i].pid = null;
         }

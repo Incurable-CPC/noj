@@ -6,7 +6,6 @@ import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/lib/paper';
 import { connect } from 'react-redux';
-import moment from 'moment';
 
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
@@ -28,7 +27,7 @@ export default class ContestOverviewPage extends Component {
   }
 
   render() {
-    const { contest, time } = this.props;
+    const { contest } = this.props;
     return (
       <div className={s.div}>
         <div className={s.left}>

@@ -4,6 +4,7 @@
 
 import { fromJS } from 'immutable';
 import ContestContants from '../constants/ContestConstants';
+import { RESULT_VALUES } from '../constants';
 
 const initState = fromJS({
   detail: {},
@@ -17,7 +18,29 @@ export default (state = initState, action) => {
       return state.set('detail', initState.get('detail'));
     case ContestContants.SET:
       return state.set('detail', fromJS(action.contest))
-        .setIn(['detail', 'pid'], 'A');
+        .setIn(['detail', 'pid'], 'A')
+        .update('detail', (contest) => {
+          const submissions = contest.get('submissions');
+          submissions.forEach((submission) => {
+            const pid = submission.get('pid');
+            const index = pid.charCodeAt(0) - 'A'.charCodeAt(0);
+            contest = contest.update('problems', problems => problems
+              .map(problem => problem
+                .set('submit', 0)
+                .set('accepted', 0)
+                .set('ratio', 0)));
+            contest = contest.updateIn(['problems', index], (problem) => {
+              const inc = (v) => (x) => (x + v);
+              const isAccepted = submission.result === RESULT_VALUES.AC;
+              problem = problem
+                .update('submit', inc(1))
+                .update('accepted', inc(isAccepted));
+              const { accepted, submit } = problem.toJS();
+              return problem.set('ratio', 100 * accepted / submit);
+            });
+          });
+          return contest;
+        });
     case ContestContants.SET_PID:
       return state.setIn(['detail', 'pid'], action.pid);
     case ContestContants.SET_LIST:

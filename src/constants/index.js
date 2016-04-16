@@ -29,4 +29,10 @@ export const RESULTS = [
   'Runtime Error', 'Compile Error',
   'Compile OK', 'Test Running Done',
 ];
-export const RESULT_VALUES = arrToObj(RESULTS);
+export const RESULT_VALUES = Object.assign({}, {
+  WT0: 0, WT1: 1, CI: 2, RI: 3,
+  AC: 4, PE: 5,
+  WA: 6, TLE: 7, MLE: 8, OLE: 9,
+  RE: 10, CE: 11,
+  CO: 12, TR: 13,
+}, arrToObj(RESULTS));
