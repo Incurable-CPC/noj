@@ -3,15 +3,62 @@
  */
 
 import { fromJS } from 'immutable';
+import moment from 'moment';
 import ContestContants from '../constants/ContestConstants';
-import { RESULT_VALUES } from '../constants';
-import { isAccepted } from '../check/submission';
+import { isCompleted, isAccepted } from '../check/submission';
 
 const initState = fromJS({
   detail: {},
   condition: {},
   list: [],
 });
+
+function addSubmission(contest, submission) {
+  const pid = submission.get('pid');
+  const index = pid.charCodeAt(0) - 'A'.charCodeAt(0);
+  const result = submission.get('result');
+  const teamName = submission.get('username');
+  const inc = (v) => (x = 0) => (x + v);
+  if (!isCompleted(result)) return contest;
+  return contest.updateIn(['problems', index], (problem) => {
+    problem = problem
+      .update('submit', inc(1))
+      .update('accepted', inc(isAccepted(result)));
+    const { accepted, submit } = problem.toJS();
+    return problem.set('ratio', 100 * accepted / submit);
+  }).updateIn(['teams', teamName], (team = fromJS({})) => {
+    if (team.hasIn(['problems', index, 'solved'])) return team;
+    if (isAccepted(result)) {
+      let newPenalty = (team.getIn(['problems', index, 'failed']) || 0) * 20;
+      const time = moment(submission.get('date'))
+        .diff(contest.get('start'), 'seconds');
+      const hour = Math.floor(time / 3600);
+      const minute = Math.floor(time / 60) % 60;
+      const second = time % 60;
+      newPenalty += Math.floor(time / 60);
+      return team.setIn(['problems', index, 'solved'],
+        `${hour}:${minute}:${second}`)
+        .update('penalty', inc(newPenalty))
+        .update('solved', inc(1));
+    }
+    return team.updateIn(['problems', index, 'tried'], inc(1));
+  });
+}
+function addSubmissionList(contest, submissionList) {
+  submissionList.forEach((submission) =>
+    contest = addSubmission(contest, submission));
+  return contest.update('teams', (teams) => teams.sort((teamA, teamB) => {
+    const solvedA = teamA.get('solved');
+    const solvedB = teamB.get('solved');
+    const penaltyA = teamA.get('penalty');
+    const penaltyB = teamB.get('penalty');
+    if (solvedA > solvedB) return -1;
+    if (solvedA < solvedB) return 1;
+    if (penaltyA < penaltyB) return -1;
+    if (penaltyA > penaltyB) return 1;
+    return 0;
+  }));
+}
 
 export default (state = initState, action) => {
   switch (action.type) {
@@ -21,25 +68,12 @@ export default (state = initState, action) => {
       return state.set('detail', fromJS(action.contest))
         .setIn(['detail', 'pid'], 'A')
         .update('detail', (contest) => {
-          const submissions = contest.get('submissions');
-          submissions.forEach((submission) => {
-            const pid = submission.get('pid');
-            const index = pid.charCodeAt(0) - 'A'.charCodeAt(0);
-            contest = contest.update('problems', problems => problems
-              .map(problem => problem
-                .set('submit', 0)
-                .set('accepted', 0)
-                .set('ratio', 0)));
-            contest = contest.updateIn(['problems', index], (problem) => {
-              const inc = (v) => (x) => (x + v);
-              problem = problem
-                .update('submit', inc(1))
-                .update('accepted', inc(isAccepted(submission.get('result'))));
-              const { accepted, submit } = problem.toJS();
-              return problem.set('ratio', 100 * accepted / submit);
-            });
-          });
-          return contest;
+          contest = contest.update('problems', problems => problems
+            .map(problem => problem
+              .set('submit', 0)
+              .set('accepted', 0)
+              .set('ratio', 0)));
+          return addSubmissionList(contest, contest.get('submissions'));
         });
     case ContestContants.SET_PID:
       return state.setIn(['detail', 'pid'], action.pid);

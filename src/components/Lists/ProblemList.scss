@@ -19,18 +19,18 @@ $font-family-base: "source_sans", "Lucida Grande", "Lucida Sans", sans-serif;
 
 .title-col {
   display: inline-block;
-  width: 55%;
+  width: 50%;
 }
 
+.ratio-col {
+  display: inline-block;
+  width: 15%;
+}
 .accepted-col {
   display: inline-block;
   width: 10%;
 }
 .submit-col {
-  display: inline-block;
-  width: 10%;
-}
-.ratio-col {
   display: inline-block;
   width: 10%;
 }
