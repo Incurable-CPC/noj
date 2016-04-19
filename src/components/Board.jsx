@@ -10,7 +10,12 @@ import TableRow from 'material-ui/lib/table/table-row';
 import TableHeader from 'material-ui/lib/table/table-header';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import TableBody from 'material-ui/lib/table/table-body';
+import { Map } from 'immutable';
 
+import withStyle from '../decorators/withStyles';
+import s from './Board.scss';
+
+@withStyle(s)
 export default class Board extends Component {
   static propTypes = {
     problems: ImmutableTypes.list,
@@ -19,7 +24,6 @@ export default class Board extends Component {
 
   render() {
     const { problems, teams } = this.props;
-    let rank = 0;
     return (
       <Table selectable={false}>
         <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
@@ -39,24 +43,29 @@ export default class Board extends Component {
           </TableRow>
         </TableHeader>
         <TableBody displayRowCheckbox={false}>
-          {teams.map((team, name) => {
-            rank ++;
-            return (
-              <TableRow>
-                <TableRowColumn>{rank}</TableRowColumn>
-                <TableRowColumn>{name}</TableRowColumn>
-                <TableRowColumn>{team.get('penalty')}</TableRowColumn>
-                {problems.map((problem, index) => {
-                  const status = team.getIn(['problems', index]);
-                  return (
-                    <TableRowColumn>
-                      {status && status.get('solved')}
-                    </TableRowColumn>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
+          {teams.entrySeq().map(([name, team], rank) => (
+            <TableRow key={rank}>
+              <TableRowColumn>{rank + 1}</TableRowColumn>
+              <TableRowColumn>{name}</TableRowColumn>
+              <TableRowColumn>{team.get('penalty')}</TableRowColumn>
+              {problems.map((problem, index) => {
+                const state = team.getIn(['problems', index]) || new Map();
+                let className = '';
+                if (state.has('solved')) className = s.solved;
+                if (state.has('tried')) className = s.tried;
+                return (
+                  <TableRowColumn
+                    style={{ backgroundColor: null }}
+                    key={index}
+                    className={className}
+                  >
+                    {state.get('solved')}
+                    {state.has('tried') && `(-${state.get('tried')})`}
+                  </TableRowColumn>
+                );
+              })}
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     );

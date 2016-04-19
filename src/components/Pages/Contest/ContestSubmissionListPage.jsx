@@ -31,9 +31,10 @@ export default class SubmissionListPage extends Component {
 
   render() {
     let { submissionList, dispatch, params: { cid } } = this.props;
-    submissionList = submissionList
+    const count = submissionList.size;
+    submissionList = submissionList.reverse().take(20)
       .map((submission, index) => submission
-        .set('sid', index + 10000)
+        .set('sid', 9999 + count - index)
         .set('problemUrl', `/contests/${cid}/problems/${submission.get('pid')}`)
       );
     const boundExpand = (index, content) =>
