@@ -12,7 +12,7 @@ const handleError = async (res) => {
   }
 
   if (res.status === 401) {
-    store.dispatch(logout());
+    store.dispatch(logout({ quiet: true }));
   }
 
   const { error } = await res.json();

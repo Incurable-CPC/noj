@@ -82,7 +82,7 @@ export default class Header extends Component {
       </div>
     ) : (
       <div>
-        <Tabs inkBarStyle={styles.whiteInk}>
+        <Tabs inkBarStyle={styles.whiteInk} style={{ width: 180 }}>
           {['login', 'register'].map(DialogTab)}
         </Tabs>
       </div>

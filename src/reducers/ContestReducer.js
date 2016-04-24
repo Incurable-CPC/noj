@@ -3,7 +3,7 @@
  */
 
 import { fromJS } from 'immutable';
-import moment from 'moment';
+import moment, { duration } from 'moment';
 import ContestContants from '../constants/ContestConstants';
 import { isCompleted, isAccepted } from '../check/submission';
 
@@ -30,14 +30,11 @@ function addSubmission(contest, submission) {
     if (team.hasIn(['problems', index, 'solved'])) return team;
     if (isAccepted(result)) {
       let newPenalty = (team.getIn(['problems', index, 'failed']) || 0) * 20;
-      const time = moment(submission.get('date'))
-        .diff(contest.get('start'), 'seconds');
-      const hour = Math.floor(time / 3600);
-      const minute = Math.floor(time / 60) % 60;
-      const second = time % 60;
-      newPenalty += Math.floor(time / 60);
+      const time = duration(moment(submission.get('date'))
+        .diff(contest.get('start')));
+      newPenalty += Math.floor(time.asMinutes());
       return team.setIn(['problems', index, 'solved'],
-        `${hour}:${minute}:${second}`)
+        `${time.hours()}:${time.minutes()}:${time.seconds()}`)
         .update('penalty', inc(newPenalty))
         .update('solved', inc(1));
     }

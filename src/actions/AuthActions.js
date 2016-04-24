@@ -71,16 +71,20 @@ export const login = () => async(dispatch, getState) => {
   }
 };
 
-export const logout = () => async(dispatch) => {
-  try {
-    nprogress.start();
-    await postJSON('/api/auth/logout');
-    toast('success', 'Logout succeed');
+export const logout = (option) => async(dispatch) => {
+  if (option && option.quiet) {
     dispatch(clearUserInfo());
-    nprogress.done();
-  } catch (err) {
-    toast('error', err.message);
-    nprogress.done();
+  } else {
+    try {
+      nprogress.start();
+      await postJSON('/api/auth/logout');
+      toast('success', 'Logout succeed');
+      dispatch(clearUserInfo());
+      nprogress.done();
+    } catch (err) {
+      toast('error', err.message);
+      nprogress.done();
+    }
   }
 };
 
