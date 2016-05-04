@@ -44,8 +44,6 @@ export const loadUserInfo = () => async (dispatch) => {
 
 export const login = () => async(dispatch, getState) => {
   try {
-    nprogress.start();
-    dispatch({ type: AuthConstants.LOGIN });
     const state = getState();
     const { username, password } = getValues(state.form.login) || {};
     if (!username) {
@@ -53,6 +51,8 @@ export const login = () => async(dispatch, getState) => {
     } else if (!password) {
       toast('warning', 'Please input password');
     } else {
+      nprogress.start();
+      dispatch({ type: AuthConstants.LOGIN });
       const res = await postJSON('/api/auth/login', {
         username,
         password,
@@ -91,8 +91,6 @@ export const logout = (option) => async(dispatch) => {
 export const register = () => async(dispatch, getState) => {
   try {
     const state = getState();
-    nprogress.start();
-    dispatch({ type: AuthConstants.REGISTER });
     const { username, password, confirmPassword } = getValues(state.form.register) || {};
     if (!username) {
       toast('warning', 'Please input username');
@@ -101,6 +99,8 @@ export const register = () => async(dispatch, getState) => {
     } else if (password !== confirmPassword) {
       toast('warning', 'Passwords not match');
     } else {
+      nprogress.start();
+      dispatch({ type: AuthConstants.REGISTER });
       const res = await postJSON('/api/auth/register', {
         username,
         password,
