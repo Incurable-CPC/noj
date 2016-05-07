@@ -11,7 +11,7 @@ import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
 import SubmissionList from '../../Lists/SubmissionList.jsx';
-import { expandContestSubmission } from '../../../actions/ContestActions';
+import { expandContestSubmission } from '../../../actions/contestActions';
 
 @withTitle('NOJ - Contests')
 @withStyles(s)

@@ -4,7 +4,7 @@
 
 import { Router } from 'express';
 import User from '../models/userModel';
-import { requireAuth } from './common';
+import { requireAuth, getUsername } from './common';
 import { useAwait } from '../common';
 import bcrypt from 'bcrypt';
 const router = new Router();
@@ -50,7 +50,7 @@ const logout = async (req, res, next) => {
 const register = async (req, res, next) => {
   let error = '';
   try {
-    const username = req.body.username;
+    const { username } = req.body;
     const salt = await genSalt();
     const password = await hash(req.body.password, salt);
     if ((await User.find({ username }).count()) > 0) {
@@ -73,7 +73,7 @@ const register = async (req, res, next) => {
 
 const getUserInfo = async (req, res, next) => {
   try {
-    const { username } = req.cookies;
+    const username = getUsername(req);
     const user = await User
       .findOne({ username })
       .select('-password -tokens');

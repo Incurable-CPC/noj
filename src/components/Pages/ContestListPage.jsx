@@ -15,7 +15,7 @@ import SearchBar from '../Lib/SearchBar.jsx';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import Location from '../../core/Location';
-import { getContestListSortBy, getContestListByKeyword } from '../../actions/ContestActions';
+import { getContestListSortBy, getContestListByKeyword } from '../../actions/contestActions';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)

@@ -29,10 +29,10 @@ import ContestSubmissionListPage from './components/Pages/Contest/ContestSubmiss
 import ContestBoardPage from './components/Pages/Contest/ContestBoardPage.jsx';
 // import Test from './components/Test.jsx';
 
-import { getProblem, initProblem, getProblemListByPage } from './actions/ProblemActions';
-import { setContestPid, getContest, initContest, getContestListByPage } from './actions/ContestActions';
-import { getSubmissionList } from './actions/SubmissionActions';
-import { loadUserInfo } from './actions/AuthActions';
+import { getProblem, initProblem, getProblemListByPage } from './actions/problemActions';
+import { setContestPid, getContest, initContest, getContestListByPage } from './actions/contestActions';
+import { getSubmissionList } from './actions/submissionActions';
+import { loadUserInfo } from './actions/authActions';
 
 const boundGetProblem = async (nextState, replace, next) => {
   const { params: { pid } } = nextState;

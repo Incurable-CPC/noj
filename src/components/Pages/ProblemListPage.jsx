@@ -17,7 +17,7 @@ import ProblemList from '../Lists/ProblemList.jsx';
 import SearchBar from '../Lib/SearchBar.jsx';
 import Location from '../../core/Location';
 import { postJSON } from '../../core/fetchJSON';
-import { getProblemListSortBy, getProblemListByKeyword } from '../../actions/ProblemActions';
+import { getProblemListSortBy, getProblemListByKeyword } from '../../actions/problemActions';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)

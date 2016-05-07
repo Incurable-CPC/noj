@@ -11,7 +11,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
 
 import Animate from '../Lib/Animate.jsx';
 import { getJSON } from '../../core/fetchJSON';
-import { postContest } from '../../actions/ContestActions';
+import { postContest } from '../../actions/contestActions';
 import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
 

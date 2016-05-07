@@ -5,7 +5,7 @@
 import { Router } from 'express';
 const router = new Router();
 
-import { requireAuth, requireAdmin } from './common';
+import { requireAuth, requireAdmin, getUsername } from './common';
 import Contest from '../models/contestModel';
 import Problem from '../models/problemModel';
 import checkSubmission from '../check/submission';
@@ -18,7 +18,8 @@ const checkManager = async (cid, username) => {
 
 const getContest = async (req, res, next) => {
   try {
-    const { params: { cid }, cookies: { username } } = req;
+    const { cid } = req.params;
+    const username = getUsername(req);
     const contest = await Contest
       .findOne({ cid });
     const isManager = contest.manager === username;
@@ -45,10 +46,8 @@ const getContest = async (req, res, next) => {
 
 const postContest = async (req, res, next) => {
   try {
-    let {
-      body: { contest },
-      cookies: { username },
-    } = req;
+    const username = getUsername(req);
+    let { contest } = req.body;
     const { cid } = contest;
     if (contest.cid) {
       const error = await checkManager(cid, username);
@@ -101,11 +100,9 @@ const getContestList = async (req, res, next) => {
 const postSubmission = async (req, res, next) => {
   try {
     const {
-      body: {
-        submission: { cid, pid, language, code },
-      },
-      cookies: { username },
-    } = req;
+      submission: { cid, pid, language, code },
+    } = req.body;
+    const username = getUsername(req);
     let submission = { username, cid, pid, language, code };
     const error = checkSubmission(submission);
     if (error) {
@@ -130,7 +127,8 @@ const postSubmission = async (req, res, next) => {
 
 const getSubmission = async(req, res, next) => {
   try {
-    const { params: { cid, sid }, cookies: { username } } = req;
+    const { cid, sid } = req.params;
+    const username = getUsername(req);
     let submission = await Contest
       .findOne({ cid })
       .select(`submissions.${sid}`);

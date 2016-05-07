@@ -7,7 +7,7 @@ import { Input } from 'react-bootstrap';
 
 import Location from '../../core/Location';
 import withTitle from '../../decorators/withTitle';
-import UserActions from '../../actions/AuthActions';
+import UserActions from '../../actions/authActions';
 import { toastr } from '../App/App';
 
 @withTitle('NOJ - Login')

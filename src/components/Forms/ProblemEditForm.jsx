@@ -14,7 +14,7 @@ import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
 import Animate from '../Lib/Animate.jsx';
 import Problem from '../Problem.jsx';
-import { postProblem } from '../../actions/ProblemActions';
+import { postProblem } from '../../actions/problemActions';
 
 const fields = [
   'pid',

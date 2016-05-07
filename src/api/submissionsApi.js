@@ -5,10 +5,9 @@
 import { Router } from 'express';
 const router = new Router();
 
-import { requireAuth, requireAdmin } from './common';
+import { requireAuth, requireAdmin, getUsername } from './common';
 import Submission from '../models/submissionModel';
 import Problem from '../models/problemModel';
-import Contest from '../models/contestModel';
 import User from '../models/userModel';
 import { RESULT_VALUES } from '../constants';
 import checkSubmission, { isCompleted, isAccepted } from '../check/submission';
@@ -29,7 +28,8 @@ const getSubmissionList = async (req, res, next) => {
 
 const getSubmission = async (req, res, next) => {
   try {
-    const { params: { sid }, cookies: { username } } = req;
+    const { sid } = req.params;
+    const username = getUsername(req);
     let submission = await Submission
       .findOne({ sid });
     if (username !== submission.username) {
@@ -45,11 +45,9 @@ const getSubmission = async (req, res, next) => {
 const postSubmission = async (req, res, next) => {
   try {
     const {
-      body: {
-        submission: { pid, language, code },
-        },
-      cookies: { username },
-      } = req;
+      submission: { pid, language, code },
+    } = req.body;
+    const username = getUsername(req);
     let submission = new Submission({ username, pid, language, code });
     const error = checkSubmission(submission);
     if (error) {

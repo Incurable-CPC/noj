@@ -4,6 +4,11 @@
 
 import User from '../models/userModel';
 
+export const getUsername = (req) => {
+  const { username } = req.cookies || {};
+  return username;
+};
+
 export const requireAuth = async (req, res, next) => {
   try {
     const { username, token } = req.cookies || {};

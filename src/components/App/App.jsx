@@ -13,8 +13,8 @@ import { connect } from 'react-redux';
 
 import s from './App.scss';
 import Header from '../Header';
-import { showDialog, hideDialog } from '../../actions/DialogActions';
-import { login, register, logout } from '../../actions/AuthActions';
+import { showDialog, hideDialog } from '../../actions/dialogActions';
+import { login, register, logout } from '../../actions/authActions';
 
 import { ToastContainer, ToastMessage } from 'react-toastr';
 const ToastMessageFactory = createFactory(ToastMessage.animation);
