@@ -42,6 +42,13 @@ const context = {
   },
 };
 
+import themeManager from 'material-ui/lib/styles/theme-manager';
+import lightRawTheme from 'material-ui/lib/styles/raw-themes/light-raw-theme';
+import themeDecorator from 'material-ui/lib/styles/theme-decorator';
+
+const muiTheme = themeManager.getMuiTheme(lightRawTheme);
+const myTheme = themeManager.modifyRawThemeFontFamily(muiTheme, 'Open Sans');
+@themeDecorator(myTheme)
 @connect(state => state)
 export default class App extends Component {
   static propTypes = {
