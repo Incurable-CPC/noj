@@ -65,14 +65,12 @@ class ContestListPage extends Component {
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
-            <div style={{ float: 'right' }}>
-              <SearchBar
-                initialValue={searchKey}
-                search={(key) => dispatch(getContestListByKeyword(key))}
-                width={280}
-              />
-            </div>
-            <div style={{ marginRight: 320, padding: 16 }}>
+            <SearchBar
+              initialValue={searchKey}
+              search={(key) => dispatch(getContestListByKeyword(key))}
+              width={280}
+            />
+            <div style={{ textAlign: 'center' }}>
               <Pagination
                 list={[first, previous].concat(pagination, [next, last])}
                 current={`${page}`}

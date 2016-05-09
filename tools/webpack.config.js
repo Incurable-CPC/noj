@@ -121,7 +121,7 @@ const clientConfig = merge({}, config, {
 
   // Choose a developer tool to enhance debugging
   // http://webpack.github.io/docs/configuration.html#devtool
-  devtool: DEBUG ? 'cheap-module-eval-source-map' : false,
+  devtool: DEBUG ? 'cheap-source-map' : false,
   plugins: [
     new webpack.DefinePlugin(GLOBALS),
     new AssetsPlugin({
@@ -175,7 +175,7 @@ const serverConfig = merge({}, config, {
     __filename: false,
     __dirname: false,
   },
-  devtool: 'source-map',
+  devtool: 'cheap-source-map',
   plugins: [
     new webpack.DefinePlugin(GLOBALS),
     new webpack.BannerPlugin('require("source-map-support").install();',

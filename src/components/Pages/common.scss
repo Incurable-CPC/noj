@@ -28,3 +28,10 @@
 .center {
   text-align: center;
 }
+
+.board {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  overflow: scroll;
+}

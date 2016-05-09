@@ -1,3 +1,5 @@
+@import "../variables.scss";
+
 .row {
   display: table;
   width: 100%;
@@ -62,21 +64,19 @@
   z-index: 5;
 }
 
-$status-font: "source_sans", "Lucida Grande", "Lucida Sans", sans-serif;
-
 .status-accepted {
-  font-family: $status-font;
+  font-family: $font-family-base;
   font-weight: 600;
   color: green;
 }
 
 .status-other {
-  font-family: $status-font;
+  font-family: $font-family-base;
   color: red;
 }
 
 .status-compile-error {
-  font-family: $status-font;
+  font-family: $font-family-base;
   color: blue;
   cursor: pointer;
 }

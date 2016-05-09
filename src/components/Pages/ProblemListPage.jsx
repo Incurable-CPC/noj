@@ -81,14 +81,12 @@ class ProblemsListPage extends Component {
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
-            <div style={{ float: 'right' }}>
-              <SearchBar
-                initialValue={searchKey}
-                search={(key) => dispatch(getProblemListByKeyword(key))}
-                width={280}
-              />
-            </div>
-            <div style={{ marginRight: 320, padding: 16 }}>
+            <SearchBar
+              initialValue={searchKey}
+              search={(key) => dispatch(getProblemListByKeyword(key))}
+              width={320}
+            />
+            <div style={{ textAlign: 'center' }}>
               <Pagination
                 current={`${page}`}
                 list={[first, previous].concat(pagination, [next, last])}

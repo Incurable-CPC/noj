@@ -16,7 +16,7 @@ export default class SearchBar extends Component {
   };
 
   state = {
-    keyword: this.props.initialValue,
+    keyword: this.props.initialValue || '',
   };
 
   handleSearch = async () => {

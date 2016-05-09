@@ -24,50 +24,50 @@ export default class Board extends Component {
 
   render() {
     const { problems, teams } = this.props;
+    const colStyle = {
+      backgroundColor: null,
+      whiteSpace: 'nowrap',
+    };
     return (
-      <Table selectable={false}>
-        <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
-          <TableRow>
-            <TableHeaderColumn>#</TableHeaderColumn>
-            <TableHeaderColumn>Team</TableHeaderColumn>
-            <TableHeaderColumn>Penalty</TableHeaderColumn>
+      <table>
+        <tr>
+          <th>#</th>
+          <th>Team</th>
+          <th>Penalty</th>
+          {problems.map((problem, index) => {
+            const pid = String.fromCharCode(index + 'A'.charCodeAt(0));
+            const title = problem.get('title');
+            return (
+              <th key={pid} tooltip={title} style={colStyle}>
+                {pid}
+              </th>
+            );
+          })}
+        </tr>
+        {teams.entrySeq().map(([name, team], rank) => (
+          <tr key={rank}>
+            <td>{rank + 1}</td>
+            <td>{name}</td>
+            <td>{team.get('penalty')}</td>
             {problems.map((problem, index) => {
-              const pid = String.fromCharCode(index + 'A'.charCodeAt(0));
-              const title = problem.get('title');
+              const state = team.getIn(['problems', index]) || new Map();
+              let className = '';
+              if (state.has('solved')) className = s.solved;
+              if (state.has('tried')) className = s.tried;
               return (
-                <TableHeaderColumn key={pid} tooltip={title}>
-                  {pid}
-                </TableHeaderColumn>
+                <td
+                  key={index}
+                  className={className}
+                  style={colStyle}
+                >
+                  {state.get('solved')}
+                  {state.has('tried') && `(-${state.get('tried')})`}
+                </td>
               );
             })}
-          </TableRow>
-        </TableHeader>
-        <TableBody displayRowCheckbox={false}>
-          {teams.entrySeq().map(([name, team], rank) => (
-            <TableRow key={rank}>
-              <TableRowColumn>{rank + 1}</TableRowColumn>
-              <TableRowColumn>{name}</TableRowColumn>
-              <TableRowColumn>{team.get('penalty')}</TableRowColumn>
-              {problems.map((problem, index) => {
-                const state = team.getIn(['problems', index]) || new Map();
-                let className = '';
-                if (state.has('solved')) className = s.solved;
-                if (state.has('tried')) className = s.tried;
-                return (
-                  <TableRowColumn
-                    style={{ backgroundColor: null }}
-                    key={index}
-                    className={className}
-                  >
-                    {state.get('solved')}
-                    {state.has('tried') && `(-${state.get('tried')})`}
-                  </TableRowColumn>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </tr>
+        ))}
+      </table>
     );
   }
 }

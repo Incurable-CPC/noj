@@ -69,8 +69,8 @@ export const setProblemList = (condition, count, list) => ({
 
 export const getProblemList = (condition) => async (dispatch, getState) => {
   try {
-    const state = getState();
-    const oldCondition = state.problem.get('condition');
+    // const state = getState();
+    // const oldCondition = state.problem.get('condition');
     // if (is(oldCondition, fromJS(condition))) return true;
     nprogress.start();
     const res = await getJSON(`/api/problems`, condition);

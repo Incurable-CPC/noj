@@ -73,7 +73,7 @@ export default class SubmissionForm extends Component {
                 secondary
               />
               <ToolbarSeparator style={{ marginRight: 20 }}/>
-              <ToolbarTitle text={` ${pid} - ${title}`} />
+              <ToolbarTitle text={pid} />
             </ToolbarGroup>
           </Toolbar>
           <Codemirror

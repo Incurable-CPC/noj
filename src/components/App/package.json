@@ -2,5 +2,8 @@
   "name": "App",
   "version": "0.0.0",
   "private": true,
-  "main": "./App.jsx"
+  "main": "./App.jsx",
+  "dependencies": {
+    "react-tap-event-plugin": "latest"
+  }
 }

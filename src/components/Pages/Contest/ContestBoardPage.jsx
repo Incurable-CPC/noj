@@ -27,7 +27,7 @@ export default class ContestBoardPage extends Component {
   render() {
     const { problems, teams } = this.props;
     return (
-      <div className={s.div}>
+      <div className={s.board}>
         <Paper className={s.paper}>
           <Board
             problems={problems}
