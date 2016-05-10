@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 
 import Board from '../../Board.jsx';
 import s from '../common.scss';
+import cx from 'classnames';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
 
@@ -28,7 +29,7 @@ export default class ContestBoardPage extends Component {
     const { problems, teams } = this.props;
     return (
       <div className={s.board}>
-        <Paper className={s.paper}>
+        <Paper className={cx(s.paper, s.container)}>
           <Board
             problems={problems}
             teams={teams}

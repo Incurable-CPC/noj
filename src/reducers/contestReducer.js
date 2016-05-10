@@ -29,14 +29,14 @@ function addSubmission(contest, submission) {
   }).updateIn(['teams', teamName], (team = fromJS({})) => {
     if (team.hasIn(['problems', index, 'solved'])) return team;
     if (isAccepted(result)) {
-      let newPenalty = (team.getIn(['problems', index, 'failed']) || 0) * 20;
-      const time = duration(moment(submission.get('date'))
-        .diff(contest.get('start')));
-      newPenalty += Math.floor(time.asMinutes());
-      return team.setIn(['problems', index, 'solved'],
-        `${time.hours()}:${time.minutes()}:${time.seconds()}`)
-        .update('penalty', inc(newPenalty))
-        .update('solved', inc(1));
+      const failed = team.getIn(['problems', index, 'failed']) || 0;
+      const time = duration(moment(submission.get('date')).diff(contest.get('start')));
+      let penalty = time.add(failed * 20, 'minutes').add(team.get('penalty') || 0);
+      const isFirst = contest.getIn(['problems', index, 'accepted']) === 0;
+      return team.update('solved', inc(1))
+        .set('penalty', penalty)
+        .setIn(['problems', index, 'solved'], time)
+        .setIn(['problems', index, 'isFirst'], isFirst);
     }
     return team.updateIn(['problems', index, 'tried'], inc(1));
   });

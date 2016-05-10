@@ -24,16 +24,18 @@ export default class Board extends Component {
 
   render() {
     const { problems, teams } = this.props;
+    const showTime = (t) => t && `${t.hours()}:${t.minutes()}:${t.seconds()}`;
     const colStyle = {
       backgroundColor: null,
       whiteSpace: 'nowrap',
     };
     return (
-      <table><tbody>
+      <table className={s.board}>
+        <tbody>
         <tr>
-          <th>#</th>
-          <th>Team</th>
-          <th>Penalty</th>
+          <th className={s.rank}>#</th>
+          <th className={s.team}>Team</th>
+          <th className={s.penalty}>Penalty</th>
           {problems.map((problem, index) => {
             const pid = String.fromCharCode(index + 'A'.charCodeAt(0));
             const title = problem.get('title');
@@ -44,15 +46,16 @@ export default class Board extends Component {
             );
           })}
         </tr>
-        {(teams || new Map()).entrySeq().map(([name, team], rank) => (
+        {teams && teams.entrySeq().map(([name, team], rank) => (
           <tr key={rank}>
             <td>{rank + 1}</td>
             <td>{name}</td>
-            <td>{team.get('penalty')}</td>
+            <td>{showTime(team.get('penalty'))}</td>
             {problems.map((problem, index) => {
               const state = team.getIn(['problems', index]) || new Map();
               let className = '';
               if (state.has('solved')) className = s.solved;
+              if (state.get('isFirst')) className = s.first;
               if (state.has('tried')) className = s.tried;
               return (
                 <td
@@ -60,14 +63,16 @@ export default class Board extends Component {
                   className={className}
                   style={colStyle}
                 >
-                  {state.get('solved')}
+                  {showTime(state.get('solved'))}
+                  {state.has('tried') && <br />}
                   {state.has('tried') && `(-${state.get('tried')})`}
                 </td>
               );
             })}
           </tr>
         ))}
-      </tbody></table>
+        </tbody>
+      </table>
     );
   }
 }
