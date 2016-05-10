@@ -54,9 +54,10 @@ export default class Board extends Component {
             {problems.map((problem, index) => {
               const state = team.getIn(['problems', index]) || new Map();
               let className = '';
+              if (state.has('failed')) className = s.tried;
               if (state.has('solved')) className = s.solved;
               if (state.get('isFirst')) className = s.first;
-              if (state.has('tried')) className = s.tried;
+              const twoLine = state.get('solved') && state.has('failed');
               return (
                 <td
                   key={index}
@@ -64,8 +65,8 @@ export default class Board extends Component {
                   style={colStyle}
                 >
                   {showTime(state.get('solved'))}
-                  {state.has('tried') && <br />}
-                  {state.has('tried') && `(-${state.get('tried')})`}
+                  {twoLine && <br />}
+                  {state.has('failed') && `(-${state.get('failed')})`}
                 </td>
               );
             })}

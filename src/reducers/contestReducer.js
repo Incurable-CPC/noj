@@ -38,7 +38,7 @@ function addSubmission(contest, submission) {
         .setIn(['problems', index, 'solved'], time)
         .setIn(['problems', index, 'isFirst'], isFirst);
     }
-    return team.updateIn(['problems', index, 'tried'], inc(1));
+    return team.updateIn(['problems', index, 'failed'], inc(1));
   });
 }
 function addSubmissionList(contest, submissionList) {
