@@ -44,7 +44,7 @@ function addSubmission(contest, submission) {
 function addSubmissionList(contest, submissionList) {
   submissionList.forEach((submission) =>
     contest = addSubmission(contest, submission));
-  return contest.update('teams', (teams) => teams.sort((teamA, teamB) => {
+  return contest.update('teams', (teams) => teams && teams.sort((teamA, teamB) => {
     const solvedA = teamA.get('solved');
     const solvedB = teamB.get('solved');
     const penaltyA = teamA.get('penalty');

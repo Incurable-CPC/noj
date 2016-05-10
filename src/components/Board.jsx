@@ -29,7 +29,7 @@ export default class Board extends Component {
       whiteSpace: 'nowrap',
     };
     return (
-      <table>
+      <table><tbody>
         <tr>
           <th>#</th>
           <th>Team</th>
@@ -44,7 +44,7 @@ export default class Board extends Component {
             );
           })}
         </tr>
-        {teams.entrySeq().map(([name, team], rank) => (
+        {(teams || new Map()).entrySeq().map(([name, team], rank) => (
           <tr key={rank}>
             <td>{rank + 1}</td>
             <td>{name}</td>
@@ -67,7 +67,7 @@ export default class Board extends Component {
             })}
           </tr>
         ))}
-      </table>
+      </tbody></table>
     );
   }
 }

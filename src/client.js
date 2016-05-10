@@ -54,7 +54,7 @@ const boundGetContest = async (nextState, replace, next) => {
   if (await store.dispatch(getContest(cid))) next();
 };
 
-const boundSetContestPid = (nextState) => {
+const boundSetContestPid = (nextState, replace) => {
   const { params: { pid } } = nextState;
   store.dispatch(setContestPid(pid));
 };

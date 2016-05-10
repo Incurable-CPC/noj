@@ -6,6 +6,7 @@ import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/lib/paper';
 import { connect } from 'react-redux';
+import { Map } from 'immutable';
 
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
@@ -13,6 +14,8 @@ import withStyles from '../../../decorators/withStyles';
 import Problem from '../../Problem.jsx';
 import Pagination from '../../Lib/Pagination.jsx';
 import SubmissionForm from '../../Forms/SubmissionForm.jsx';
+import Location from '../../../core/Location';
+import toast from '../../../core/toast';
 
 @withTitle('NOJ - Contests')
 @withStyles(s)
@@ -31,6 +34,16 @@ export default class ContestProblemPage extends Component {
     cid: PropTypes.number.isRequired,
   };
 
+  componentWillMount() {
+    const { problems, cid, pid } = this.props;
+    const index = pid.charCodeAt(0) - 'A'.charCodeAt(0);
+    const problem = problems.get(index);
+    if (!problem) {
+      toast('error', 'No such problem');
+      Location.push(`/contests/${cid}`);
+    }
+  }
+
   componentDidMount() {
     window.scrollTo(0, 0);
   }
@@ -38,7 +51,11 @@ export default class ContestProblemPage extends Component {
   render() {
     const { problems, cid, pid } = this.props;
     const index = pid.charCodeAt(0) - 'A'.charCodeAt(0);
-    const problem = problems.get(index).set('pid', pid);
+    let problem = problems.get(index);
+    if (!problem) {
+      return null;
+    }
+    problem = problem.set('pid', pid);
     const pagination = problems.map((prob, idx) => {
       let content = String.fromCharCode(idx + 'A'.charCodeAt(0));
       return {
