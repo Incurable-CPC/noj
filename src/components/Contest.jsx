@@ -14,15 +14,13 @@ import s from './Contest.scss';
 
 @withTime()
 @withStyle(s)
-export default class Contest extends Component {
+class TimeInfo extends Component {
   static propTypes = {
     contest: ImmutableTypes.map.isRequired,
     time: PropTypes.object.isRequired,
   };
-
   render() {
     let { contest, time } = this.props;
-    const cid = contest.get('cid');
     const start = moment(contest.get('start'));
     const duration = Number(contest.get('duration'));
     const end = moment(start).add(duration, 'hours');
@@ -34,11 +32,52 @@ export default class Contest extends Component {
     } else {
       progress = 0;
     }
+    return (
+      <div>
+        <div>
+            <span className={s.center}>
+              Start Time: {start.format('YYYY-MM-DD HH:mm')}
+            </span>
+            <span className={s.center}>
+              End Time: {end.format('YYYY-MM-DD HH:mm')}
+            </span>
+        </div>
+        <div>
+          Current Time: {time.format('YYYY-MM-DD HH:mm:ss')}
+        </div>
+        <div className={s.timebar}>
+          <LinearProgress mode="determinate" value={progress} />
+        </div>
+      </div>
+    );
+  }
+}
+
+@withStyle(s)
+export default class Contest extends Component {
+  static propTypes = {
+    username: PropTypes.string,
+    contest: ImmutableTypes.map.isRequired,
+  };
+
+  render() {
+    let { contest, username } = this.props;
+    const cid = contest.get('cid');
+    const team = contest.getIn(['teams', username]);
     const problemList = contest.get('problems')
       .map((problem, index) => {
         const pid = String.fromCharCode(index + 'A'.charCodeAt(0));
         const url = `/contests/${cid}/problems/${pid}`;
-        return problem.set('pid', pid).set('url', url);
+        let status = '';
+        if (team && team.hasIn(['problems', index, 'solved'])) {
+          status = 'solved';
+        } else if (team && team.hasIn(['problems', index, 'failed'])) {
+          status = 'tried';
+        }
+        return problem
+          .set('status', status)
+          .set('pid', pid)
+          .set('url', url);
       });
 
     return (
@@ -47,21 +86,9 @@ export default class Contest extends Component {
           <div>
             <h1>{contest.get('title')}</h1>
           </div>
-          <div>
-            <span className={s.center}>
-              Start Time: {start.format('YYYY-MM-DD HH:mm')}
-            </span>
-            <span className={s.center}>
-              End Time: {end.format('YYYY-MM-DD HH:mm')}
-            </span>
-          </div>
-          <div>
-            Current Time: {time.format('YYYY-MM-DD HH:mm:ss')}
-          </div>
+          <TimeInfo contest={contest} />
         </div>
         <div className={s.problems}>
-          <LinearProgress mode="determinate" value={progress} />
-          <br/>
           <ProblemList problemList={problemList} />
         </div>
       </div>

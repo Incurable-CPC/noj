@@ -15,11 +15,13 @@ import Contest from '../../Contest.jsx';
 @withTitle('NOJ - Contests')
 @withStyles(s)
 @connect((state) => ({
+  username: state.auth.get('username'),
   contest: state.contest.get('detail'),
 }))
 export default class ContestOverviewPage extends Component {
   static propTypes = {
     contest: ImmutableTypes.map.isRequired,
+    username: PropTypes.string,
   };
 
   componentDidMount() {
@@ -27,12 +29,12 @@ export default class ContestOverviewPage extends Component {
   }
 
   render() {
-    const { contest } = this.props;
+    const { contest, username } = this.props;
     return (
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
-            <Contest contest={contest} />
+            <Contest contest={contest} username={username}/>
           </Paper>
         </div>
         <div className={s.right}>

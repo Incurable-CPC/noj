@@ -15,7 +15,7 @@ const init = async() => {
   _interval = setInterval(() => {
     _time = moment().subtract(_diff);
     _func.forEach((func) => func());
-  }, 200);
+  }, 1000);
 };
 
 export default function withTime() {
