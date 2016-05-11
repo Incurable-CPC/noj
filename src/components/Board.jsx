@@ -33,9 +33,10 @@ export default class Board extends Component {
       <table className={s.board}>
         <tbody>
         <tr>
-          <th className={s.rank}>#</th>
-          <th className={s.team}>Team</th>
-          <th className={s.penalty}>Penalty</th>
+          <th>#</th>
+          <th>Team</th>
+          <th>Solved</th>
+          <th>Penalty</th>
           {problems.map((problem, index) => {
             const pid = String.fromCharCode(index + 'A'.charCodeAt(0));
             const title = problem.get('title');
@@ -50,6 +51,7 @@ export default class Board extends Component {
           <tr key={rank}>
             <td>{rank + 1}</td>
             <td>{name}</td>
+            <td>{team.get('solved') || 0}</td>
             <td>{showTime(team.get('penalty'))}</td>
             {problems.map((problem, index) => {
               const state = team.getIn(['problems', index]) || new Map();

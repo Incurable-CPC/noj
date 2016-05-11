@@ -1,31 +1,28 @@
 .solved {
-  background-color: #66FF66;
+  background-color: green;
+  color: white;
 }
 
 .tried {
-  background-color: #FF5555;
+  background-color: red;
+  color: white;
 }
 
 .first {
-  background-color: #007F00;
+  background-color: #43CD80;
   color: white;
 }
 
 .board {
   min-width: 100%;
   text-align: center;
-  th, td {
-    border: 1px solid #DDDDDD;
-    padding: 8px;
+  border-collapse: collapse;
+  th {
+    padding: 8px 0 8px 0;
+  }
+  td {
+    border: 1px solid #E0E0E0;
+    padding: 4px;
+    min-width: 27px;
   }
 }
-
-.rank {
-}
-
-.team {
-}
-
-.penalty {
-}
-
