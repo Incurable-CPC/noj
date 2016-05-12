@@ -1,5 +1,15 @@
 .list { }
 
+.row {
+  display: table;
+  width: 100%;
+}
+
+.col {
+  display: table-cell;
+  vertical-align: middle;
+}
+
 .header-col {
   font-size: 15px;
   font-weight: 500;
@@ -7,21 +17,18 @@
 }
 
 .cid-col {
-  display: inline-block;
-  width: 15%;
+  width: 12%;
 }
 
 .title-col {
-  display: inline-block;
-  width: 35%;
+  width: 38%;
+  padding-right: 12px;
 }
 
 .start-col {
-  display: inline-block;
   width: 30%;
 }
 .duration-col {
-  display: inline-block;
   width: 20%;
 }
 

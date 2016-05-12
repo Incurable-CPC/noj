@@ -10,6 +10,7 @@ import Divider from 'material-ui/lib/divider';
 
 import withStyles from '../../decorators/withStyles';
 import s from './ProblemList.scss';
+import cs from 'classnames';
 import Location from '../../core/Location';
 
 @withStyles(s)
@@ -29,9 +30,9 @@ export default class ProblemList extends Component {
       const pid = problem.get('pid');
       const url = problem.get('url') || `/problems/${pid}`;
       const content = (
-        <div>
+        <div className={s.row}>
           {fields.map((field) => (
-            <span key={field} className={s[`${field}-col`]}>
+            <span key={field} className={cs(s.col, s[`${field}-col`])}>
               {showProblem.get(field)}
             </span>
           ))}
@@ -50,9 +51,9 @@ export default class ProblemList extends Component {
       );
     });
     const header = (
-      <div>
+      <div className={s.row}>
         {fields.map((field, index) => (
-          <span className={s[`${field}-col`]} key={field}>
+          <span className={cs(s.col, s[`${field}-col`])} key={field}>
             {sortBy ? (
               <strong className={s.header} onClick={() => sortBy(field)}>
                 {headers[index]}

@@ -10,6 +10,7 @@ import Divider from 'material-ui/lib/divider';
 import moment from 'moment';
 
 import withStyles from '../../decorators/withStyles';
+import cs from 'classnames';
 import s from './ContestList.scss';
 import Location from '../../core/Location';
 
@@ -32,9 +33,9 @@ export default class ProblemList extends Component {
           `${(duration / 24).toFixed(1)} days` :
           `${duration} hours`);
       const content = (
-        <div>
+        <div className={s.row}>
           {fields.map((field) => (
-            <span key={field} className={s[`${field}-col`]}>
+            <span key={field} className={cs(s.col, s[`${field}-col`])}>
               {showContest.get(field)}
             </span>
           ))}
@@ -52,9 +53,9 @@ export default class ProblemList extends Component {
       );
     });
     const header = (
-      <div>
+      <div className={s.row}>
         {fields.map((field, index) => (
-          <span className={s[`${field}-col`]} key={field}>
+          <span className={cs(s.col, s[`${field}-col`])} key={field}>
             <strong className={s.header} onClick={() => sortBy(field)}>
               {headers[index]}
             </strong>
