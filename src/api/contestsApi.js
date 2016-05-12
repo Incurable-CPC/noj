@@ -142,6 +142,26 @@ const getSubmission = async(req, res, next) => {
   }
 };
 
+const generateTest = async (req, res) => {
+  const contest = await Contest.findOne({ cid: 10000 });
+  const rand = (n) => Math.floor(Math.random() * n);
+  const randChar = () => String.fromCharCode('A'.charCodeAt(0) + rand(26));
+  const oldLength = contest.submissions.length;
+  for (let i = oldLength; i < oldLength + 100; i++) {
+    const username = randChar() + randChar();
+    const pid = String.fromCharCode('A'.charCodeAt(0) + rand(contest.problems.length));
+    const result = 4 + rand(8);
+    const date = new Date();
+    date.setTime(contest.start.getTime() + i * 1000);
+    const originOJ = 'POJ';
+    const submission = { username, result, date, pid, originOJ };
+    contest.submissions.push(submission);
+  }
+  await contest.save();
+  res.send(contest);
+};
+
+router.get('/temp', generateTest);
 router.get('/:cid', getContest);
 router.get('/', getContestList);
 router.get('/:cid/submissions/:sid', getSubmission);

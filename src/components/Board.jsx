@@ -24,7 +24,18 @@ export default class Board extends Component {
 
   render() {
     const { problems, teams } = this.props;
-    const showTime = (t) => t && `${t.hours()}:${t.minutes()}:${t.seconds()}`;
+    const showTime = (t) => {
+      let res = '';
+      if (t) {
+        let sec = t.seconds();
+        let min = t.minutes();
+        let hour = Math.floor(t.asHours());
+        if (sec < 10) sec = '0' + sec;
+        if (min < 10) min = '0' + min;
+        res = `${hour}:${min}:${sec}`;
+      }
+      return res;
+    };
     const colStyle = {
       backgroundColor: null,
       whiteSpace: 'nowrap',

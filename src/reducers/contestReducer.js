@@ -31,7 +31,8 @@ function addSubmission(contest, submission) {
     if (isAccepted(result)) {
       const failed = team.getIn(['problems', index, 'failed']) || 0;
       const time = duration(moment(submission.get('date')).diff(contest.get('start')));
-      let penalty = time.add(failed * 20, 'minutes').add(team.get('penalty') || 0);
+      const penalty = duration(time);
+      penalty.add(failed * 20, 'minutes').add(team.get('penalty') || 0);
       const isFirst = contest.getIn(['problems', index, 'accepted']) === 0;
       return team.update('solved', inc(1))
         .set('penalty', penalty)
@@ -45,8 +46,8 @@ function addSubmissionList(contest, submissionList) {
   submissionList.forEach((submission) =>
     contest = addSubmission(contest, submission));
   return contest.update('teams', (teams) => teams && teams.sort((teamA, teamB) => {
-    const solvedA = teamA.get('solved');
-    const solvedB = teamB.get('solved');
+    const solvedA = teamA.get('solved') || 0;
+    const solvedB = teamB.get('solved') || 0;
     const penaltyA = teamA.get('penalty');
     const penaltyB = teamB.get('penalty');
     if (solvedA > solvedB) return -1;
