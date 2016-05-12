@@ -2,5 +2,10 @@
   "name": "Header",
   "version": "0.0.0",
   "private": true,
-  "main": "./Header.jsx"
+  "main": "./Header.jsx",
+  "dependencies": {
+    "react-immutable-proptypes": "latest",
+    "react": "latest",
+    "react-router": "latest"
+  }
 }

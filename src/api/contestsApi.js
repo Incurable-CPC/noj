@@ -147,7 +147,7 @@ const generateTest = async (req, res) => {
   const rand = (n) => Math.floor(Math.random() * n);
   const randChar = () => String.fromCharCode('A'.charCodeAt(0) + rand(26));
   const oldLength = contest.submissions.length;
-  for (let i = oldLength; i < oldLength + 100; i++) {
+  for (let i = oldLength; i < oldLength + 1000; i++) {
     const username = randChar() + randChar();
     const pid = String.fromCharCode('A'.charCodeAt(0) + rand(contest.problems.length));
     const result = 4 + rand(8);

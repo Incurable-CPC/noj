@@ -4,12 +4,11 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import Styles from 'material-ui/lib/styles';
+import { Colors } from 'material-ui/lib/styles';
 import Paper from 'material-ui/lib/paper';
 import { Link } from 'react-router';
 import { Tabs, Tab } from 'material-ui/lib/tabs';
 import FlatButton from 'material-ui/lib/flat-button';
-const { Colors } = Styles;
 
 import LoginDialog from '../Dialogs/LoginDialog.jsx';
 import RegisterDialog from '../Dialogs/RegisterDialog.jsx';
@@ -24,7 +23,11 @@ const styles = {
     backgroundColor: Colors.white,
     color: Colors.black,
   },
-  ink: { backgroundColor: Colors.grey500 },
+  activeTab: {
+    backgroundColor: Colors.white,
+    color: Colors.cyan500
+  },
+  ink: { backgroundColor: Colors.cyan500 },
   whiteInk: { backgroundColor: Colors.white },
 };
 
@@ -50,7 +53,7 @@ export default class Header extends Component {
     const LinkTab = (name, index) => (
       <Tab
         className={s.tab}
-        style={styles.tab}
+        style={(active === name) ? styles.activeTab: styles.tab }
         key={index}
         value={name}
         label={nameToLabel(name)}
