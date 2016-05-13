@@ -2,6 +2,7 @@
  * Created by cpc on 3/27/16.
  */
 
+import moment from 'moment';
 
 import { getJSON, postJSON } from '../core/fetchJSON';
 import { is, fromJS } from 'immutable';
@@ -11,6 +12,7 @@ import Location from '../core/Location';
 import checkContest from '../check/contest';
 import ContestConstants from '../constants/ContestConstants';
 import { isCompileError } from '../check/submission';
+import { getTime } from '../decorators/withTime';
 
 
 const setContest = (contest) => ({
@@ -48,6 +50,18 @@ export const getContest = (cid) => async (dispatch, getState) => {
     await nprogress.done();
     return false;
   }
+};
+
+export const getContestNewSubmissionList = () => async (dispatch, getState) => {
+  const state = getState();
+  const contest = state.contest.get('detail');
+  const cid = contest.get('cid');
+  const res = await getJSON(`/api/contests/${cid}/submissions`);
+  const { submissionList } = await res.json();
+  dispatch({
+    type: ContestConstants.UPDATE_SUBMISSION_LIST,
+    submissionList,
+  });
 };
 
 export const postContest = async (contest, dispatch) => {

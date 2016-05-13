@@ -8,5 +8,6 @@ export default {
   INIT: 'contest-init',
   SET_LIST: 'contest-list-set',
   SET_SUBMISSION: 'contest-submission-set',
+  UPDATE_SUBMISSION_LIST: 'contest-submissions-update',
   CHANGE_SUBMISSION_EXPAND_STATE: 'contest-submission-change-state',
 };

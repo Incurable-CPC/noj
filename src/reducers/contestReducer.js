@@ -42,6 +42,7 @@ function addSubmission(contest, submission) {
     return team.updateIn(['problems', index, 'failed'], inc(1));
   });
 }
+
 function addSubmissionList(contest, submissionList) {
   submissionList.forEach((submission) =>
     contest = addSubmission(contest, submission));
@@ -82,6 +83,9 @@ export default (state = initState, action) => {
     case ContestContants.SET_SUBMISSION:
       return state.setIn(['detail', 'submissions', action.index, 'code'],
         fromJS(action.submission));
+    case ContestContants.UPDATE_SUBMISSION_LIST:
+      return state.update('detail', (contest) =>
+        addSubmissionList(contest, action.submissionList));
     case ContestContants.CHANGE_SUBMISSION_EXPAND_STATE:
       return state.updateIn(['detail', 'submissions', action.index, 'content'],
         (oldContent) => (oldContent === action.content) ? '' : action.content);
