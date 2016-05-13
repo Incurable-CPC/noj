@@ -146,17 +146,29 @@ const generateTest = async (req, res) => {
   const contest = await Contest.findOne({ cid: 10000 });
   const rand = (n) => Math.floor(Math.random() * n);
   const randChar = () => String.fromCharCode('A'.charCodeAt(0) + rand(26));
-  const oldLength = contest.submissions.length;
-  const diff = contest.problems.map(() => [1, 30, 70, 500, 900][rand(5)]);
-  for (let i = oldLength; i < oldLength + 1000; i++) {
+  const proCnt = contest.problems.length;
+  const diff = contest.problems.map(() => [1, 30, 70, 500][rand(4)]);
+  const solved = {};
+  for (let i = 0; i < 400; i++) {
     const username = randChar();
-    const index = rand(contest.problems.length);
+    let index = 0;
+    if (!solved[username]) solved[username] = {};
+    const t = solved[username];
+    while ((index < proCnt) && (t[index])) index ++;
+    if (index === proCnt) continue;
+    for (let k = index + 1; k < proCnt; k++) {
+      if ((!t[k]) && ((diff[k] > diff[index])
+        || ((diff[k] === diff[index]) && (Math.random() < 0.5)))) index = k;
+    }
     const pid = String.fromCharCode('A'.charCodeAt(0) + index);
-    const val = rand(1000);
+    const val = Math.random() * 1000 / 26 * (1 + username.charCodeAt(0) - 'A'.charCodeAt(0));
     let result = 6;
-    if (val < diff[index]) result = 4;
+    if (val < diff[index]) {
+      result = 4;
+      t[index] = 1;
+    }
     const date = new Date();
-    date.setTime(contest.start.getTime() + i * 1000);
+    date.setTime(contest.start.getTime() + i * 60000);
     const originOJ = 'POJ';
     const submission = { username, result, date, pid, originOJ };
     contest.submissions.push(submission);

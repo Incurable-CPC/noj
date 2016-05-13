@@ -48,6 +48,10 @@ export default class Board extends Component {
             return (
               <th key={pid} tooltip={title} style={colStyle}>
                 {pid}
+                <br />
+                <span style={{ fontSize: 12 }}>
+                  {`${problem.get('accepted')}/${problem.get('submit')}`}
+                </span>
               </th>
             );
           })}

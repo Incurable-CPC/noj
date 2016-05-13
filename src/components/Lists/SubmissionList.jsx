@@ -21,6 +21,10 @@ import Location from '../../core/Location';
 import { LANGUAGES, RESULTS } from '../../constants';
 import { isCompleted, isCompileError, isAccepted } from '../../check/submission';
 
+const styles = {
+  label: { textTransform: null },
+};
+
 @withStyles(s)
 export default class SubmissionList extends Component {
   static propTypes = {
@@ -54,7 +58,7 @@ export default class SubmissionList extends Component {
           {withoutPid ? null : (
             <span className={cs(s.col, s.problem)}>
               <FlatButton
-                style={{ textTransform: '' }}
+                labelStyle={styles.label}
                 onTouchTap={() => Location.push(problemUrl)}
                 label={pid}
               />
@@ -62,9 +66,8 @@ export default class SubmissionList extends Component {
           )}
           <span className={cs(s.col, s.username)}>
             <FlatButton
-              style={{ textTransform: '' }}
+              labelStyle={styles.label}
               onTouchTap={() => ({})}
-              labelStyle={{ paddingLeft: 2, paddingRight: 2 }}
               label={username}
             />
           </span>
