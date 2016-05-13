@@ -35,7 +35,7 @@ export const initContest = () => ({ type: ContestConstants.INIT });
 export const getContest = (cid) => async (dispatch, getState) => {
   try {
     const state = getState();
-    if (state.contest.getIn(['detail', 'cid']) === cid) return true;
+    // if (state.contest.getIn(['detail', 'cid']) === cid) return true;
     nprogress.start();
     const res = await getJSON(`/api/contests/${cid}`);
     const { contest } = await res.json();
@@ -64,6 +64,7 @@ export const postContest = async (contest, dispatch) => {
     const data = await res.json();
     dispatch(setContest(data.contest));
     toast('success', `Contest ${action}`);
+    dispatch(getContest(data.contest.cid));
     Location.push(`/contests/${data.contest.cid}`);
   } catch (err) {
     toast('error', err.message);

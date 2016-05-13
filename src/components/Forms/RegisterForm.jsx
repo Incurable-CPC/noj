@@ -51,7 +51,7 @@ export default class LoginForm extends Component {
             className={s.action}
             primary
             label="Register"
-            onClick={register}
+            onTouchTap={register}
             disabled={disabled}
           />
         )}

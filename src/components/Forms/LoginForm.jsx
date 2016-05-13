@@ -47,7 +47,7 @@ export default class LoginForm extends Component {
             className={s.action}
             primary
             label="Login"
-            onClick={login}
+            onTouchTap={login}
             disabled={disabled}
           />
         )}

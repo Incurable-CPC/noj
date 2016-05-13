@@ -4,6 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
+import { green500, blue500, red500 } from 'material-ui/styles/colors';
 import FlatButton from 'material-ui/FlatButton';
 import ListItem from 'material-ui/List/ListItem';
 import Divider from 'material-ui/Divider';
@@ -23,6 +24,17 @@ import { isCompleted, isCompileError, isAccepted } from '../../check/submission'
 
 const styles = {
   label: { textTransform: null },
+  ['status-compile-error']: {
+    cursor: 'pointer',
+    color: blue500,
+  },
+  ['status-accepted']: {
+    color: green500,
+    fontWeight: 600,
+  },
+  ['status-other']: {
+    color: red500,
+  },
 };
 
 @withStyles(s)
@@ -73,9 +85,9 @@ export default class SubmissionList extends Component {
           </span>
           <span className={cs(s.col, s.result)}>
             {isCompleted(result) ?
-              <span className={s[`status-${status}`]}>
+              <span style={styles[`status-${status}`]}>
                 {isCompileError(result) ? (
-                  <span onClick={() => expandSubmission(index, 'CEInfo')}>
+                  <span onTouchTap={() => expandSubmission(index, 'CEInfo')}>
                     {RESULTS[result]}
                   </span>
                 ) : RESULTS[result]}

@@ -55,7 +55,7 @@ export default class ProblemList extends Component {
       <div className={s.row}>
         {fields.map((field, index) => (
           <span className={cs(s.col, s[`${field}-col`])} key={field}>
-            <strong className={s.header} onClick={() => sortBy(field)}>
+            <strong className={s.header} onTouchTap={() => sortBy(field)}>
               {headers[index]}
             </strong>
           </span>

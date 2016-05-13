@@ -20,7 +20,6 @@ import s from './Header.scss';
 
 const styles = {
   ink: { backgroundColor: cyan500 },
-  whiteInk: { backgroundColor: white },
   nameButton: {
     textTransform: '',
     height: 48,
@@ -58,7 +57,6 @@ export default class Header extends Component {
     const DialogTab = (name, index) => (
       <Tab
         className={s.tab}
-        style={styles.tab}
         key={index}
         value={name}
         label={nameToLabel(name)}
@@ -80,7 +78,7 @@ export default class Header extends Component {
       </div>
     ) : (
       <div>
-        <Tabs inkBarStyle={styles.whiteInk} style={{ width: 180 }}>
+        <Tabs style={{ width: 180 }}>
           {['login', 'register'].map(DialogTab)}
         </Tabs>
       </div>
@@ -91,7 +89,7 @@ export default class Header extends Component {
       <Paper className={rootClassName}>
         <div className={s.container}>
           <Link className={s.title} to="/"><strong>NOJ</strong></Link>
-          <Tabs className={s.left} value={active} inkBarStyle={styles.ink}>
+          <Tabs className={s.left} value={active}>
             {leftPart}
           </Tabs>
           <div className={s.right}>

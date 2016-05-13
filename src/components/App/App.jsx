@@ -49,6 +49,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 const muiTheme = getMuiTheme({
   fontFamily: '"Lucida Grande", "Lucida Sans", "Open Sans", sans-serif',
   button: { minWidth: 0 },
+  inkBar: { backgroundColor: cyan500 },
   tabs: {
     backgroundColor: white,
     textColor: black,
