@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import Paper from 'material-ui/lib/paper';
+import Paper from 'material-ui/Paper';
 import { connect } from 'react-redux';
 
 import s from '../common.scss';

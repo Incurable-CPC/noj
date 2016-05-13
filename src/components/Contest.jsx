@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import LinearProgress from 'material-ui/lib/linear-progress';
+import LinearProgress from 'material-ui/LinearProgress';
 import moment from 'moment';
 
 import withStyle from '../decorators/withStyles';

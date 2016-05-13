@@ -4,6 +4,10 @@
   "private": true,
   "main": "./App.jsx",
   "dependencies": {
-    "react-tap-event-plugin": "latest"
+    "react-tap-event-plugin": "latest",
+    "react-immutable-proptypes": "latest",
+    "react-redux": "latest",
+    "react": "latest",
+    "react-toastr": "latest"
   }
 }

@@ -4,8 +4,8 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import FlatButton from 'material-ui/lib/flat-button';
-import Paper from 'material-ui/lib/paper';
+import FlatButton from 'material-ui/FlatButton';
+import Paper from 'material-ui/Paper';
 import { connect } from 'react-redux';
 
 import s from './common.scss';

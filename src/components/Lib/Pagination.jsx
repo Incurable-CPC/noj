@@ -3,7 +3,7 @@
  **/
 
 import React, { Component, PropTypes } from 'react';
-import RaisedButton from 'material-ui/lib/raised-button';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import Location from '../../core/Location';
 
@@ -29,7 +29,7 @@ export default class Pagination extends Component {
           labelStyle={{ paddingLeft: 12, paddingRight: 12 }}
           style={{ minWidth: 40, marginLeft: 1 }}
           onTouchTap={() => Location.push(href)}
-          secondary={current === content}
+          primary={current === content}
           {...props}
         />
       );

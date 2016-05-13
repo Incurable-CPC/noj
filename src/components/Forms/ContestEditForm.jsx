@@ -4,10 +4,10 @@
 
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
-import TextField from 'material-ui/lib/text-field';
-import FlatButton from 'material-ui/lib/flat-button';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import DateTimePicker from '../Lib/DateTimePicker.jsx';
-import RaisedButton from 'material-ui/lib/raised-button';
 
 import Animate from '../Lib/Animate.jsx';
 import { getJSON } from '../../core/fetchJSON';
@@ -112,7 +112,7 @@ export default class ContestEditForm extends Component {
         </div>
         <div className={s.action}>
           <RaisedButton
-            secondary
+            primary
             type="submit"
             label={action}
             disabled={submitting}

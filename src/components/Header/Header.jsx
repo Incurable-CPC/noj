@@ -4,11 +4,11 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import { Colors } from 'material-ui/lib/styles';
-import Paper from 'material-ui/lib/paper';
+import { white, black, cyan500 } from 'material-ui/styles/colors';
+import Paper from 'material-ui/Paper';
+import FlatButton from 'material-ui/FlatButton';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import { Link } from 'react-router';
-import { Tabs, Tab } from 'material-ui/lib/tabs';
-import FlatButton from 'material-ui/lib/flat-button';
 
 import LoginDialog from '../Dialogs/LoginDialog.jsx';
 import RegisterDialog from '../Dialogs/RegisterDialog.jsx';
@@ -19,16 +19,12 @@ import Location from '../../core/Location';
 import s from './Header.scss';
 
 const styles = {
-  tab: {
-    backgroundColor: Colors.white,
-    color: Colors.black,
+  ink: { backgroundColor: cyan500 },
+  whiteInk: { backgroundColor: white },
+  nameButton: {
+    textTransform: '',
+    height: 48,
   },
-  activeTab: {
-    backgroundColor: Colors.white,
-    color: Colors.cyan500
-  },
-  ink: { backgroundColor: Colors.cyan500 },
-  whiteInk: { backgroundColor: Colors.white },
 };
 
 @withStyles(s)
@@ -53,7 +49,6 @@ export default class Header extends Component {
     const LinkTab = (name, index) => (
       <Tab
         className={s.tab}
-        style={(active === name) ? styles.activeTab: styles.tab }
         key={index}
         value={name}
         label={nameToLabel(name)}
@@ -77,7 +72,7 @@ export default class Header extends Component {
     const rightPart = auth.has('username') ? (
       <div>
         <FlatButton
-          style={{ textTransform: '' }}
+          style={styles.nameButton}
           className={s.button}
           label={auth.get('username')}
           onTouchTap={logout}

@@ -3,8 +3,8 @@
  **/
 
 import React, { Component, PropTypes } from 'react';
-import ContentCopyIcon from 'material-ui/lib/svg-icons/content/content-copy';
-import IconButton from 'material-ui/lib/icon-button';
+import ContentCopyIcon from 'material-ui/svg-icons/content/content-copy';
+import IconButton from 'material-ui/IconButton';
 import Codemirror from 'react-codemirror';
 import 'codemirror/mode/clike/clike';
 import 'codemirror/mode/python/python';

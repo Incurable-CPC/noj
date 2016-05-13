@@ -4,14 +4,23 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import List from 'material-ui/lib/lists/list';
-import ListItem from 'material-ui/lib/lists/list-item';
-import Divider from 'material-ui/lib/divider';
+import List from 'material-ui/List/List';
+import ListItem from 'material-ui/List/ListItem';
+import Divider from 'material-ui/Divider';
 
 import withStyles from '../../decorators/withStyles';
 import s from './ProblemList.scss';
 import cs from 'classnames';
 import Location from '../../core/Location';
+
+const styles = {
+  solved: {
+    backgroundColor: 'rgba(212, 237, 201, 0.55)',
+  },
+  tried: {
+    backgroundColor: 'rgba(221, 238, 255, 0.55)',
+  },
+};
 
 @withStyles(s)
 export default class ProblemList extends Component {
@@ -42,8 +51,7 @@ export default class ProblemList extends Component {
         <div key={index}>
           <Divider />
           <ListItem
-            className={s[problem.get('status')]}
-            style={{ background: '' }}
+            style={styles[problem.get('status')]}
             primaryText={content}
             onTouchTap={() => Location.push(url)}
           />

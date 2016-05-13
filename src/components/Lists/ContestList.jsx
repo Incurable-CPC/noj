@@ -4,9 +4,9 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import List from 'material-ui/lib/lists/list';
-import ListItem from 'material-ui/lib/lists/list-item';
-import Divider from 'material-ui/lib/divider';
+import List from 'material-ui/List/List';
+import ListItem from 'material-ui/List/ListItem';
+import Divider from 'material-ui/Divider';
 import moment from 'moment';
 
 import withStyles from '../../decorators/withStyles';
@@ -45,7 +45,6 @@ export default class ProblemList extends Component {
         <div key={index}>
           <Divider />
           <ListItem
-            style={{ background: '' }}
             primaryText={content}
             onTouchTap={() => Location.push(`/contests/${cid}`)}
           />

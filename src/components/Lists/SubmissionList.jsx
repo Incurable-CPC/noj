@@ -4,12 +4,12 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import FlatButton from 'material-ui/lib/flat-button';
-import ListItem from 'material-ui/lib/lists/list-item';
-import Divider from 'material-ui/lib/divider';
-import List from 'material-ui/lib/lists/list';
-import Paper from 'material-ui/lib/paper';
-import CircularProgress from 'material-ui/lib/circular-progress';
+import FlatButton from 'material-ui/FlatButton';
+import ListItem from 'material-ui/List/ListItem';
+import Divider from 'material-ui/Divider';
+import List from 'material-ui/List/List';
+import Paper from 'material-ui/Paper';
+import CircularProgress from 'material-ui/CircularProgress';
 import moment from 'moment';
 
 import CodeBlock from '../Lib/CodeBlock.jsx';

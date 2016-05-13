@@ -3,9 +3,9 @@
  **/
 
 import React, { Component, PropTypes } from 'react';
-import TextField from '../../../node_modules/material-ui/lib/text-field';
-import DatePicker from '../../../node_modules/material-ui/lib/date-picker/date-picker';
-import TimePicker from 'material-ui/lib/time-picker';
+import TextField from 'material-ui/TextField';
+import DatePicker from 'material-ui/DatePicker';
+import TimePicker from 'material-ui/TimePicker';
 import moment from 'moment';
 
 export default class DateTimePicker extends Component {

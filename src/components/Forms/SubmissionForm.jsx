@@ -4,15 +4,15 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import Toolbar from 'material-ui/lib/toolbar/toolbar';
-import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
-import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
-import ToolbarSeparator from 'material-ui/lib/toolbar/toolbar-separator';
-import MenuItem from 'material-ui/lib/menus/menu-item';
-import DropDownMenu from 'material-ui/lib/DropDownMenu';
+import Toolbar from 'material-ui/Toolbar/Toolbar';
+import ToolbarGroup from 'material-ui/Toolbar/ToolbarGroup';
+import ToolbarTitle from 'material-ui/Toolbar/ToolbarTitle';
+import ToolbarSeparator from 'material-ui/Toolbar/ToolbarSeparator';
+import MenuItem from 'material-ui/MenuItem';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
 import Codemirror from 'react-codemirror';
-import Paper from 'material-ui/lib/paper';
-import RaisedButton from 'material-ui/lib/raised-button';
 import 'codemirror/mode/clike/clike';
 import 'codemirror/mode/python/python';
 import { reduxForm } from 'redux-form';
@@ -70,7 +70,7 @@ export default class SubmissionForm extends Component {
                 type="submit"
                 label="submit"
                 disabled={submitting}
-                secondary
+                primary
               />
               <ToolbarSeparator style={{ marginRight: 20 }}/>
               <ToolbarTitle text={pid} />

@@ -4,8 +4,8 @@
 
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
-import FlatButton from 'material-ui/lib/flat-button';
-import TextField from 'material-ui/lib/text-field';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
 
 import withStyle from '../../decorators/withStyles';
 import s from './SmallForm.scss';

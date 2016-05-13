@@ -4,9 +4,9 @@
 
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
-import TextField from 'material-ui/lib/text-field';
-import FlatButton from 'material-ui/lib/flat-button';
-import RaisedButton from 'material-ui/lib/raised-button';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import { fromJS } from 'immutable';
 
 import { nameToStr } from '../../common';
@@ -139,7 +139,7 @@ export default class ProblemEditForm extends Component {
             onTouchTap={this.changeStatus}
           />
           <RaisedButton
-            secondary
+            primary
             type="submit"
             label={action}
             disabled={submitting}

@@ -4,9 +4,9 @@
 
 import React, { Component } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import Paper from 'material-ui/lib/paper';
+import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
-import RaisedButton from 'material-ui/lib/raised-button';
 
 import s from './common.scss';
 import withTitle from '../../decorators/withTitle';

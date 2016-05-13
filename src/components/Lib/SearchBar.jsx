@@ -3,10 +3,10 @@
  **/
 
 import React, { Component, PropTypes } from 'react';
-import Paper from 'material-ui/lib/paper';
-import IconButton from 'material-ui/lib/icon-button';
-import SearchIcon from 'material-ui/lib/svg-icons/action/search';
-import TextField from 'material-ui/lib/text-field';
+import Paper from 'material-ui/Paper';
+import IconButton from 'material-ui/IconButton';
+import SearchIcon from 'material-ui/svg-icons/action/search';
+import TextField from 'material-ui/TextField';
 
 export default class SearchBar extends Component {
   static propTypes = {

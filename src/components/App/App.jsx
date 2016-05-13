@@ -10,6 +10,7 @@
 import React, { Component, PropTypes, createFactory } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
+import { cyan500, white, black } from 'material-ui/styles/colors'
 
 import s from './App.scss';
 import Header from '../Header';
@@ -42,15 +43,19 @@ const context = {
   },
 };
 
-import themeManager from 'material-ui/lib/styles/theme-manager';
-import lightRawTheme from 'material-ui/lib/styles/raw-themes/light-raw-theme';
-import themeDecorator from 'material-ui/lib/styles/theme-decorator';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-const muiTheme = themeManager.getMuiTheme(lightRawTheme);
-const myTheme = themeManager.modifyRawThemeFontFamily(muiTheme,
-  '"Lucida Grande", "Lucida Sans", "Open Sans", sans-serif'
-);
-@themeDecorator(myTheme)
+const muiTheme = getMuiTheme({
+  fontFamily: '"Lucida Grande", "Lucida Sans", "Open Sans", sans-serif',
+  button: { minWidth: 0 },
+  tabs: {
+    backgroundColor: white,
+    textColor: black,
+    selectedTextColor: cyan500,
+  },
+});
+
 @connect(state => state)
 export default class App extends Component {
   static propTypes = {
@@ -86,25 +91,27 @@ export default class App extends Component {
       /\/([^\/]*)/);
     const active = (match) ? match[1] : 'empty';
     return (
-      <div>
-        <Header
-          cid={params.cid}
-          auth={auth}
-          dialog={dialog}
-          active={active}
-          login={() => dispatch(login())}
-          logout={() => dispatch(logout())}
-          register={() => dispatch(register())}
-          showDialog={(_) => dispatch(showDialog(_))}
-          hideDialog={() => dispatch(hideDialog())}
-        />
-        {this.props.children}
-        <ToastContainer
-          ref={setContainer}
-          toastMessageFactory={ToastMessageFactory}
-          className="toast-top-right"
-        />
-      </div>
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <div>
+          <Header
+            cid={params.cid}
+            auth={auth}
+            dialog={dialog}
+            active={active}
+            login={() => dispatch(login())}
+            logout={() => dispatch(logout())}
+            register={() => dispatch(register())}
+            showDialog={(_) => dispatch(showDialog(_))}
+            hideDialog={() => dispatch(hideDialog())}
+          />
+          {this.props.children}
+          <ToastContainer
+            ref={setContainer}
+            toastMessageFactory={ToastMessageFactory}
+            className="toast-top-right"
+          />
+        </div>
+      </MuiThemeProvider>
     );
   }
 }

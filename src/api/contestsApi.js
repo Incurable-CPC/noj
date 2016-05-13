@@ -147,10 +147,14 @@ const generateTest = async (req, res) => {
   const rand = (n) => Math.floor(Math.random() * n);
   const randChar = () => String.fromCharCode('A'.charCodeAt(0) + rand(26));
   const oldLength = contest.submissions.length;
+  const diff = contest.problems.map(() => [1, 30, 70, 500, 900][rand(5)]);
   for (let i = oldLength; i < oldLength + 1000; i++) {
-    const username = randChar() + randChar();
-    const pid = String.fromCharCode('A'.charCodeAt(0) + rand(contest.problems.length));
-    const result = 4 + rand(8);
+    const username = randChar();
+    const index = rand(contest.problems.length);
+    const pid = String.fromCharCode('A'.charCodeAt(0) + index);
+    const val = rand(1000);
+    let result = 6;
+    if (val < diff[index]) result = 4;
     const date = new Date();
     date.setTime(contest.start.getTime() + i * 1000);
     const originOJ = 'POJ';
