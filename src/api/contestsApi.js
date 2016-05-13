@@ -8,6 +8,7 @@ const router = new Router();
 import { requireAuth, requireAdmin, getUsername } from './common';
 import Contest from '../models/contestModel';
 import Problem from '../models/problemModel';
+import { submissionCheckUser, submissionListCheckUser } from '../models/submissionModel';
 import checkSubmission from '../check/submission';
 
 const checkManager = async (cid, username) => {
@@ -33,11 +34,7 @@ const getContest = async (req, res, next) => {
         }
       }
     }
-    submissions.forEach((submission) => {
-      if (submission.username !== username) {
-        submission.code = undefined;
-      }
-    });
+    submissionListCheckUser(submissions, username);
     res.send({ contest });
   } catch (err) {
     next(err);
@@ -132,11 +129,23 @@ const getSubmission = async(req, res, next) => {
     let submission = await Contest
       .findOne({ cid })
       .select(`submissions.${sid}`);
-    if (username !== submission.username) {
-      submission.code = undefined;
-    }
-
+    submissionCheckUser(submission, username);
     res.send({ submission });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getSubmissionList = async(req, res, next) => {
+  try {
+    const { cid } = req.params;
+    const skip = Number(req.query.skip) || 0;
+    const limit = Number(req.query.limit) || 100000;
+    const { submissions } = await Contest
+      .findOne({ cid })
+      .select('submissions')
+      .slice('submissions', [skip, limit]);
+    res.send({ submissionList: submissions });
   } catch (err) {
     next(err);
   }
@@ -177,12 +186,13 @@ const generateTest = async (req, res) => {
   res.send(contest);
 };
 
-router.get('/temp', generateTest);
 router.get('/:cid', getContest);
 router.get('/', getContestList);
+router.get('/:cid/submissions', getSubmissionList);
 router.get('/:cid/submissions/:sid', getSubmission);
 
 router.all('*', requireAuth);
 router.post('/', postContest);
 router.post('/:cid/submissions', postSubmission);
+router.get('/temp', generateTest);
 export default router;

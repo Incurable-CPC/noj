@@ -7,6 +7,8 @@ import ImmutableTypes from 'react-immutable-proptypes';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Divider from 'material-ui/Divider';
+import { blue100, green100 } from 'material-ui/styles/colors';
+import { fade } from 'material-ui/utils/colorManipulator';
 
 import withStyles from '../../decorators/withStyles';
 import s from './ProblemList.scss';
@@ -15,10 +17,10 @@ import Location from '../../core/Location';
 
 const styles = {
   solved: {
-    backgroundColor: 'rgba(212, 237, 201, 0.55)',
+    backgroundColor: fade(green100, 0.5),
   },
   tried: {
-    backgroundColor: 'rgba(221, 238, 255, 0.55)',
+    backgroundColor: fade(blue100, 0.5),
   },
 };
 
@@ -51,7 +53,7 @@ export default class ProblemList extends Component {
         <div key={index}>
           <Divider />
           <ListItem
-            style={styles[problem.get('status')]}
+            innerDivStyle={styles[problem.get('status')]}
             primaryText={content}
             onTouchTap={() => Location.push(url)}
           />

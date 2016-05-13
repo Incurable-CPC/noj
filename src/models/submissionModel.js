@@ -37,3 +37,13 @@ class Submission extends Model {
 
 const submission = new Submission();
 export default submission.generateModel();
+
+export function submissionCheckUser(sub, username) {
+  if (sub.username !== username) {
+    sub.code = undefined;
+  }
+}
+
+export function submissionListCheckUser(subList, username) {
+  subList.forEach((sub) => submissionCheckUser(sub, username));
+}

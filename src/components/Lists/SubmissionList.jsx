@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import { green500, blue500, red500 } from 'material-ui/styles/colors';
+import { green700, blue500, red500 } from 'material-ui/styles/colors';
 import FlatButton from 'material-ui/FlatButton';
 import ListItem from 'material-ui/List/ListItem';
 import Divider from 'material-ui/Divider';
@@ -29,7 +29,7 @@ const styles = {
     color: blue500,
   },
   ['status-accepted']: {
-    color: green500,
+    color: green700,
     fontWeight: 600,
   },
   ['status-other']: {
