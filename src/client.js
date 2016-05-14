@@ -27,6 +27,7 @@ import ContestOverviewPage from './components/Pages/Contest/ContestOverviewPage.
 import ContestProblemPage from './components/Pages/Contest/ContestProblemPage.jsx';
 import ContestSubmissionListPage from './components/Pages/Contest/ContestSubmissionListPage.jsx';
 import ContestBoardPage from './components/Pages/Contest/ContestBoardPage.jsx';
+import ContestClarifyPage from './components/Pages/Contest/ContestClarifyPage';
 // import Test from './components/Test.jsx';
 
 import { getProblem, initProblem, getProblemListByPage } from './actions/problemActions';
@@ -106,6 +107,7 @@ ReactDOM.render((
               <Route path=":pid" onEnter={boundSetContestPid} />
             </Route>
             <Route path="status" component={ContestSubmissionListPage} />
+            <Route path="clarify" component={ContestClarifyPage} />
             <Route path="standing" component={ContestBoardPage} />
             <Route path="edit" component={ContestEditPage} />
             <Route path="*" component={ContestOverviewPage} />

@@ -15,6 +15,11 @@ export const contestSchema = {
   manager: String,
   problems: [Object.assign({ pid: String }, problemSchema)],
   submissions: [submissionSchema],
+  questions: [{
+    username: String,
+    question: String,
+    answer: String,
+  }],
 };
 
 class Contest extends Model {

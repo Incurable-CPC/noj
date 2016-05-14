@@ -153,6 +153,24 @@ const getSubmissionList = async(req, res, next) => {
   }
 };
 
+const postQuestion = async(req, res, next) => {
+  try {
+    const {
+      params: { cid },
+      body: { question },
+    } = req;
+    const username = getUsername(req);
+    const newQuestion = { username, question };
+    await Contest
+      .findOneAndUpdate(
+        { cid },
+        { $push: { questions: newQuestion } });
+    res.send({ question: newQuestion });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const generateTest = async (req, res) => {
   const contest = await Contest.findOne({ cid: 10000 });
   const rand = (n) => Math.floor(Math.random() * n);
@@ -196,5 +214,6 @@ router.get('/:cid/submissions/:sid', getSubmission);
 router.all('*', requireAuth);
 router.post('/', postContest);
 router.post('/:cid/submissions', postSubmission);
+router.post('/:cid/question', postQuestion);
 router.get('/temp', generateTest);
 export default router;

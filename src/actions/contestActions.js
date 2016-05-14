@@ -96,7 +96,6 @@ export const postContest = async (contest, dispatch) => {
   } catch (err) {
     toast('error', err.message);
   }
-
   await nprogress.done();
 };
 
@@ -202,4 +201,27 @@ export const expandContestSubmission = (index, content) => async (dispatch, getS
   } catch (err) {
     toast('error', err.message);
   }
+};
+
+export const postContestQuestion = (clear) => async (question, dispatch) => {
+  try {
+    // const error = question.question.trim() !== '';
+    // if (error) {
+    //   toast('warning', error);
+    //   return;
+    // }
+
+    nprogress.start();
+    const { cid } = question;
+    const res = await postJSON(
+      `/api/contests/${cid}/question`,
+      { question: question.question });
+    const data = await res.json();
+    console.log(data);
+    if (clear) clear();
+    toast('success', 'Post succeed');
+  } catch (err) {
+    toast('error', err.message);
+  }
+  await nprogress.done();
 };
