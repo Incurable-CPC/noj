@@ -8,6 +8,7 @@
     "prefer-const": 0,
     "react/jsx-quotes": 0,
     "react/no-multi-comp": 0,
+    "no-use-before-define": 0,
     "no-script-url": 0,
     "no-empty": 0,
     "no-param-reassign": 0,

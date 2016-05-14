@@ -14,7 +14,6 @@ import ContestConstants from '../constants/ContestConstants';
 import { isCompileError } from '../check/submission';
 import { getTime } from '../decorators/withTime';
 
-
 const setContest = (contest) => ({
   type: ContestConstants.SET,
   contest,
@@ -34,15 +33,19 @@ export const setContestPid = (pid) => ({
 
 export const initContest = () => ({ type: ContestConstants.INIT });
 
-export const getContest = (cid) => async (dispatch, getState) => {
+export const getContest = (cid) => async (dispatch) => {
   try {
-    const state = getState();
+    // const state = getState();
     // if (state.contest.getIn(['detail', 'cid']) === cid) return true;
     nprogress.start();
     const res = await getJSON(`/api/contests/${cid}`);
     const { contest } = await res.json();
     dispatch(setContest(contest));
     await nprogress.done();
+    clearInterval(_newSubmissionsInterval);
+    _newSubmissionsInterval = setInterval(
+      () => dispatch(getContestNewSubmissionList()),
+      2000);
     return true;
   } catch (err) {
     Location.push('/');
@@ -52,11 +55,21 @@ export const getContest = (cid) => async (dispatch, getState) => {
   }
 };
 
+let _newSubmissionsInterval = null;
 export const getContestNewSubmissionList = () => async (dispatch, getState) => {
   const state = getState();
   const contest = state.contest.get('detail');
+  if (!contest) return;
+  const start = moment(contest.get('start'));
+  const duration = Number(contest.get('duration'));
+  const end = moment(start).add(duration, 'hours');
+  const time = getTime();
+  if (time.isBefore(start) || time.isAfter(end)) return;
   const cid = contest.get('cid');
-  const res = await getJSON(`/api/contests/${cid}/submissions`);
+  const skip = contest.get('submissions').size;
+  const res = await getJSON(
+    `/api/contests/${cid}/submissions`,
+    { skip });
   const { submissionList } = await res.json();
   dispatch({
     type: ContestConstants.UPDATE_SUBMISSION_LIST,
@@ -87,7 +100,7 @@ export const postContest = async (contest, dispatch) => {
   await nprogress.done();
 };
 
-export const getContestList = (condition) => async (dispatch, getState) => {
+export const getContestList = (condition) => async (dispatch) => {
   try {
     // const state = getState();
     // const oldCondition = state.contest.get('condition');

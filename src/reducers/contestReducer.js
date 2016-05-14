@@ -84,8 +84,12 @@ export default (state = initState, action) => {
       return state.setIn(['detail', 'submissions', action.index, 'code'],
         fromJS(action.submission));
     case ContestContants.UPDATE_SUBMISSION_LIST:
-      return state.update('detail', (contest) =>
-        addSubmissionList(contest, action.submissionList));
+      return state.update('detail', (contest) => {
+        const submissionList = fromJS(action.submissionList);
+        contest = contest.update('submissions', (submissions) =>
+          submissions.concat(submissionList));
+        return addSubmissionList(contest, submissionList);
+      });
     case ContestContants.CHANGE_SUBMISSION_EXPAND_STATE:
       return state.updateIn(['detail', 'submissions', action.index, 'content'],
         (oldContent) => (oldContent === action.content) ? '' : action.content);

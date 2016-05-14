@@ -139,12 +139,14 @@ const getSubmission = async(req, res, next) => {
 const getSubmissionList = async(req, res, next) => {
   try {
     const { cid } = req.params;
+    const username = getUsername(req);
     const skip = Number(req.query.skip) || 0;
     const limit = Number(req.query.limit) || 100000;
     const { submissions } = await Contest
       .findOne({ cid })
       .select('submissions')
       .slice('submissions', [skip, limit]);
+    submissionListCheckUser(submissions, username);
     res.send({ submissionList: submissions });
   } catch (err) {
     next(err);
