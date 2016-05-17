@@ -14,7 +14,7 @@ import { postContestQuestion } from '../../actions/contestActions';
 const fields = ['cid', 'question'];
 
 @reduxForm({
-  form: 'clarify',
+  form: 'clarifyQuestion',
   fields,
 }, (state) => ({
   initialValues: { cid: state.contest.getIn(['detail', 'cid']) },

@@ -4,7 +4,6 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
 import { connect } from 'react-redux';
 
@@ -17,6 +16,7 @@ import withStyles from '../../../decorators/withStyles';
 @withTitle('NOJ - Contests')
 @withStyles(s)
 @connect(state => ({
+  admin: state.auth.get('admin'),
   username: state.auth.get('username'),
   manager: state.contest.getIn(['detail', 'manager']),
   questions: state.contest.getIn(['detail', 'questions']),
@@ -29,7 +29,7 @@ export default class ContestClarifyPage extends Component {
   };
 
   render() {
-    const { questions, username, manager } = this.props;
+    const { questions, username, manager, admin } = this.props;
     return (
       <div className={s.div}>
         <div className={s.left}>
@@ -38,7 +38,7 @@ export default class ContestClarifyPage extends Component {
           </Paper>
           <Paper className={s.paper}>
             <QuestionList
-              isManager={username === manager}
+              isManager={(username === manager) || admin}
               questionList={questions}
             />
           </Paper>

@@ -18,7 +18,12 @@ export const contestSchema = {
   questions: [{
     username: String,
     question: String,
-    answer: String,
+    time: { type: Date, default: Date.now },
+    answers: [{
+      username: String,
+      answer: String,
+      time: { type: Date, default: Date.now },
+    }],
   }],
 };
 

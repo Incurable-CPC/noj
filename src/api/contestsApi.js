@@ -122,7 +122,7 @@ const postSubmission = async (req, res, next) => {
   }
 };
 
-const getSubmission = async(req, res, next) => {
+const getSubmission = async (req, res, next) => {
   try {
     const { cid, sid } = req.params;
     const username = getUsername(req);
@@ -136,7 +136,7 @@ const getSubmission = async(req, res, next) => {
   }
 };
 
-const getSubmissionList = async(req, res, next) => {
+const getSubmissionList = async (req, res, next) => {
   try {
     const { cid } = req.params;
     const username = getUsername(req);
@@ -153,7 +153,7 @@ const getSubmissionList = async(req, res, next) => {
   }
 };
 
-const postQuestion = async(req, res, next) => {
+const postQuestion = async (req, res, next) => {
   try {
     const {
       params: { cid },
@@ -166,6 +166,28 @@ const postQuestion = async(req, res, next) => {
         { cid },
         { $push: { questions: newQuestion } });
     res.send({ question: newQuestion });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const postAnswer = async (req, res, next) => {
+  try {
+    const {
+      params: { cid, qid },
+      body: { answer },
+    } = req;
+    const username = getUsername(req);
+    const error = await checkManager(cid, username);
+    if (error) {
+      return res.status(401).send({ error });
+    }
+    const newAnswer = { username, answer };
+    await Contest
+      .findOneAndUpdate(
+        { cid },
+        { $push: { [`questions.${qid}.answers`]: newAnswer } });
+    res.send({ question: newAnswer });
   } catch (err) {
     next(err);
   }
@@ -215,5 +237,6 @@ router.all('*', requireAuth);
 router.post('/', postContest);
 router.post('/:cid/submissions', postSubmission);
 router.post('/:cid/question', postQuestion);
+router.post('/:cid/question/:qid/answer', postAnswer);
 router.get('/temp', generateTest);
 export default router;

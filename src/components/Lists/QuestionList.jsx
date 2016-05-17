@@ -4,10 +4,14 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import TextField from 'material-ui/TextField';
+import Divider from 'material-ui/Divider';
+import moment from 'moment';
+
+import AnswerForm from '../Forms/AnswerForm.jsx';
 
 class Question extends Component {
   static propTypes = {
+    index: PropTypes.number.isRequired,
     isManager: PropTypes.bool.isRequired,
     question: ImmutableTypes.map.isRequired,
   };
@@ -19,35 +23,26 @@ class Question extends Component {
   _onChange = (evt) => this.setState({ answer: evt.target.value });
 
   render() {
-    const { question, isManager } = this.props;
+    const { question, isManager, index } = this.props;
     const lines = (question.get('question') || '')
-      .split('\n').map((line, index) =>
-        <span key={index}>{line}<br/></span>);
-    const answerForm = (
-      <div>
-        <TextField
-          multiLine
-          floatingLabelText="Post Answer"
-          value={this.state.answer}
-          onChange={this._onChange}
-        />
-      </div>
-    );
+      .split('\n').map((line, id) =>
+        <span key={id}>{line}<br/></span>);
+    const { username, time } = question.toJS();
     return (
-      <div style={{ paddingTop: 40 }}>
-        <div>
+      <div style={{ paddingTop: 20, paddingBottom: 20 }}>
+        <div style={{ paddingBottom: 4 }}>
           <strong>Question:</strong>
           <div style={{ padding: 8 }}>
             {lines}
           </div>
           <div style={{ fontSize: 12 }}>
-            from team: {question.get('username')}
+            from {username}, {moment(time).format('YYYY-MM-DD hh:mm:ss')}
           </div>
         </div>
         <div>
           <strong>Answer(s):</strong>
         </div>
-        {isManager && answerForm}
+        {isManager && <AnswerForm formKey={index.toString()} />}
       </div>
     );
   }
@@ -62,12 +57,15 @@ export default class QuestionList extends Component {
   render() {
     const { questionList, isManager } = this.props;
     const questionNodeList =
-      questionList.reverse().map((question, index) =>
-        <Question
-          isManager={isManager}
-          question={question}
-          key={index}
-        />);
+      questionList.map((question, index) =>
+        <div key={index}>
+          <Question
+            index={index}
+            isManager={isManager}
+            question={question}
+          />
+          <Divider />
+        </div>);
     return (
       <div>
         {questionNodeList}

@@ -82,7 +82,7 @@ export default class Header extends Component {
         </Tabs>
       </div>
     );
-    const rootClassName = s.header + (cid && ` ${s['contest-header']}`);
+    const rootClassName = s.header + (cid ? ` ${s['contest-header']}` : '');
 
     return (
       <Paper className={rootClassName}>
