@@ -6,8 +6,17 @@ import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Divider from 'material-ui/Divider';
 import moment from 'moment';
+import { grey500 } from 'material-ui/styles/colors';
 
 import AnswerForm from '../Forms/AnswerForm.jsx';
+
+const styles = {
+  info: {
+    fontSize: 12,
+    color: grey500,
+  },
+  grey: { color: grey500 },
+};
 
 class Question extends Component {
   static propTypes = {
@@ -16,31 +25,35 @@ class Question extends Component {
     question: ImmutableTypes.map.isRequired,
   };
 
-  state = {
-    answer: '',
-  };
-
-  _onChange = (evt) => this.setState({ answer: evt.target.value });
-
   render() {
     const { question, isManager, index } = this.props;
-    const lines = (question.get('question') || '')
+    const questionLines = (question.get('question') || '')
       .split('\n').map((line, id) =>
         <span key={id}>{line}<br/></span>);
+    const answerNodeList = (question.get('answers')).map((answer, id) => (
+      <div key={id} style={{ paddingLeft: 8, paddingTop: 4 }}>
+        {answer.get('answer')}
+        <div style={styles.info}>
+          from {answer.get('username')}
+          , {moment(answer.get('time')).format('YYYY-MM-DD hh:mm:ss')}
+        </div>
+      </div>
+    ));
     const { username, time } = question.toJS();
     return (
       <div style={{ paddingTop: 20, paddingBottom: 20 }}>
         <div style={{ paddingBottom: 4 }}>
           <strong>Question:</strong>
           <div style={{ padding: 8 }}>
-            {lines}
-          </div>
-          <div style={{ fontSize: 12 }}>
-            from {username}, {moment(time).format('YYYY-MM-DD hh:mm:ss')}
+            {questionLines}
+            <div style={styles.info}>
+              from {username}, {moment(time).format('YYYY-MM-DD hh:mm:ss')}
+            </div>
           </div>
         </div>
         <div>
           <strong>Answer(s):</strong>
+          <div>{answerNodeList}</div>
         </div>
         {isManager && <AnswerForm formKey={index.toString()} />}
       </div>

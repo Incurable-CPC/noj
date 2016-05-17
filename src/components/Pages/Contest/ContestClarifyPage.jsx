@@ -26,6 +26,7 @@ export default class ContestClarifyPage extends Component {
     questions: ImmutableTypes.list,
     username: PropTypes.string,
     manager: PropTypes.string,
+    admin: PropTypes.bool,
   };
 
   render() {
