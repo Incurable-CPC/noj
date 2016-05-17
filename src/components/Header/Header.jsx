@@ -20,10 +20,8 @@ import s from './Header.scss';
 
 const styles = {
   ink: { backgroundColor: cyan500 },
-  nameButton: {
-    textTransform: '',
-    height: 48,
-  },
+  nameLabel: { textTransform: null },
+  nameButton: { height: 48 },
 };
 
 @withStyles(s)
@@ -70,9 +68,10 @@ export default class Header extends Component {
     const rightPart = auth.has('username') ? (
       <div>
         <FlatButton
-          style={styles.nameButton}
           className={s.button}
+          style={styles.nameButton}
           label={auth.get('username')}
+          labelStyle={styles.nameLabel}
           onTouchTap={logout}
         />
       </div>
@@ -83,7 +82,7 @@ export default class Header extends Component {
         </Tabs>
       </div>
     );
-    const rootClassName = s.header + (cid ? ` ${s['contest-header']}` : '');
+    const rootClassName = s.header + (cid && ` ${s['contest-header']}`);
 
     return (
       <Paper className={rootClassName}>

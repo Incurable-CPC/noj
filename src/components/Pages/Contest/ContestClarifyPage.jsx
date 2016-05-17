@@ -2,12 +2,14 @@
  * Create by cpc on 5/14/16.
  **/
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
+import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
 import { connect } from 'react-redux';
 
-import QuestionForm from '../../Forms/QuestionForm';
+import QuestionForm from '../../Forms/QuestionForm.jsx';
+import QuestionList from '../../Lists/QuestionList.jsx';
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
@@ -15,26 +17,34 @@ import withStyles from '../../../decorators/withStyles';
 @withTitle('NOJ - Contests')
 @withStyles(s)
 @connect(state => ({
-  problems: state.contest.getIn(['detail', 'problems']),
-  teams: state.contest.getIn(['detail', 'teams']),
+  username: state.auth.get('username'),
+  manager: state.contest.getIn(['detail', 'manager']),
+  questions: state.contest.getIn(['detail', 'questions']),
 }))
 export default class ContestClarifyPage extends Component {
   static propTypes = {
-    problems: ImmutableTypes.list,
-    teams: ImmutableTypes.map,
+    questions: ImmutableTypes.list,
+    username: PropTypes.string,
+    manager: PropTypes.string,
   };
 
   render() {
-    // const { problems, teams } = this.props;
+    const { questions, username, manager } = this.props;
     return (
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
             <QuestionForm />
           </Paper>
+          <Paper className={s.paper}>
+            <QuestionList
+              isManager={username === manager}
+              questionList={questions}
+            />
+          </Paper>
         </div>
         <div className={s.right}>
-          <Paper className={s.paper} style={{ height: 250 }}>
+          <Paper className={s.paper} style={{ height: 350 }}>
             TEST
           </Paper>
         </div>

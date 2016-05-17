@@ -58,7 +58,7 @@ export const login = () => async(dispatch, getState) => {
         password,
       });
       const { token } = await res.json();
-      toast('success', 'Login succeed', 'Welcome to NJU Online Judge !');
+      toast('success', 'Login succeed', 'Welcome to NJU Online Judge');
       loginSuccess({ username, token });
       await dispatch(loadUserInfo());
       nprogress.done();
