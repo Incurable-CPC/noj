@@ -18,10 +18,12 @@ import Location from '../../core/Location';
 
 import s from './Header.scss';
 
+const height = 48;
 const styles = {
   ink: { backgroundColor: cyan500 },
   nameLabel: { textTransform: null },
-  nameButton: { height: 48 },
+  nameButton: { height },
+  tabs: { height },
 };
 
 @withStyles(s)
@@ -64,9 +66,15 @@ export default class Header extends Component {
     const items = (cid) ?
       ['overview', 'problems', 'status', 'standing', 'clarify'] :
       ['problems', 'contests', 'status', 'standing'];
-    const leftPart = items.map(LinkTab);
+    const leftPart = (
+      <Tabs
+        tabItemContainerStyle={styles.tabs}
+        className={s.left}
+        value={active}
+      >{items.map(LinkTab)}</Tabs>
+    );
     const rightPart = auth.has('username') ? (
-      <div>
+      <div className={s.right}>
         <FlatButton
           className={s.button}
           style={styles.nameButton}
@@ -76,8 +84,8 @@ export default class Header extends Component {
         />
       </div>
     ) : (
-      <div>
-        <Tabs style={{ width: 180 }}>
+      <div className={s.right}>
+        <Tabs style={{ width: 180 }} tabItemContainerStyle={styles.tabs}>
           {['login', 'register'].map(DialogTab)}
         </Tabs>
       </div>
@@ -88,9 +96,7 @@ export default class Header extends Component {
       <Paper className={rootClassName}>
         <div className={s.container}>
           <Link className={s.title} to="/"><strong>NOJ</strong></Link>
-          <Tabs className={s.left} value={active}>
-            {leftPart}
-          </Tabs>
+          {leftPart}
           <div className={s.right}>
             {rightPart}
           </div>
