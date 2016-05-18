@@ -4,6 +4,7 @@
 
 import { fromJS } from 'immutable';
 import moment, { duration } from 'moment';
+import { List } from 'immutable';
 import ContestContants from '../constants/ContestConstants';
 import { isCompleted, isAccepted } from '../check/submission';
 
@@ -59,6 +60,14 @@ function addSubmissionList(contest, submissionList) {
   }));
 }
 
+function addClarifyLog(contest, clarifyLog) {
+  let path = ['questions'];
+  if (clarifyLog.get('kind') === 1) {
+    path = ['questions', clarifyLog.get('qid'), 'answers'];
+  }
+  return contest.updateIn(path, (_ = new List()) => _.push(clarifyLog));
+}
+
 export default (state = initState, action) => {
   switch (action.type) {
     case ContestContants.INIT:
@@ -72,7 +81,11 @@ export default (state = initState, action) => {
               .set('submit', 0)
               .set('accepted', 0)
               .set('ratio', 0)));
-          return addSubmissionList(contest, contest.get('submissions'));
+          contest = addSubmissionList(contest, contest.get('submissions'));
+          const clarifyLogs = contest.get('clarifyLogs');
+          clarifyLogs.forEach((clarifyLog) =>
+            contest = addClarifyLog(contest, clarifyLog));
+          return contest;
         });
     case ContestContants.SET_PID:
       return state.setIn(['detail', 'pid'], action.pid);

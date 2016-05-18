@@ -20,26 +20,26 @@ const styles = {
 
 class Question extends Component {
   static propTypes = {
-    index: PropTypes.number.isRequired,
     isManager: PropTypes.bool.isRequired,
     question: ImmutableTypes.map.isRequired,
   };
 
   render() {
-    const { question, isManager, index } = this.props;
-    const questionLines = (question.get('question') || '')
+    const { question, isManager } = this.props;
+    const questionLines = (question.get('content') || '')
       .split('\n').map((line, id) =>
         <span key={id}>{line}<br/></span>);
-    const answerNodeList = (question.get('answers')).map((answer, id) => (
-      <div key={id} style={{ paddingLeft: 8, paddingTop: 4 }}>
-        {answer.get('answer')}
+    const answers = question.get('answers');
+    const answerNodeList = answers && answers.map((answer, index) => (
+      <div key={index} style={{ paddingLeft: 8, paddingTop: 4 }}>
+        {answer.get('content')}
         <div style={styles.info}>
           from {answer.get('username')}
           , {moment(answer.get('time')).format('YYYY-MM-DD hh:mm:ss')}
         </div>
       </div>
     ));
-    const { username, time } = question.toJS();
+    const { username, time, qid } = question.toJS();
     return (
       <div style={{ paddingTop: 20, paddingBottom: 20 }}>
         <div style={{ paddingBottom: 4 }}>
@@ -55,7 +55,7 @@ class Question extends Component {
           <strong>Answer(s):</strong>
           <div>{answerNodeList}</div>
         </div>
-        {isManager && <AnswerForm formKey={index.toString()} />}
+        {isManager && <AnswerForm formKey={qid.toString()} />}
       </div>
     );
   }
@@ -70,13 +70,9 @@ export default class QuestionList extends Component {
   render() {
     const { questionList, isManager } = this.props;
     const questionNodeList =
-      questionList.map((question, index) =>
+      questionList && questionList.reverse().map((question, index) =>
         <div key={index}>
-          <Question
-            index={index}
-            isManager={isManager}
-            question={question}
-          />
+          <Question isManager={isManager} question={question} />
           <Divider />
         </div>);
     return (

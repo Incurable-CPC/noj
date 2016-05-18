@@ -16,7 +16,7 @@ import withStyles from '../../../decorators/withStyles';
 @withTitle('NOJ - Contests')
 @withStyles(s)
 @connect(state => ({
-  admin: state.auth.get('admin'),
+  admin: state.auth.has('admin'),
   username: state.auth.get('username'),
   manager: state.contest.getIn(['detail', 'manager']),
   questions: state.contest.getIn(['detail', 'questions']),

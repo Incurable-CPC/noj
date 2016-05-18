@@ -160,12 +160,25 @@ const postQuestion = async (req, res, next) => {
       body: { question },
     } = req;
     const username = getUsername(req);
-    const newQuestion = { username, question };
-    await Contest
+    const { questionCnt } = await Contest
       .findOneAndUpdate(
         { cid },
-        { $push: { questions: newQuestion } });
-    res.send({ question: newQuestion });
+        { $inc: { questionCnt: 1 } })
+      .select('questionCnt');
+    const newLog = {
+      kind: 0,
+      qid: questionCnt,
+      content: question,
+      username,
+    };
+    const { clarifyLogs } = await Contest
+      .findOneAndUpdate(
+        { cid },
+        { $push: { clarifyLogs: newLog } },
+        { new: true })
+      .select('clarifyLogs')
+      .slice('clarifyLogs', -1);
+    res.send({ clarifyLog: clarifyLogs[0] });
   } catch (err) {
     next(err);
   }
@@ -182,12 +195,20 @@ const postAnswer = async (req, res, next) => {
     if (error) {
       return res.status(401).send({ error });
     }
-    const newAnswer = { username, answer };
-    await Contest
+    const newLog = {
+      kind: 1,
+      content: answer,
+      username,
+      qid,
+    };
+    const { clarifyLogs } = await Contest
       .findOneAndUpdate(
         { cid },
-        { $push: { [`questions.${qid}.answers`]: newAnswer } });
-    res.send({ question: newAnswer });
+        { $push: { clarifyLogs: newLog } },
+        { new: true })
+      .select('clarifyLogs')
+      .slice('clarifyLogs', -1);
+    res.send({ clarifyLog: clarifyLogs[0] });
   } catch (err) {
     next(err);
   }

@@ -15,15 +15,13 @@ export const contestSchema = {
   manager: String,
   problems: [Object.assign({ pid: String }, problemSchema)],
   submissions: [submissionSchema],
-  questions: [{
+  questionCnt: { type: Number, default: 0 },
+  clarifyLogs: [{
+    kind: Number,
+    qid: Number,
     username: String,
-    question: String,
+    content: String,
     time: { type: Date, default: Date.now },
-    answers: [{
-      username: String,
-      answer: String,
-      time: { type: Date, default: Date.now },
-    }],
   }],
 };
 
