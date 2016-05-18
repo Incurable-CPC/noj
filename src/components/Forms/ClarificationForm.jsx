@@ -9,48 +9,53 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
-import { postContestQuestion } from '../../actions/contestActions';
+import { clarifyContest } from '../../actions/contestActions';
 
-const fields = ['cid', 'question'];
+const fields = ['cid', 'qid', 'content'];
 
 @reduxForm({
-  form: 'clarifyQuestion',
+  form: 'clarification',
   fields,
-}, (state) => ({
-  initialValues: { cid: state.contest.getIn(['detail', 'cid']) },
+}, (state, prop) => ({
+  initialValues: {
+    cid: state.contest.getIn(['detail', 'cid']),
+    qid: prop.formKey,
+  },
 }))
 @withStyles(s)
-export default class ClarifyForm extends Component {
+export default class ClarificationForm extends Component {
   static propTypes = {
     fields: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     submitting: PropTypes.bool.isRequired,
+    formKey: PropTypes.string.isRequired,
   };
 
   render() {
     const {
-      fields: { question },
+      fields: { content },
       handleSubmit,
       submitting,
+      formKey,
     } = this.props;
-    const clear = () => question.onChange('');
+    const clear = () => content.onChange('');
+    const label = (Number(formKey) < 0) ? 'Question' : 'Answer';
     return (
-      <form onSubmit={handleSubmit(postContestQuestion(clear))}>
+      <form onSubmit={handleSubmit(clarifyContest(clear))}>
         <div>
           <TextField
-            fullWidth
             multiLine
-            rows={3}
-            floatingLabelText="Post New Question"
-            {...question}
+            fullWidth
+            floatingLabelText={label}
+            {...content}
           />
         </div>
         <div className={s.action}>
           <RaisedButton
+            disabled={submitting}
             primary
             type="submit"
-            label="Post"
-            disabled={submitting}
+            label="post"
           />
         </div>
         <div style={{ clear: 'both' }}/>

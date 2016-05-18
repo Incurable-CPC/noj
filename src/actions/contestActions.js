@@ -44,7 +44,7 @@ export const getContest = (cid) => async (dispatch) => {
     await nprogress.done();
     clearInterval(_newSubmissionsInterval);
     _newSubmissionsInterval = setInterval(
-      () => dispatch(getContestNewSubmissionList()),
+      () => dispatch(updateContest()),
       2000);
     return true;
   } catch (err) {
@@ -56,24 +56,30 @@ export const getContest = (cid) => async (dispatch) => {
 };
 
 let _newSubmissionsInterval = null;
-export const getContestNewSubmissionList = () => async (dispatch, getState) => {
+export const updateContest = (force) => async (dispatch, getState) => {
   const state = getState();
   const contest = state.contest.get('detail');
   if (!contest) return;
-  const start = moment(contest.get('start'));
-  const duration = Number(contest.get('duration'));
-  const end = moment(start).add(duration, 'hours');
-  const time = getTime();
-  if (time.isBefore(start) || time.isAfter(end)) return;
+  if (!force) {
+    const start = moment(contest.get('start'));
+    const duration = Number(contest.get('duration'));
+    const end = moment(start).add(duration, 'hours');
+    const time = getTime();
+    if (time.isBefore(start) || time.isAfter(end)) return;
+  }
   const cid = contest.get('cid');
-  const skip = contest.get('submissions').size;
+  const submissionSkip = contest.get('submissions').size;
+  const clarifyLogSkip = contest.get('clarifyLogs').size;
   const res = await getJSON(
-    `/api/contests/${cid}/submissions`,
-    { skip });
-  const { submissionList } = await res.json();
+    `/api/contests/${cid}/update`, {
+      submission: { skip: submissionSkip },
+      clarifyLog: { skip: clarifyLogSkip },
+    });
+  const { submissionList, clarifyLogList } = await res.json();
   dispatch({
-    type: ContestConstants.UPDATE_SUBMISSION_LIST,
+    type: ContestConstants.UPDATE,
     submissionList,
+    clarifyLogList,
   });
 };
 
@@ -203,7 +209,7 @@ export const expandContestSubmission = (index, content) => async (dispatch, getS
   }
 };
 
-export const postContestQuestion = (clear) => async (question, dispatch) => {
+export const clarifyContest = (clear) => async (values, dispatch) => {
   try {
     // const error = question.question.trim() !== '';
     // if (error) {
@@ -211,32 +217,12 @@ export const postContestQuestion = (clear) => async (question, dispatch) => {
     //   return;
     // }
     nprogress.start();
-    const { cid } = question;
+    const { cid } = values;
     const res = await postJSON(
-      `/api/contests/${cid}/question`,
-      { question: question.question });
+      `/api/contests/${cid}/clarification`,
+      values);
     const data = await res.json();
-    if (clear) clear();
-    toast('success', 'Post succeed');
-  } catch (err) {
-    toast('error', err.message);
-  }
-  await nprogress.done();
-};
-
-export const postContestAnswer = (clear) => async (answer, dispatch) => {
-  try {
-    // const error = question.question.trim() !== '';
-    // if (error) {
-    //   toast('warning', error);
-    //   return;
-    // }
-    nprogress.start();
-    const { cid, qid } = answer;
-    const res = await postJSON(
-      `/api/contests/${cid}/question/${qid}/answer`,
-      { answer: answer.answer });
-    const data = await res.json();
+    dispatch(updateContest(true));
     if (clear) clear();
     toast('success', 'Post succeed');
   } catch (err) {

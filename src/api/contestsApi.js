@@ -41,6 +41,29 @@ const getContest = async (req, res, next) => {
   }
 };
 
+const getcontestUpdate = async (req, res, next) => {
+  try {
+    const { cid } = req.params;
+    const username = getUsername(req);
+    const submissionSkip = Number(req.query.submission.skip) || 0;
+    const submissionLimit = Number(req.query.submission.limit) || 100000;
+    const clarifyLogSkip = Number(req.query.clarifyLog.skip) || 0;
+    const clarifyLogLimit = Number(req.query.clarifyLog.limit) || 100000;
+    const { submissions, clarifyLogs } = await Contest
+      .findOne({ cid })
+      .select('submissions clarifyLogs')
+      .slice('submissions', [submissionSkip, submissionLimit])
+      .slice('clarifyLogs', [clarifyLogSkip, clarifyLogLimit]);
+    submissionListCheckUser(submissions, username);
+    res.send({
+      submissionList: submissions,
+      clarifyLogList: clarifyLogs,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const postContest = async (req, res, next) => {
   try {
     const username = getUsername(req);
@@ -136,71 +159,24 @@ const getSubmission = async (req, res, next) => {
   }
 };
 
-const getSubmissionList = async (req, res, next) => {
+const clarifyContest = async (req, res, next) => {
   try {
-    const { cid } = req.params;
-    const username = getUsername(req);
-    const skip = Number(req.query.skip) || 0;
-    const limit = Number(req.query.limit) || 100000;
-    const { submissions } = await Contest
-      .findOne({ cid })
-      .select('submissions')
-      .slice('submissions', [skip, limit]);
-    submissionListCheckUser(submissions, username);
-    res.send({ submissionList: submissions });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const postQuestion = async (req, res, next) => {
-  try {
-    const {
+    let {
       params: { cid },
-      body: { question },
+      body: { content, qid },
     } = req;
     const username = getUsername(req);
-    const { questionCnt } = await Contest
-      .findOneAndUpdate(
-        { cid },
-        { $inc: { questionCnt: 1 } })
-      .select('questionCnt');
-    const newLog = {
-      kind: 0,
-      qid: questionCnt,
-      content: question,
-      username,
-    };
-    const { clarifyLogs } = await Contest
-      .findOneAndUpdate(
-        { cid },
-        { $push: { clarifyLogs: newLog } },
-        { new: true })
-      .select('clarifyLogs')
-      .slice('clarifyLogs', -1);
-    res.send({ clarifyLog: clarifyLogs[0] });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const postAnswer = async (req, res, next) => {
-  try {
-    const {
-      params: { cid, qid },
-      body: { answer },
-    } = req;
-    const username = getUsername(req);
-    const error = await checkManager(cid, username);
-    if (error) {
-      return res.status(401).send({ error });
+    let kind = 1;
+    if (Number(qid) < 0) {
+      const { questionCnt } = await Contest
+        .findOneAndUpdate(
+          { cid },
+          { $inc: { questionCnt: 1 } })
+        .select('questionCnt');
+      qid = questionCnt;
+      kind = 0;
     }
-    const newLog = {
-      kind: 1,
-      content: answer,
-      username,
-      qid,
-    };
+    const newLog = { kind, qid, content, username };
     const { clarifyLogs } = await Contest
       .findOneAndUpdate(
         { cid },
@@ -251,13 +227,12 @@ const generateTest = async (req, res) => {
 
 router.get('/:cid', getContest);
 router.get('/', getContestList);
-router.get('/:cid/submissions', getSubmissionList);
+router.get('/:cid/update', getcontestUpdate);
 router.get('/:cid/submissions/:sid', getSubmission);
 
 router.all('*', requireAuth);
 router.post('/', postContest);
 router.post('/:cid/submissions', postSubmission);
-router.post('/:cid/question', postQuestion);
-router.post('/:cid/question/:qid/answer', postAnswer);
+router.post('/:cid/clarification', clarifyContest);
 router.get('/temp', generateTest);
 export default router;

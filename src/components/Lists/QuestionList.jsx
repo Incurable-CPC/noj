@@ -6,16 +6,28 @@ import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Divider from 'material-ui/Divider';
 import moment from 'moment';
-import { grey500 } from 'material-ui/styles/colors';
+import { cyan500, black } from 'material-ui/styles/colors';
 
-import AnswerForm from '../Forms/AnswerForm.jsx';
+import ClarificationForm from '../Forms/ClarificationForm.jsx';
 
 const styles = {
+  content: {
+    // fontSize: 12,
+    padding: 8,
+    paddingLeft: 12,
+    // color: cyan500,
+  },
   info: {
     fontSize: 12,
-    color: grey500,
+    color: black,
   },
-  grey: { color: grey500 },
+};
+
+const multiLines = (str) => {
+  const lines = (str || '')
+    .split('\n')
+    .map((line, index) => <span key={index}>{line}<br/></span>);
+  return <span>{lines}</span>;
 };
 
 class Question extends Component {
@@ -26,26 +38,25 @@ class Question extends Component {
 
   render() {
     const { question, isManager } = this.props;
-    const questionLines = (question.get('content') || '')
-      .split('\n').map((line, id) =>
-        <span key={id}>{line}<br/></span>);
     const answers = question.get('answers');
-    const answerNodeList = answers && answers.map((answer, index) => (
-      <div key={index} style={{ paddingLeft: 8, paddingTop: 4 }}>
-        {answer.get('content')}
-        <div style={styles.info}>
-          from {answer.get('username')}
-          , {moment(answer.get('time')).format('YYYY-MM-DD hh:mm:ss')}
-        </div>
-      </div>
-    ));
+    const answerNodeList = answers && answers.map((answer, index) => {
+      return (
+        <div key={index} style={styles.content}>
+            {multiLines(answer.get('content'))}
+            <div style={styles.info}>
+              from {answer.get('username')}
+              , {moment(answer.get('time')).format('YYYY-MM-DD hh:mm:ss')}
+            </div>
+          </div>
+        );
+      });
     const { username, time, qid } = question.toJS();
     return (
       <div style={{ paddingTop: 20, paddingBottom: 20 }}>
         <div style={{ paddingBottom: 4 }}>
           <strong>Question:</strong>
-          <div style={{ padding: 8 }}>
-            {questionLines}
+          <div style={styles.content}>
+            {multiLines(question.get('content'))}
             <div style={styles.info}>
               from {username}, {moment(time).format('YYYY-MM-DD hh:mm:ss')}
             </div>
@@ -55,7 +66,7 @@ class Question extends Component {
           <strong>Answer(s):</strong>
           <div>{answerNodeList}</div>
         </div>
-        {isManager && <AnswerForm formKey={qid.toString()} />}
+        {isManager && <ClarificationForm formKey={qid.toString()} />}
       </div>
     );
   }

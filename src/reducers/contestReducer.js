@@ -44,8 +44,8 @@ function addSubmission(contest, submission) {
   });
 }
 
-function addSubmissionList(contest, submissionList) {
-  submissionList.forEach((submission) =>
+function addSubmissions(contest, submissions) {
+  submissions.forEach((submission) =>
     contest = addSubmission(contest, submission));
   return contest.update('teams', (teams) => teams && teams.sort((teamA, teamB) => {
     const solvedA = teamA.get('solved') || 0;
@@ -68,6 +68,12 @@ function addClarifyLog(contest, clarifyLog) {
   return contest.updateIn(path, (_ = new List()) => _.push(clarifyLog));
 }
 
+function addClarifyLogs(contest, clarifyLogs) {
+  clarifyLogs.forEach((clarifyLog) =>
+    contest = addClarifyLog(contest, clarifyLog));
+  return contest;
+}
+
 export default (state = initState, action) => {
   switch (action.type) {
     case ContestContants.INIT:
@@ -81,14 +87,25 @@ export default (state = initState, action) => {
               .set('submit', 0)
               .set('accepted', 0)
               .set('ratio', 0)));
-          contest = addSubmissionList(contest, contest.get('submissions'));
-          const clarifyLogs = contest.get('clarifyLogs');
-          clarifyLogs.forEach((clarifyLog) =>
-            contest = addClarifyLog(contest, clarifyLog));
+          contest = addSubmissions(contest, contest.get('submissions'));
+          contest = addClarifyLogs(contest, contest.get('clarifyLogs'));
           return contest;
         });
     case ContestContants.SET_PID:
       return state.setIn(['detail', 'pid'], action.pid);
+    case ContestContants.UPDATE:
+      return state.update('detail', (contest) => {
+        const submissionList = fromJS(action.submissionList);
+        const clarifyLogList = fromJS(action.clarifyLogList);
+        contest = contest
+          .update('submissions', (submissions) =>
+            submissions.concat(submissionList))
+          .update('clarifyLogs', (clarifyLogs) =>
+            clarifyLogs.concat(clarifyLogList));
+        contest = addSubmissions(contest, submissionList);
+        contest = addClarifyLogs(contest, clarifyLogList);
+        return contest;
+      });
     case ContestContants.SET_LIST:
       return state.set('list', fromJS(action.list))
         .set('condition', fromJS(action.condition))
@@ -96,13 +113,6 @@ export default (state = initState, action) => {
     case ContestContants.SET_SUBMISSION:
       return state.setIn(['detail', 'submissions', action.index, 'code'],
         fromJS(action.submission));
-    case ContestContants.UPDATE_SUBMISSION_LIST:
-      return state.update('detail', (contest) => {
-        const submissionList = fromJS(action.submissionList);
-        contest = contest.update('submissions', (submissions) =>
-          submissions.concat(submissionList));
-        return addSubmissionList(contest, submissionList);
-      });
     case ContestContants.CHANGE_SUBMISSION_EXPAND_STATE:
       return state.updateIn(['detail', 'submissions', action.index, 'content'],
         (oldContent) => (oldContent === action.content) ? '' : action.content);

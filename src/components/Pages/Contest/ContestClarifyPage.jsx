@@ -7,7 +7,7 @@ import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/Paper';
 import { connect } from 'react-redux';
 
-import QuestionForm from '../../Forms/QuestionForm.jsx';
+import ClarificationForm from '../../Forms/ClarificationForm.jsx';
 import QuestionList from '../../Lists/QuestionList.jsx';
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
@@ -35,7 +35,7 @@ export default class ContestClarifyPage extends Component {
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
-            <QuestionForm />
+            <ClarificationForm formKey="-1" />
           </Paper>
           <Paper className={s.paper}>
             <QuestionList
