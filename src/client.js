@@ -30,10 +30,24 @@ import ContestBoardPage from './components/Pages/Contest/ContestBoardPage.jsx';
 import ContestClarifyPage from './components/Pages/Contest/ContestClarifyPage';
 // import Test from './components/Test.jsx';
 
-import { getProblem, initProblem, getProblemListByPage } from './actions/problemActions';
-import { setContestPid, getContest, initContest, getContestListByPage } from './actions/contestActions';
-import { getSubmissionList } from './actions/submissionActions';
-import { loadUserInfo } from './actions/authActions';
+import {
+  getProblem,
+  initProblem,
+  getProblemListByPage,
+} from './actions/problemActions';
+import {
+  getContest,
+  initContest,
+  setContestPid,
+  updateContest,
+  getContestListByPage,
+} from './actions/contestActions';
+import {
+  getSubmissionList,
+} from './actions/submissionActions';
+import {
+  loadUserInfo,
+} from './actions/authActions';
 
 const boundGetProblem = async (nextState, replace, next) => {
   const { params: { pid } } = nextState;
@@ -58,6 +72,10 @@ const boundGetContest = async (nextState, replace, next) => {
 const boundSetContestPid = (nextState) => {
   const { params: { pid } } = nextState;
   store.dispatch(setContestPid(pid));
+};
+
+const boundUpdateContest = () => {
+  store.dispatch(updateContest(true));
 };
 
 const boundGetContestListByPage = async (nextState, replace, next) => {
@@ -100,7 +118,7 @@ ReactDOM.render((
           <IndexRoute onEnter={boundGetContestListByPage} component={ContestListPage} />
           <Route path="page/:page" onEnter={boundGetContestListByPage} component={ContestListPage}/>
           <Route path="add" onEnter={boundInitContest} component={ContestEditPage} />
-          <Route path=":cid" onEnter={boundGetContest}>
+          <Route path=":cid" onEnter={boundGetContest} onChange={boundUpdateContest}>
             <IndexRedirect to="overview" />
             <Route path="overview" component={ContestOverviewPage} />
             <Route path="problems" component={ContestProblemPage}>

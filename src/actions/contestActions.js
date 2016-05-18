@@ -33,10 +33,13 @@ export const setContestPid = (pid) => ({
 
 export const initContest = () => ({ type: ContestConstants.INIT });
 
-export const getContest = (cid) => async (dispatch) => {
+export const getContest = (cid) => async (dispatch, getState) => {
   try {
-    // const state = getState();
-    // if (state.contest.getIn(['detail', 'cid']) === cid) return true;
+    const state = getState();
+    if (state.contest.getIn(['detail', 'cid']) === Number(cid)) {
+      dispatch(updateContest(true));
+      return true;
+    }
     nprogress.start();
     const res = await getJSON(`/api/contests/${cid}`);
     const { contest } = await res.json();
@@ -45,7 +48,7 @@ export const getContest = (cid) => async (dispatch) => {
     clearInterval(_newSubmissionsInterval);
     _newSubmissionsInterval = setInterval(
       () => dispatch(updateContest()),
-      2000);
+      5000);
     return true;
   } catch (err) {
     Location.push('/');
