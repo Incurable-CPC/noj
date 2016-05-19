@@ -45,8 +45,8 @@ export const getContest = (cid) => async (dispatch, getState) => {
     const { contest } = await res.json();
     dispatch(setContest(contest));
     await nprogress.done();
-    clearInterval(_newSubmissionsInterval);
-    _newSubmissionsInterval = setInterval(
+    clearInterval(_updateInterval);
+    _updateInterval = setInterval(
       () => dispatch(updateContest()),
       5000);
     return true;
@@ -58,8 +58,11 @@ export const getContest = (cid) => async (dispatch, getState) => {
   }
 };
 
-let _newSubmissionsInterval = null;
+let _updateInterval = null;
+let _updateLock = false;
 export const updateContest = (force) => async (dispatch, getState) => {
+  if (_updateLock) return;
+  _updateLock = true;
   const state = getState();
   const contest = state.contest.get('detail');
   if (!contest) return;
@@ -84,6 +87,7 @@ export const updateContest = (force) => async (dispatch, getState) => {
     submissionList,
     clarifyLogList,
   });
+  _updateLock = false;
 };
 
 export const postContest = async (contest, dispatch) => {

@@ -39,7 +39,7 @@ export default class ContestEditForm extends Component {
     submitting: PropTypes.bool.isRequired,
   };
 
-  setProblemErrorText = (index, title, error) => {
+  setProblemInfoText = (index, title, error) => {
     const problem = this.props.fields.problems[index];
     problem.title.onChange(title);
     problem.error.onChange(error);
@@ -50,9 +50,9 @@ export default class ContestEditForm extends Component {
       try {
         const res = await getJSON(`/api/problems/${pid}`);
         const { problem: { title } } = await res.json();
-        this.setProblemErrorText(index, title);
+        this.setProblemInfoText(index, title);
       } catch (err) {
-        this.setProblemErrorText(index, '', 'Problem not exist');
+        this.setProblemInfoText(index, '', `Problem ${pid} not exist`);
       }
       this.forceUpdate();
     }, 500);
@@ -66,7 +66,6 @@ export default class ContestEditForm extends Component {
       submitting,
       action,
     } = this.props;
-    start.value = start.value || start.initialValue;
     const startDate = start.value && new Date(start.value);
     return (
       <form className={s.form} onSubmit={handleSubmit(postContest)}>
@@ -91,8 +90,9 @@ export default class ContestEditForm extends Component {
             {problems.map((problem, index) => {
               const { pid: { onChange, ...others } } = problem;
               const handleChange = (evt) => {
-                onChange(evt);
-                this.getProblemTitle(index, evt.target.value);
+                const value = evt.target.value;
+                onChange(value);
+                this.getProblemTitle(index, value);
               };
               return (
                 <div className={s.problem} key={index}>

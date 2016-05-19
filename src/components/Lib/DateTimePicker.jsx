@@ -15,14 +15,9 @@ export default class DateTimePicker extends Component {
     onChange: PropTypes.func,
   };
 
-  state = {
-    value: undefined,
-  };
-
-  getDate = () => (this.props.value || this.state.value);
+  getDate = () => this.props.value;
 
   handleChange = (date) => {
-    this.setState({ value: date });
     if (this.props.onChange) {
       this.props.onChange(null, date);
     }
@@ -65,15 +60,19 @@ export default class DateTimePicker extends Component {
         <div style={{ display: 'none' }}>
           <DatePicker
             autoOk
+            hintText="datepicker"
             mode="landscape"
             ref="datepicker"
             onChange={this.changeDate}
+            value={date}
           />
           <TimePicker
             autoOk
+            hintText="timepicker"
             format="24hr"
             ref="timepicker"
             onChange={this.changeTime}
+            value={date}
           />
         </div>
       </div>
