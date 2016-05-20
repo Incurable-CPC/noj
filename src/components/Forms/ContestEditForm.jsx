@@ -66,6 +66,7 @@ export default class ContestEditForm extends Component {
       submitting,
       action,
     } = this.props;
+    start.value = start.value || start.initialValue;
     const startDate = start.value && new Date(start.value);
     return (
       <form className={s.form} onSubmit={handleSubmit(postContest)}>
@@ -83,6 +84,7 @@ export default class ContestEditForm extends Component {
           <div>
             <TextField
               floatingLabelText="Duration / hours"
+              type="number"
               {...duration}
             />
           </div>

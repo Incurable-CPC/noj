@@ -33,12 +33,14 @@ export const setContestPid = (pid) => ({
 
 export const initContest = () => ({ type: ContestConstants.INIT });
 
-export const getContest = (cid) => async (dispatch, getState) => {
+export const getContest = (cid, force) => async (dispatch, getState) => {
   try {
-    const state = getState();
-    if (state.contest.getIn(['detail', 'cid']) === Number(cid)) {
-      dispatch(updateContest(true));
-      return true;
+    if (!force) {
+      const state = getState();
+      if (state.contest.getIn(['detail', 'cid']) === Number(cid)) {
+        dispatch(updateContest(true));
+        return true;
+      }
     }
     nprogress.start();
     const res = await getJSON(`/api/contests/${cid}`);
@@ -58,21 +60,24 @@ export const getContest = (cid) => async (dispatch, getState) => {
   }
 };
 
+const shouldContestUpdate = (contest) => {
+  if (!contest) return false;
+  const start = moment(contest.get('start'));
+  const duration = Number(contest.get('duration'));
+  const end = moment(start).add(duration, 'hours');
+  const time = getTime();
+  if (time.isBefore(start) || time.isAfter(end)) return false;
+  return true;
+};
+
 let _updateInterval = null;
 let _updateLock = false;
 export const updateContest = (force) => async (dispatch, getState) => {
-  if (_updateLock) return;
-  _updateLock = true;
   const state = getState();
   const contest = state.contest.get('detail');
-  if (!contest) return;
-  if (!force) {
-    const start = moment(contest.get('start'));
-    const duration = Number(contest.get('duration'));
-    const end = moment(start).add(duration, 'hours');
-    const time = getTime();
-    if (time.isBefore(start) || time.isAfter(end)) return;
-  }
+  if ((!force) && shouldContestUpdate(contest)) return;
+  if (_updateLock) return;
+  _updateLock = true;
   const cid = contest.get('cid');
   const submissionSkip = contest.get('submissions').size;
   const clarifyLogSkip = contest.get('clarifyLogs').size;
@@ -102,9 +107,9 @@ export const postContest = async (contest, dispatch) => {
     const action = contest.cid ? 'saved' : 'added';
     const res = await postJSON('/api/contests', { contest });
     const data = await res.json();
-    dispatch(setContest(data.contest));
+    // dispatch(setContest(data.contest));
     toast('success', `Contest ${action}`);
-    dispatch(getContest(data.contest.cid));
+    dispatch(getContest(data.contest.cid, true));
     Location.push(`/contests/${data.contest.cid}`);
   } catch (err) {
     toast('error', err.message);
