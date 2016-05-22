@@ -26,9 +26,9 @@ const checkContest = async (contest) => {
 };
 
 const checkStarted = async (cid) => {
-  const { start } = (await Contest
+  const { start } = await Contest
     .findOne({ cid })
-    .select('start')) || {};
+    .select('start');
   const now = moment();
   return now.isAfter(start);
 };
@@ -37,9 +37,9 @@ const checkSubmission = async (submission) => {
   let error = submissionChecker(submission);
   if (error) return error;
   const { cid } = submission;
-  const { start, duration } = (await Contest
+  const { start, duration } = await Contest
     .findOne({ cid })
-    .select('start duration')) || {};
+    .select('start duration');
   const now = moment();
   const end = moment(start).add(duration, 'hours');
   if (now.isAfter(end) || now.isBefore(start)) return 'Out of contest time';
@@ -53,30 +53,35 @@ const checkManager = async (cid, username) => {
     'Unauthorized opeartion' : '';
 };
 
+const checkCid = async (req, res, next) => {
+  const { cid } = req.params;
+  const contest = await Contest
+    .findOne({ cid })
+    .select('cid');
+  if (contest) next();
+  else res.status(404).send({ error: 'Contest not exist' });
+};
+
 const getContest = async (req, res, next) => {
   try {
     const { cid } = req.params;
     const username = getUsername(req);
     const contest = await Contest.findOne({ cid });
-    if (contest) {
-      const isManager = contest.manager === username;
-      if ((await checkStarted(cid)) || isManager) {
-        const { problems, submissions } = contest;
-        for (let i = 0; i < problems.length; i++) {
-          let { pid } = problems[i];
-          problems[i] = await Problem.findOne({ pid });
-          if (!isManager) problems[i].pid = undefined;
-        }
-        submissionListCheckUser(submissions, username);
-      } else {
-        contest.problems = [];
-        contest.submissions = [];
-        contest.clarifyLogs = [];
+    const isManager = contest.manager === username;
+    if ((await checkStarted(cid)) || isManager) {
+      const { problems, submissions } = contest;
+      for (let i = 0; i < problems.length; i++) {
+        let { pid } = problems[i];
+        problems[i] = await Problem.findOne({ pid });
+        if (!isManager) problems[i].pid = undefined;
       }
-      res.send({ contest });
+      submissionListCheckUser(submissions, username);
     } else {
-      res.status(404).send({ error: 'Contest not exist' });
+      contest.problems = [];
+      contest.submissions = [];
+      contest.clarifyLogs = [];
     }
+    res.send({ contest });
   } catch (err) {
     next(err);
   }
@@ -264,8 +269,9 @@ const generateTest = async (req, res) => {
   res.send(contest);
 };
 
-router.get('/:cid', getContest);
 router.get('/', getContestList);
+router.all('/:cid', checkCid);
+router.get('/:cid', getContest);
 router.get('/:cid/update', getcontestUpdate);
 router.get('/:cid/submissions/:sid', getSubmission);
 

@@ -10,6 +10,12 @@ import FlatButton from 'material-ui/FlatButton';
 import withStyle from '../../decorators/withStyles';
 import s from './SmallForm.scss';
 
+const styles = {
+  hiddlen: {
+    position: 'absolute',
+    left: -9999,
+  },
+};
 const fields = ['username', 'password'];
 @withStyle(s)
 @reduxForm({ form: 'login', fields })
@@ -22,15 +28,19 @@ export default class LoginForm extends Component {
     disabled: PropTypes.bool,
   };
 
+  _handleSubmit = (evt) => {
+    evt.preventDefault();
+    this.props.login();
+  }
+
   render() {
     const {
-      login,
       disabled,
       withoutAction,
       fields: { username, password },
       } = this.props;
     return (
-      <form className={s.form} >
+      <form className={s.form} onSubmit={this._handleSubmit}>
         <TextField
           {...username}
           fullWidth
@@ -42,15 +52,14 @@ export default class LoginForm extends Component {
           type="password"
           floatingLabelText="Password"
         />
-        {withoutAction ? null : (
-          <FlatButton
-            className={s.action}
-            primary
-            label="Login"
-            onTouchTap={login}
-            disabled={disabled}
-          />
-        )}
+        <FlatButton
+          style={withoutAction ? styles.hiddlen : {}}
+          className={s.action}
+          disabled={disabled}
+          label="Login"
+          type="submit"
+          primary
+        />
       </form>
     );
   }

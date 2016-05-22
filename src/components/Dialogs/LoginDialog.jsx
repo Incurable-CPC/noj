@@ -45,7 +45,13 @@ export default class LoginDialog extends Component {
         open={open}
         onRequestClose={hide}
         contentStyle={{ maxWidth: 450 }}
-      ><LoginForm withoutAction login={login} disabled={disabled}/></Dialog>
+      >
+        <LoginForm
+          withoutAction
+          login={handleClick}
+          disabled={disabled}
+        />
+      </Dialog>
     );
   }
 }

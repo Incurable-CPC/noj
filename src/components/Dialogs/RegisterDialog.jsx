@@ -44,7 +44,13 @@ export default class RegisterDialog extends Component {
         open={open}
         onRequestClose={hide}
         contentStyle={{ maxWidth: 450 }}
-      ><RegisterForm withoutAction register={register} disabled={disabled}/></Dialog>
+      >
+        <RegisterForm
+          withoutAction
+          register={handleClick}
+          disabled={disabled}
+        />
+      </Dialog>
     );
   }
 }

@@ -106,7 +106,7 @@ export const register = () => async(dispatch, getState) => {
         password,
       });
       const { token } = await res.json();
-      toast('success', 'Register succeed', 'Welcome to NJU Online Judge !');
+      toast('success', 'Register succeed', 'Welcome to NJU Online Judge');
       loginSuccess({ username, token });
       await dispatch(loadUserInfo());
       nprogress.done();
