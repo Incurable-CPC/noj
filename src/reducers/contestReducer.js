@@ -6,7 +6,7 @@ import { fromJS } from 'immutable';
 import moment, { duration } from 'moment';
 import { List } from 'immutable';
 import ContestContants from '../constants/ContestConstants';
-import { isCompleted, isAccepted } from '../check/submission';
+import { isCompleted, isAccepted } from '../check/submissionChecker';
 
 const initState = fromJS({
   detail: {},

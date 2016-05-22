@@ -4,16 +4,17 @@
 
 import { Router } from 'express';
 const router = new Router();
+import moment from 'moment';
 
 import { requireAuth, requireAdmin, getUsername } from './common';
 import Contest from '../models/contestModel';
 import Problem from '../models/problemModel';
 import { submissionCheckUser, submissionListCheckUser } from '../models/submissionModel';
-import checkSubmission from '../check/submission';
+import submissionChecker from '../check/submissionChecker';
 
-import check, { problemNotExist } from '../check/contest';
+import contestChecker, { problemNotExist } from '../check/contestChekcer';
 const checkContest = async (contest) => {
-  let error = check(contest);
+  let error = contestChecker(contest);
   if (error) return error;
   const { problems } = contest;
   for (let i = 0; i < problems.length; i++) {
@@ -24,8 +25,30 @@ const checkContest = async (contest) => {
   return '';
 };
 
+const checkStarted = async (cid) => {
+  const { start } = (await Contest
+    .findOne({ cid })
+    .select('start')) || {};
+  const now = moment();
+  return now.isAfter(start);
+};
+
+const checkSubmission = async (submission) => {
+  let error = submissionChecker(submission);
+  if (error) return error;
+  const { cid } = submission;
+  const { start, duration } = (await Contest
+    .findOne({ cid })
+    .select('start duration')) || {};
+  const now = moment();
+  const end = moment(start).add(duration, 'hours');
+  if (now.isAfter(end) || now.isBefore(start)) return 'Out of contest time';
+};
+
 const checkManager = async (cid, username) => {
-  const { manager } = await Contest.findOne({ cid });
+  const { manager } = (await Contest
+    .findOne({ cid })
+    .selec('manager')) || {};
   return (username !== manager) ?
     'Unauthorized opeartion' : '';
 };
@@ -34,21 +57,26 @@ const getContest = async (req, res, next) => {
   try {
     const { cid } = req.params;
     const username = getUsername(req);
-    const contest = await Contest
-      .findOne({ cid });
-    const isManager = contest.manager === username;
-    const { problems, submissions } = contest;
-    for (let i = 0; i < problems.length; i++) {
-      let { pid } = problems[i];
-      if (pid) {
-        problems[i] = await Problem.findOne({ pid });
-        if (!isManager) {
-          problems[i].pid = undefined;
+    const contest = await Contest.findOne({ cid });
+    if (contest) {
+      const isManager = contest.manager === username;
+      if ((await checkStarted(cid)) || isManager) {
+        const { problems, submissions } = contest;
+        for (let i = 0; i < problems.length; i++) {
+          let { pid } = problems[i];
+          problems[i] = await Problem.findOne({ pid });
+          if (!isManager) problems[i].pid = undefined;
         }
+        submissionListCheckUser(submissions, username);
+      } else {
+        contest.problems = [];
+        contest.submissions = [];
+        contest.clarifyLogs = [];
       }
+      res.send({ contest });
+    } else {
+      res.status(404).send({ error: 'Contest not exist' });
     }
-    submissionListCheckUser(submissions, username);
-    res.send({ contest });
   } catch (err) {
     next(err);
   }
@@ -137,10 +165,8 @@ const postSubmission = async (req, res, next) => {
     } = req.body;
     const username = getUsername(req);
     let submission = { username, cid, pid, language, code };
-    const error = checkSubmission(submission);
-    if (error) {
-      return res.status(400).send({ error });
-    }
+    const error = await checkSubmission(submission);
+    if (error) return res.status(406).send({ error });
     const index = pid.charCodeAt(0) - 'A'.charCodeAt(0);
     const contest = await Contest.findOne({ cid });
     const problem = await Problem

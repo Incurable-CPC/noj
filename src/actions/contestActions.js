@@ -9,9 +9,9 @@ import { is, fromJS } from 'immutable';
 import toast from '../core/toast';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
-import checkContest from '../check/contest';
+import contestChecker from '../check/contestChekcer';
 import ContestConstants from '../constants/ContestConstants';
-import { isCompileError } from '../check/submission';
+import { isCompileError } from '../check/submissionChecker';
 import { getTime } from '../decorators/withTime';
 
 const setContest = (contest) => ({
@@ -98,7 +98,7 @@ export const updateContest = (force) => async (dispatch, getState) => {
 
 export const postContest = async (contest, dispatch) => {
   try {
-    const error = checkContest(contest);
+    const error = contestChecker(contest);
     if (error) return toast('warning', error);
     nprogress.start();
     const action = contest.cid ? 'saved' : 'added';

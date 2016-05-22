@@ -20,7 +20,7 @@ import s from './SubmissionList.scss';
 import withStyles from '../../decorators/withStyles';
 import Location from '../../core/Location';
 import { LANGUAGES, RESULTS } from '../../constants';
-import { isCompleted, isCompileError, isAccepted } from '../../check/submission';
+import { isCompleted, isCompileError, isAccepted } from '../../check/submissionChecker';
 
 const styles = {
   label: { textTransform: null },

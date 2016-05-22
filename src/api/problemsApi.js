@@ -9,7 +9,9 @@ import { requireAuth, requireAdmin } from './common';
 import Problem from '../models/problemModel';
 import { markWithMath } from '../common';
 import fetch from '../core/fetch';
-import checkProblem from '../check/problem';
+import problemChecker from '../check/problemChecker';
+
+const checkProblem = async (problem) => problemChecker(problem);
 
 const getProblem = async (req, res, next) => {
   try {
@@ -59,7 +61,7 @@ const srcFields = ['description', 'input', 'output', 'source', 'hint'];
 const postProblem = async (req, res, next) => {
   try {
     let { problem } = req.body;
-    let error = checkProblem(problem);
+    let error = await checkProblem(problem);
     if (error) return res.status(406).send({ error });
     srcFields.forEach((field) => {
       const src = problem[`${field}Src`];

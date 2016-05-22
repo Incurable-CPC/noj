@@ -2,7 +2,7 @@
  * Created by cpc on 2/24/16.
  */
 
-import checkSubmission, { isCompleted, isCompileError } from '../check/submission';
+import submissionChecker, { isCompleted, isCompileError } from '../check/submissionChecker';
 import SubmissionConstants from '../constants/SubmissionConstants';
 import { getJSON, postJSON } from '../core/fetchJSON';
 import nprogress from '../core/nprogress';
@@ -29,7 +29,7 @@ export const changeSubmissionState = (index, content) => ({
 export const submit = async (submission) => {
   try {
     const { pid, cid } = submission;
-    const error = checkSubmission(submission);
+    const error = submissionChecker(submission);
     if (error) {
       toast('warning', error);
       return false;

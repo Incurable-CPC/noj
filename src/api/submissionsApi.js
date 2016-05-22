@@ -10,7 +10,9 @@ import Submission from '../models/submissionModel';
 import Problem from '../models/problemModel';
 import User from '../models/userModel';
 import { RESULT_VALUES } from '../constants';
-import checkSubmission, { isCompleted, isAccepted } from '../check/submission';
+import submissionChecker, { isCompleted, isAccepted } from '../check/submissionChecker';
+
+const checkSubmission = async (submission) => submissionChecker(submission);
 
 const getSubmissionList = async (req, res, next) => {
   try {
@@ -49,11 +51,8 @@ const postSubmission = async (req, res, next) => {
     } = req.body;
     const username = getUsername(req);
     let submission = new Submission({ username, pid, language, code });
-    const error = checkSubmission(submission);
-    if (error) {
-      return res.status(400).send({ error });
-    }
-
+    const error = await checkSubmission(submission);
+    if (error) return res.status(406).send({ error });
     const problem = await Problem
       .findOne({ pid })
       .select('originOJ originPid');

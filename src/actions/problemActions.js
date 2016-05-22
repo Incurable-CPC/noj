@@ -9,7 +9,7 @@ import { getJSON, postJSON } from '../core/fetchJSON';
 import toast from '../core/toast';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
-import checkProblem from '../check/problem';
+import problemChecker from '../check/problemChecker';
 
 export const setProblem = (problem) => ({
   type: ProblemConstants.SET,
@@ -22,7 +22,7 @@ export const initProblem = () => ({
 
 export const postProblem = async (problem, dispatch) => {
   try {
-    const error = checkProblem(problem);
+    const error = problemChecker(problem);
     if (error) return toast('warning', error);
     nprogress.start();
     const action = problem.pid ? 'saved' : 'added';

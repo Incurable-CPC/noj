@@ -14,7 +14,7 @@ import { getJSON } from '../../core/fetchJSON';
 import { postContest } from '../../actions/contestActions';
 import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
-import { problemNotExist, MAX_PROBLEM_CNT } from '../../check/contest';
+import { problemNotExist, MAX_PROBLEM_CNT } from '../../check/contestChekcer';
 import toast from '../../core/toast';
 
 const fields = [
