@@ -2,7 +2,7 @@
  * Created by cpc on 1/12/16.
  */
 
-import { Model } from 'mongoose-babelmodel';
+import mongoose, { Schema } from 'mongoose';
 import { createHash } from 'crypto';
 
 export const userSchema = {
@@ -15,35 +15,33 @@ export const userSchema = {
   lastSubmit: Date,
 };
 
-class User extends Model {
-  _schema = userSchema;
+const schema = new Schema(userSchema);
 
-  static async checkToekn(username, token) {
-    const cnt = await this.find({ username, tokens: token }).count();
-    return cnt > 0;
-  }
+schema.statics.checkToken = async function checkToken(username, token) {
+  const cnt = await this.find({ username, tokens: token }).count();
+  return cnt > 0;
+};
 
-  static async checkAdminToken(username, token) {
-    const user = await this.findOne({ username, tokens: token });
-    return user && user.admin;
-  }
+schema.statics.checkAdminToken = async function checkAdminToken(username, token) {
+  const user = await this.findOne({ username, tokens: token });
+  return user && user.admin;
+};
 
-  static async addToken(username) {
-    const rand = Math.random();
-    const str = new Date().toISOString() + rand;
-    const token = createHash('md5').update(str).digest('base64');
-    await this.findOneAndUpdate({ username }, {
-      $push: { tokens: token },
-    });
-    return token;
-  }
+schema.statics.addToken = async function addToken(username) {
+  const rand = Math.random();
+  const str = new Date().toISOString() + rand;
+  const token = createHash('md5').update(str).digest('base64');
+  await this.findOneAndUpdate({ username }, {
+    $push: { tokens: token },
+  });
+  return token;
+};
 
-  static async removeToken(username, token) {
-    await this.findOneAndUpdate({ username }, {
-      $pull: { tokens: token },
-    });
-  }
-}
+schema.statics.removeToken = async function removeToken(username, token) {
+  await this.findOneAndUpdate({ username }, {
+    $pull: { tokens: token },
+  });
+};
 
-const user = new User();
-export default user.generateModel();
+const User = mongoose.model('User', schema);
+export default User;

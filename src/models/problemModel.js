@@ -2,7 +2,7 @@
  * Created by cpc on 1/17/16.
  */
 
-import { Model, pre } from 'mongoose-babelmodel';
+import mongoose, { Schema } from 'mongoose';
 import Counter from './counterModel';
 
 export const problemSchema = {
@@ -29,26 +29,24 @@ export const problemSchema = {
   originPid: String,
 };
 
-class Problem extends Model {
-  _schema = Object.assign({
-    pid: { type: String, index: { unique: true } },
-  }, problemSchema);
+const schema = new Schema(Object.assign({
+  pid: { type: String, index: { unique: true } },
+}, problemSchema));
 
-  @pre('save')
-  static async getPid(next) {
-    if (this.pid) return next();
-    const proCount = await Counter.add('Problem');
-    this.pid = proCount + 1000;
-    next();
-  }
 
-  static async updateRatio(pid) {
-    const problem = await this.findOne({ pid });
-    const { submit, accepted } = problem;
-    problem.ratio = (submit > 0) ? (100 * accepted / submit) : 0;
-    await problem.save();
-  }
-}
+schema.statics.updateRatio = async function updateRatio(pid) {
+  const problem = await this.findOne({ pid });
+  const { submit, accepted } = problem;
+  problem.ratio = (submit > 0) ? (100 * accepted / submit) : 0;
+  await problem.save();
+};
 
-const problem = new Problem();
-export default problem.generateModel();
+schema.pre('save', async function getPid(next) {
+  if (this.pid) return next();
+  const proCount = await Counter.add('Problem');
+  this.pid = proCount + 1000;
+  next();
+});
+
+const Problem = mongoose.model('Problem', schema);
+export default Problem;

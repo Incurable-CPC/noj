@@ -2,7 +2,7 @@
  * Created by cpc on 2/26/16.
  */
 
-import { Model, pre } from 'mongoose-babelmodel';
+import mongoose, { Schema } from 'mongoose';
 import Counter from './counterModel';
 
 export const submissionSchema = {
@@ -20,23 +20,20 @@ export const submissionSchema = {
   CEInfo: String,
 };
 
-class Submission extends Model {
-  _schema = Object.assign({
-    sid: { type: Number, index: { unique: true } },
-  }, submissionSchema);
+const schema = new Schema(Object.assign({
+  sid: { type: Number, index: { unique: true } },
+}, submissionSchema));
 
-  @pre('save')
-  static async getSid(next) {
-    this.codeLength = this.code.length;
-    if (this.sid) return next();
-    const solCounter = await Counter.add('Submission');
-    this.sid = solCounter + 100000;
-    next();
-  }
-}
+schema.pre('save', async function getSid(next) {
+  this.codeLength = this.code.length;
+  if (this.sid) return next();
+  const solCounter = await Counter.add('Submission');
+  this.sid = solCounter + 100000;
+  next();
+});
 
-const submission = new Submission();
-export default submission.generateModel();
+const Submission = mongoose.model('Submission', schema);
+export default Submission;
 
 export function submissionCheckUser(sub, username) {
   if (sub.username !== username) {

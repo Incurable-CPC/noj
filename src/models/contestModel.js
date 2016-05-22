@@ -2,7 +2,7 @@
  * Created by cpc on 3/26/16.
  */
 
-import { Model, pre } from 'mongoose-babelmodel';
+import mongoose, { Schema } from 'mongoose';
 import Counter from './counterModel';
 import { problemSchema } from './problemModel';
 import { submissionSchema } from './submissionModel';
@@ -25,17 +25,13 @@ export const contestSchema = {
   }],
 };
 
-class Contest extends Model {
-  _schema = contestSchema;
+const schema = new Schema(contestSchema);
+schema.pre('save', async function getCid(next) {
+  if (this.cid) return next();
+  const contestCounter = await Counter.add('Contest');
+  this.cid = contestCounter + 10000;
+  next();
+});
 
-  @pre('save')
-  static async getCid(next) {
-    if (this.cid) return next();
-    const contestCounter = await Counter.add('Contest');
-    this.cid = contestCounter + 10000;
-    next();
-  }
-}
-
-const contest = new Contest();
-export default contest.generateModel();
+const Contest = mongoose.model('Contest', schema);
+export default Contest;

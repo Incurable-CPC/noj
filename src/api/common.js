@@ -12,7 +12,7 @@ export const getUsername = (req) => {
 export const requireAuth = async (req, res, next) => {
   try {
     const { username, token } = req.cookies || {};
-    if (!(await User.checkToekn(username, token))) {
+    if (!(await User.checkToken(username, token))) {
       res.status(401).send({ error: 'Please login first' });
     } else {
       next();
