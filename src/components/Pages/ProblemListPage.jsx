@@ -16,6 +16,7 @@ import withStyles from '../../decorators/withStyles';
 import ProblemList from '../Lists/ProblemList.jsx';
 import SearchBar from '../Lib/SearchBar.jsx';
 import Location from '../../core/Location';
+import { api } from '../../config';
 import { postJSON } from '../../core/fetchJSON';
 import { getProblemListSortBy, getProblemListByKeyword } from '../../actions/problemActions';
 
@@ -102,7 +103,7 @@ class ProblemsListPage extends Component {
             />
             <RaisedButton
               label="add from poj"
-              onTouchTap={() => postJSON('/api/problems/poj')}
+              onTouchTap={() => postJSON(`${api}/problems/poj`)}
             />
           </Paper>
         </div>

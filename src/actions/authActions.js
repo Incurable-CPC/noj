@@ -8,6 +8,7 @@ import AuthConstants from '../constants/AuthConstants';
 import { getJSON, postJSON } from '../core/fetchJSON';
 import nprogress from '../core/nprogress';
 import toast from '../core/toast';
+import { api } from '../config';
 
 const cookieOpt = {
   maxAge: 9000000,
@@ -34,7 +35,7 @@ const clearUserInfo = () => {
 export const loadUserInfo = () => async (dispatch) => {
   try {
     if (!cookie.load('username', cookieOpt)) return;
-    const res = await getJSON('/api/auth/info');
+    const res = await getJSON(`${api}/auth/info`);
     const user = await res.json();
     dispatch(setUserInfo(user));
   } catch (err) {
@@ -53,7 +54,7 @@ export const login = () => async(dispatch, getState) => {
     } else {
       nprogress.start();
       dispatch({ type: AuthConstants.LOGIN });
-      const res = await postJSON('/api/auth/login', {
+      const res = await postJSON(`${api}/auth/login`, {
         username,
         password,
       });
@@ -77,7 +78,7 @@ export const logout = (option) => async(dispatch) => {
   } else {
     try {
       nprogress.start();
-      await postJSON('/api/auth/logout');
+      await postJSON(`${api}/auth/logout`);
       toast('success', 'Logout succeed');
       dispatch(clearUserInfo());
       nprogress.done();
@@ -101,7 +102,7 @@ export const register = () => async(dispatch, getState) => {
     } else {
       nprogress.start();
       dispatch({ type: AuthConstants.REGISTER });
-      const res = await postJSON('/api/auth/register', {
+      const res = await postJSON(`${api}/auth/register`, {
         username,
         password,
       });

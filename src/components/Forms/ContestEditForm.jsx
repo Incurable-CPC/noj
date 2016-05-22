@@ -16,6 +16,8 @@ import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
 import { problemNotExist, MAX_PROBLEM_CNT } from '../../check/contestChekcer';
 import toast from '../../core/toast';
+import { api } from '../../config';
+
 
 const fields = [
   'cid',
@@ -51,7 +53,7 @@ export default class ContestEditForm extends Component {
     clearTimeout(this._updateProblem[index]);
     this._updateProblem[index] = setTimeout(async () => {
       try {
-        const res = await getJSON(`/api/problems/${pid}`);
+        const res = await getJSON(`${api}/problems/${pid}`);
         const { problem: { title } } = await res.json();
         this.setProblemInfoText(index, title);
       } catch (err) {

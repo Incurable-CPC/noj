@@ -3,6 +3,7 @@
 
 .idea
 build
+config.*.js
 node_modules
 ncp-debug.log
 npm-debug.log

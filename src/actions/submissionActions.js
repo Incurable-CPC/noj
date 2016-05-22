@@ -8,6 +8,7 @@ import { getJSON, postJSON } from '../core/fetchJSON';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
 import toast from '../core/toast';
+import { api } from '../config';
 
 export const reciveSubmissionList = (submissionList) => ({
   type: SubmissionConstants.SET_LIST,
@@ -37,8 +38,8 @@ export const submit = async (submission) => {
 
     nprogress.start();
     const postUrl = (cid) ?
-      `/api/contests/${cid}/submissions` :
-      `/api/submissions`;
+      `${api}/contests/${cid}/submissions` :
+      `${api}/submissions`;
     const retUrl = (cid) ?
       `/contests/${cid}/status` :
       `/problems/${pid}/status`;
@@ -66,7 +67,7 @@ export const getSubmission = (index) => async(dispatch, getState) => {
     if (!canSubmissionExpand(state, index)) return true;
     nprogress.start();
     const sid = state.submission.getIn(['list', index, 'sid']);
-    const res = await getJSON(`/api/submissions/${sid}`);
+    const res = await getJSON(`${api}/submissions/${sid}`);
     const { submission } = await res.json();
     dispatch(reciveSubmission(index, submission));
     await nprogress.done();
@@ -85,7 +86,7 @@ export const updateSubmissionResult = (index) => async (dispatch, getState) => {
     if (!isCompleted(submission.get('result'))) {
       setTimeout(() => dispatch(updateSubmissionResult(index)), 200);
       const sid = submission.get('sid');
-      const res = await getJSON(`/api/submissions/${sid}`);
+      const res = await getJSON(`${api}/submissions/${sid}`);
       const data = await res.json();
       if (submission.get('result') !== data.submission.result) {
         dispatch(reciveSubmission(index, data.submission));
@@ -97,7 +98,7 @@ export const updateSubmissionResult = (index) => async (dispatch, getState) => {
 export const getSubmissionList = (cond) => async (dispatch) => {
   try {
     nprogress.start();
-    const res = await getJSON(`/api/submissions`, cond);
+    const res = await getJSON(`${api}/submissions`, cond);
     const { submissionList } = await res.json();
     dispatch(reciveSubmissionList(submissionList));
     submissionList.forEach((submission, index) => {

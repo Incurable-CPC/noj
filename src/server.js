@@ -15,7 +15,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import engine from 'ejs-mate';
 import assets from './assets';
-import { port, mongoSetting } from './config';
+import { port, mongoSetting, root } from './config';
 
 const server = global.server = express();
 
@@ -39,7 +39,7 @@ server.use(express.static(path.join(__dirname, 'public')));
 // Register API middleware
 // -----------------------------------------------------------------------------
 import api from './api';
-server.use('/api', api);
+server.use(`${root}/api`, api);
 
 //
 // Register server-side rendering middleware

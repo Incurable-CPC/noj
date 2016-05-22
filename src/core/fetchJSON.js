@@ -7,14 +7,10 @@ import store from '../stores';
 import { logout } from '../actions/authActions';
 
 const handleError = async (res) => {
-  if (res.ok) {
-    return res;
-  }
-
+  if (res.ok) return res;
   if (res.status === 401) {
     store.dispatch(logout({ quiet: true }));
   }
-
   const { error } = await res.json();
   throw new Error(error);
 };
