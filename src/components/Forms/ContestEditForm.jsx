@@ -14,6 +14,8 @@ import { getJSON } from '../../core/fetchJSON';
 import { postContest } from '../../actions/contestActions';
 import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
+import { problemNotExist, MAX_PROBLEM_CNT } from '../../check/contest';
+import toast from '../../core/toast';
 
 const fields = [
   'cid',
@@ -44,6 +46,7 @@ export default class ContestEditForm extends Component {
     problem.title.onChange(title);
     problem.error.onChange(error);
   };
+
   getProblemTitle = (index, pid) => {
     clearTimeout(this._updateProblem[index]);
     this._updateProblem[index] = setTimeout(async () => {
@@ -52,11 +55,21 @@ export default class ContestEditForm extends Component {
         const { problem: { title } } = await res.json();
         this.setProblemInfoText(index, title);
       } catch (err) {
-        this.setProblemInfoText(index, '', `Problem ${pid} not exist`);
+        this.setProblemInfoText(index, '', problemNotExist(pid, index));
       }
       this.forceUpdate();
     }, 500);
   };
+
+  addProblem = () => {
+    const { problems } = this.props.fields;
+    if (problems.length < MAX_PROBLEM_CNT) {
+      problems.addField();
+    } else {
+      toast('warning', 'Too many problems');
+    }
+  };
+
   _updateProblem = [];
 
   render() {
@@ -96,21 +109,28 @@ export default class ContestEditForm extends Component {
                 onChange(value);
                 this.getProblemTitle(index, value);
               };
+              const pid = String.fromCharCode('A'.charCodeAt(0) + index);
               return (
                 <div className={s.problem} key={index}>
                   <TextField
-                    floatingLabelText={`Problem ${index + 1}`}
+                    floatingLabelText={`Problem ${pid}`}
                     errorText={problem.error.value}
                     onChange={handleChange}
                     {...others}
                   />
                   {problem.title.value}
-                  <FlatButton label="REMOVE" onTouchTap={() => problems.removeField(index)}/>
+                  <FlatButton
+                    onTouchTap={() => problems.removeField(index)}
+                    label="remove"
+                  />
                 </div>
               );
             })}
           </Animate>
-          <FlatButton label="add problem" onTouchTap={() => problems.addField()}/>
+          <FlatButton
+            onTouchTap={this.addProblem}
+            label="add problem"
+          />
         </div>
         <div className={s.action}>
           <RaisedButton

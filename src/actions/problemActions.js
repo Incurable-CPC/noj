@@ -23,11 +23,7 @@ export const initProblem = () => ({
 export const postProblem = async (problem, dispatch) => {
   try {
     const error = checkProblem(problem);
-    if (error) {
-      toast('warning', error);
-      return;
-    }
-
+    if (error) return toast('warning', error);
     nprogress.start();
     const action = problem.pid ? 'saved' : 'added';
     const res = await postJSON('/api/problems', { problem });

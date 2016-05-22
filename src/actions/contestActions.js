@@ -75,39 +75,35 @@ let _updateLock = false;
 export const updateContest = (force) => async (dispatch, getState) => {
   const state = getState();
   const contest = state.contest.get('detail');
-  if ((!force) && shouldContestUpdate(contest)) return;
-  if (_updateLock) return;
-  _updateLock = true;
-  const cid = contest.get('cid');
-  const submissionSkip = contest.get('submissions').size;
-  const clarifyLogSkip = contest.get('clarifyLogs').size;
-  const res = await getJSON(
-    `/api/contests/${cid}/update`, {
-      submission: { skip: submissionSkip },
-      clarifyLog: { skip: clarifyLogSkip },
+  if (force || shouldContestUpdate(contest)) {
+    if (_updateLock) return;
+    _updateLock = true;
+    const cid = contest.get('cid');
+    const submissionSkip = contest.get('submissions').size;
+    const clarifyLogSkip = contest.get('clarifyLogs').size;
+    const res = await getJSON(
+      `/api/contests/${cid}/update`, {
+        submission: { skip: submissionSkip },
+        clarifyLog: { skip: clarifyLogSkip },
+      });
+    const { submissionList, clarifyLogList } = await res.json();
+    dispatch({
+      type: ContestConstants.UPDATE,
+      submissionList,
+      clarifyLogList,
     });
-  const { submissionList, clarifyLogList } = await res.json();
-  dispatch({
-    type: ContestConstants.UPDATE,
-    submissionList,
-    clarifyLogList,
-  });
-  _updateLock = false;
+    _updateLock = false;
+  }
 };
 
 export const postContest = async (contest, dispatch) => {
   try {
     const error = checkContest(contest);
-    if (error) {
-      toast('warning', error);
-      return;
-    }
-
+    if (error) return toast('warning', error);
     nprogress.start();
     const action = contest.cid ? 'saved' : 'added';
     const res = await postJSON('/api/contests', { contest });
     const data = await res.json();
-    // dispatch(setContest(data.contest));
     toast('success', `Contest ${action}`);
     dispatch(getContest(data.contest.cid, true));
     Location.push(`/contests/${data.contest.cid}`);

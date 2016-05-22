@@ -11,6 +11,19 @@ import Problem from '../models/problemModel';
 import { submissionCheckUser, submissionListCheckUser } from '../models/submissionModel';
 import checkSubmission from '../check/submission';
 
+import check, { problemNotExist } from '../check/contest';
+const checkContest = async (contest) => {
+  let error = check(contest);
+  if (error) return error;
+  const { problems } = contest;
+  for (let i = 0; i < problems.length; i++) {
+    const { pid } = problems[i];
+    const problem = await Problem.findOne({ pid });
+    if (!problem) return problemNotExist(pid, i);
+  }
+  return '';
+};
+
 const checkManager = async (cid, username) => {
   const { manager } = await Contest.findOne({ cid });
   return (username !== manager) ?
@@ -68,12 +81,12 @@ const postContest = async (req, res, next) => {
   try {
     const username = getUsername(req);
     let { contest } = req.body;
+    let error = await checkContest(contest);
+    if (error) return res.status(406).send({ error });
     const { cid } = contest;
     if (contest.cid) {
-      const error = await checkManager(cid, username);
-      if (error) {
-        return res.status(401).send({ error });
-      }
+      error = await checkManager(cid, username);
+      if (error) return res.status(401).send({ error });
       contest = await Contest.findOneAndUpdate({ cid },
         contest, { upsert: true, new: true });
     } else {
