@@ -6,20 +6,20 @@ import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Divider from 'material-ui/Divider';
 import moment from 'moment';
-import { cyan500, black } from 'material-ui/styles/colors';
+import { grey100, grey500 } from 'material-ui/styles/colors';
 
 import ClarificationForm from '../Forms/ClarificationForm.jsx';
 
 const styles = {
   content: {
-    // fontSize: 12,
     padding: 8,
     paddingLeft: 12,
-    // color: cyan500,
+    backgroundColor: grey100,
+    borderRadius: 10,
   },
   info: {
     fontSize: 12,
-    color: black,
+    color: grey500,
   },
 };
 
@@ -41,7 +41,7 @@ class Question extends Component {
     const answers = question.get('answers');
     const answerNodeList = answers && answers.map((answer, index) => {
       return (
-        <div key={index} style={styles.content}>
+        <div key={index} style={{ paddingBottom: 4 }}>
             {multiLines(answer.get('content'))}
             <div style={styles.info}>
               from {answer.get('username')}
@@ -64,7 +64,9 @@ class Question extends Component {
         </div>
         <div>
           <strong>Answer(s):</strong>
-          <div>{answerNodeList}</div>
+          <div style={styles.content}>
+            {answerNodeList}
+          </div>
         </div>
         {isManager && <ClarificationForm formKey={qid.toString()} />}
       </div>

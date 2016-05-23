@@ -5,6 +5,7 @@
 import { getValues } from 'redux-form';
 import cookie from 'react-cookie';
 import AuthConstants from '../constants/AuthConstants';
+import { loginChecker, registerChecker } from '../check/authChecker';
 import { getJSON, postJSON } from '../core/fetchJSON';
 import nprogress from '../core/nprogress';
 import toast from '../core/toast';
@@ -47,10 +48,9 @@ export const login = () => async(dispatch, getState) => {
   try {
     const state = getState();
     const { username, password } = getValues(state.form.login) || {};
-    if (!username) {
-      toast('warning', 'Please input username');
-    } else if (!password) {
-      toast('warning', 'Please input password');
+    const error = loginChecker(username, password);
+    if (error) {
+      toast('warning', error);
     } else {
       nprogress.start();
       dispatch({ type: AuthConstants.LOGIN });
@@ -68,8 +68,8 @@ export const login = () => async(dispatch, getState) => {
   } catch (err) {
     toast('error', err.message);
     nprogress.done();
-    return false;
   }
+  return false;
 };
 
 export const logout = (option) => async(dispatch) => {
@@ -93,12 +93,9 @@ export const register = () => async(dispatch, getState) => {
   try {
     const state = getState();
     const { username, password, confirmPassword } = getValues(state.form.register) || {};
-    if (!username) {
-      toast('warning', 'Please input username');
-    } else if (!password) {
-      toast('warning', 'Please input password');
-    } else if (password !== confirmPassword) {
-      toast('warning', 'Passwords not match');
+    const error = registerChecker(username, password, confirmPassword);
+    if (error) {
+      toast('warning', error);
     } else {
       nprogress.start();
       dispatch({ type: AuthConstants.REGISTER });
@@ -117,4 +114,5 @@ export const register = () => async(dispatch, getState) => {
     toast('error', err.message);
     nprogress.done();
   }
+  return false;
 };

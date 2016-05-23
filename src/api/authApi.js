@@ -3,10 +3,11 @@
  */
 
 import { Router } from 'express';
+import bcrypt from 'bcrypt';
 import User from '../models/userModel';
 import { requireAuth, getUsername } from './common';
 import { useAwait } from '../common';
-import bcrypt from 'bcrypt';
+import { loginChecker, registerChecker } from '../check/authChecker';
 const router = new Router();
 
 const compare = useAwait(bcrypt.compare);
@@ -14,10 +15,10 @@ const genSalt = useAwait(bcrypt.genSalt);
 const hash = useAwait(bcrypt.hash);
 
 const login = async(req, res, next) => {
-  let error = '';
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
+    let error = loginChecker(username, password);
     if (!user) {
       res.status(401);
       error = 'User not exist';
@@ -48,11 +49,11 @@ const logout = async (req, res, next) => {
 };
 
 const register = async (req, res, next) => {
-  let error = '';
   try {
-    const { username } = req.body;
+    const { username, password, confirmPassword } = req.body;
+    let error = registerChecker(username, password, confirmPassword);
     const salt = await genSalt();
-    const password = await hash(req.body.password, salt);
+    const bcrypted = await hash(password, salt);
     if ((await User.find({ username }).count()) > 0) {
       res.status(409);
       error = 'User exist already';
@@ -61,7 +62,7 @@ const register = async (req, res, next) => {
     if (error) {
       res.send({ error });
     } else {
-      const newUser = new User({ username, password });
+      const newUser = new User({ username, password: bcrypted });
       await newUser.save();
       const token = await User.addToken(username);
       res.status(201).send({ token });

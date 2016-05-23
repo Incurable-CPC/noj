@@ -9,6 +9,7 @@ import FlatButton from 'material-ui/FlatButton';
 
 import withStyle from '../../decorators/withStyles';
 import s from './SmallForm.scss';
+import { usernameChecker } from '../../check/authChecker';
 
 const styles = {
   hiddlen: {
@@ -44,6 +45,7 @@ export default class LoginForm extends Component {
           {...username}
           fullWidth
           floatingLabelText="Username"
+          errorText={usernameChecker(username.value)}
         />
         <TextField
           {...password}
