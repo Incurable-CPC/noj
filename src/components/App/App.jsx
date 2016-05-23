@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { cyan500, white, black } from 'material-ui/styles/colors'
 
 import s from './App.scss';
-import Header from '../Header';
+import Header from './Header.jsx';
 import { showDialog, hideDialog } from '../../actions/dialogActions';
 import { login, register, logout } from '../../actions/authActions';
 

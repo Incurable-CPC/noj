@@ -65,8 +65,10 @@ const postSubmission = async (req, res, next) => {
       { $inc: { submit: 1 } });
     await Problem.updateRatio(pid);
     await User.findOneAndUpdate(
-      { username },
-      { $addToSet: { tried: pid } });
+      { username }, {
+        $set: { lastSubmit: submission.date },
+        $addToSet: { tried: pid },
+      });
     res.send({ submission });
   } catch (err) {
     next(err);

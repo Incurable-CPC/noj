@@ -13,8 +13,9 @@ import s from './common.scss';
 import Pagination from '../Lib/Pagination.jsx';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
-import ProblemList from '../Lists/ProblemList.jsx';
-import SearchBar from '../Lib/SearchBar.jsx';
+import ProblemList from '../Lists/ProblemList';
+import SearchBar from '../Lib/SearchBar';
+import UserInfoBox from '../SideBoxes/UserInfoBox';
 import Location from '../../core/Location';
 import { api } from '../../config';
 import { postJSON } from '../../core/fetchJSON';
@@ -29,6 +30,7 @@ import { getProblemListSortBy, getProblemListByKeyword } from '../../actions/pro
   searchKey: state.problem.getIn(['condition', 'searchKey']),
   solved: state.auth.get('solved'),
   tried: state.auth.get('tried'),
+  user: state.auth,
 }))
 class ProblemsListPage extends Component {
   static propTypes = {
@@ -36,6 +38,7 @@ class ProblemsListPage extends Component {
     searchKey: PropTypes.string,
     solved: ImmutableTypes.list,
     tried: ImmutableTypes.list,
+    user: ImmutableTypes.map,
     count: PropTypes.number.isRequired,
     page: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired,
@@ -46,7 +49,7 @@ class ProblemsListPage extends Component {
   }
 
   render() {
-    const { count, page, dispatch, searchKey } = this.props;
+    const { count, page, dispatch, searchKey, user } = this.props;
     const tried = (this.props.tried || new List()).toJS();
     const solved = (this.props.solved || new List()).toJS();
     const pagination = [];
@@ -108,9 +111,10 @@ class ProblemsListPage extends Component {
           </Paper>
         </div>
         <div className={s.right}>
-          <Paper className={s.paper} style={{ height: 250 }}>
+          <Paper className={s.paper} style={{ height: 250, paddingBottom: 20 }}>
             TEST
           </Paper>
+          {user.has('username') && <UserInfoBox user={user}/>}
         </div>
       </div>
     );

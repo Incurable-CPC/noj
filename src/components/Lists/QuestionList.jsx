@@ -20,6 +20,7 @@ const styles = {
   info: {
     fontSize: 12,
     color: grey500,
+    // textAlign: 'right',
   },
 };
 

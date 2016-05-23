@@ -13,6 +13,12 @@ export const userSchema = {
   solved: [String],
   tried: [String],
   lastSubmit: Date,
+  registerTime: { type: Date, default: Date.now },
+  info: {
+    avatar: { type: String, default: '/img/default.png' },
+    school: String,
+    email: String,
+  },
 };
 
 const schema = new Schema(userSchema);
