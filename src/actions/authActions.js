@@ -102,6 +102,7 @@ export const register = () => async(dispatch, getState) => {
       const res = await postJSON(`${api}/auth/register`, {
         username,
         password,
+        confirmPassword,
       });
       const { token } = await res.json();
       toast('success', 'Register succeed', 'Welcome to NJU Online Judge');

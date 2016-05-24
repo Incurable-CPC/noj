@@ -52,6 +52,7 @@ const register = async (req, res, next) => {
   try {
     const { username, password, confirmPassword } = req.body;
     let error = registerChecker(username, password, confirmPassword);
+    if (error) res.status(406);
     const salt = await genSalt();
     const bcrypted = await hash(password, salt);
     if ((await User.find({ username }).count()) > 0) {

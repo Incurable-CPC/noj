@@ -5,23 +5,27 @@
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Divider from 'material-ui/Divider';
+import Paper from 'material-ui/Paper';
+import { grey50, grey500 } from 'material-ui/styles/colors';
 import moment from 'moment';
-import { grey100, grey500 } from 'material-ui/styles/colors';
 
 import ClarificationForm from '../Forms/ClarificationForm.jsx';
 
 const styles = {
   content: {
-    padding: 8,
-    paddingLeft: 12,
-    backgroundColor: grey100,
-    borderRadius: 10,
+    padding: '12px 20px',
+    marginTop: 12,
+    marginBottom: 12,
+    backgroundColor: grey50,
+    // borderRadius: 10,
   },
   info: {
+    paddingTop: 8,
     fontSize: 12,
     color: grey500,
     // textAlign: 'right',
   },
+  marginTop: { paddingTop: 20 },
 };
 
 const multiLines = (str) => {
@@ -42,34 +46,34 @@ class Question extends Component {
     const answers = question.get('answers');
     const answerNodeList = answers && answers.map((answer, index) => {
       return (
-        <div key={index} style={{ paddingBottom: 4 }}>
-            {multiLines(answer.get('content'))}
-            <div style={styles.info}>
-              from {answer.get('username')}
-              , {moment(answer.get('time')).format('YYYY-MM-DD hh:mm:ss')}
-            </div>
+        <div key={index} style={index > 0 ? styles.marginTop : {}}>
+          {multiLines(answer.get('content'))}
+          <div style={styles.info}>
+            from {answer.get('username')}
+            , {moment(answer.get('time')).format('YYYY-MM-DD hh:mm:ss')}
           </div>
-        );
-      });
+        </div>
+      );
+    });
     const { username, time, qid } = question.toJS();
     return (
       <div style={{ paddingTop: 20, paddingBottom: 20 }}>
         <div style={{ paddingBottom: 4 }}>
           <strong>Question:</strong>
-          <div style={styles.content}>
+          <Paper style={styles.content}>
             {multiLines(question.get('content'))}
             <div style={styles.info}>
               from {username}, {moment(time).format('YYYY-MM-DD hh:mm:ss')}
             </div>
-          </div>
+          </Paper>
         </div>
         <div>
           <strong>Answer(s):</strong>
-          <div style={styles.content}>
+          <Paper style={styles.content}>
             {answerNodeList}
-          </div>
+            {isManager && <ClarificationForm formKey={qid.toString()} />}
+          </Paper>
         </div>
-        {isManager && <ClarificationForm formKey={qid.toString()} />}
       </div>
     );
   }
@@ -86,8 +90,8 @@ export default class QuestionList extends Component {
     const questionNodeList =
       questionList && questionList.reverse().map((question, index) =>
         <div key={index}>
+          {(index > 0) && <Divider /> }
           <Question isManager={isManager} question={question} />
-          <Divider />
         </div>);
     return (
       <div>
