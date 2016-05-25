@@ -2,7 +2,7 @@
  * Create by cpc on 1/12/16.
  **/
 
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
@@ -11,9 +11,10 @@ import { connect } from 'react-redux';
 import s from './common.scss';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
-import SubmissionList from '../Lists/SubmissionList.jsx';
+import SubmissionList from '../Lists/SubmissionList';
 import { expandSubmission } from '../../actions/submissionActions';
 import Location from '../../core/Location';
+import BasePage from './BasePage';
 
 @withTitle('NOJ - Status')
 @withStyles(s)
@@ -21,17 +22,13 @@ import Location from '../../core/Location';
   submissionList: state.submission.get('list'),
   problem: state.problem.get('detail'),
 }))
-export default class SubmissionListPage extends Component {
+export default class SubmissionListPage extends BasePage {
   static propTypes = {
     submissionList: ImmutableTypes.list.isRequired,
     problem: ImmutableTypes.map.isRequired,
     dispatch: PropTypes.func.isRequired,
     params: PropTypes.object,
   };
-
-  componentDidMount() {
-    window.scrollTo(0, 0);
-  }
 
   render() {
     const { submissionList, problem, dispatch, params: { pid } } = this.props;

@@ -2,16 +2,17 @@
  * Create by cpc on 5/14/16.
  **/
 
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/Paper';
 import { connect } from 'react-redux';
 
-import ClarificationForm from '../../Forms/ClarificationForm.jsx';
-import QuestionList from '../../Lists/QuestionList.jsx';
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
+import ClarificationForm from '../../Forms/ClarificationForm';
+import QuestionList from '../../Lists/QuestionList';
+import BasePage from '../BasePage';
 
 @withTitle('NOJ - Contests')
 @withStyles(s)
@@ -21,7 +22,7 @@ import withStyles from '../../../decorators/withStyles';
   manager: state.contest.getIn(['detail', 'manager']),
   questions: state.contest.getIn(['detail', 'questions']),
 }))
-export default class ContestClarifyPage extends Component {
+export default class ContestClarifyPage extends BasePage {
   static propTypes = {
     questions: ImmutableTypes.list,
     username: PropTypes.string,

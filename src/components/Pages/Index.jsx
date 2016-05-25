@@ -2,16 +2,13 @@
  * Create by cpc on 1/3/16.
  **/
 
-import React, { Component } from 'react';
+import React from 'react';
 import withTitle from '../../decorators/withTitle';
+import BasePage from './BasePage';
 
 export default
 @withTitle('NJU Online Judge')
-class Index extends Component {
-
-  componentDidMount() {
-    window.scrollTo(0, 0);
-  }
+class Index extends BasePage {
 
   render() {
     return <h1 style={{ textAlign: 'center' }}>Welcome to NJU Online Judge</h1>;

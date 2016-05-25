@@ -2,7 +2,7 @@
  * Create by cpc on 1/13/16.
  **/
 
-import React, { Component } from 'react';
+import React from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -12,22 +12,19 @@ import s from './common.scss';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import Location from '../../core/Location';
-import Problem from '../Problem.jsx';
-import SubmissionForm from '../Forms/SubmissionForm.jsx';
+import Problem from '../Problem';
+import SubmissionForm from '../Forms/SubmissionForm';
+import BasePage from './BasePage';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
 @connect((state) => ({
   problem: state.problem.get('detail'),
 }))
-export default class ProblemPage extends Component {
+export default class ProblemPage extends BasePage {
   static propTypes = {
     problem: ImmutableTypes.map.isRequired,
   };
-
-  componentDidMount() {
-    window.scrollTo(0, 0);
-  }
 
   render() {
     const { problem } = this.props;

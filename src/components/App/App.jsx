@@ -10,10 +10,10 @@
 import React, { Component, PropTypes, createFactory } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
-import { cyan500, white, black } from 'material-ui/styles/colors'
+import { cyan500, white, black } from 'material-ui/styles/colors';
 
 import s from './App.scss';
-import Header from './Header.jsx';
+import Header from './Header';
 import { showDialog, hideDialog } from '../../actions/dialogActions';
 import { login, register, logout } from '../../actions/authActions';
 

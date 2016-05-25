@@ -2,13 +2,17 @@
  * Create by cpc on 1/12/16.
  **/
 
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import { List } from 'immutable';
 import { connect } from 'react-redux';
 
+import { getProblemListSortBy, getProblemListByKeyword } from '../../actions/problemActions';
+import { postJSON } from '../../core/fetchJSON';
+import Location from '../../core/Location';
+import { api } from '../../config';
 import s from './common.scss';
 import Pagination from '../Lib/Pagination.jsx';
 import withTitle from '../../decorators/withTitle';
@@ -16,10 +20,7 @@ import withStyles from '../../decorators/withStyles';
 import ProblemList from '../Lists/ProblemList';
 import SearchBar from '../Lib/SearchBar';
 import UserInfoBox from '../SideBoxes/UserInfoBox';
-import Location from '../../core/Location';
-import { api } from '../../config';
-import { postJSON } from '../../core/fetchJSON';
-import { getProblemListSortBy, getProblemListByKeyword } from '../../actions/problemActions';
+import BasePage from './BasePage';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
@@ -32,7 +33,7 @@ import { getProblemListSortBy, getProblemListByKeyword } from '../../actions/pro
   tried: state.auth.get('tried'),
   user: state.auth,
 }))
-class ProblemsListPage extends Component {
+class ProblemsListPage extends BasePage {
   static propTypes = {
     problemList: ImmutableTypes.list.isRequired,
     searchKey: PropTypes.string,
@@ -43,10 +44,6 @@ class ProblemsListPage extends Component {
     page: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
-
-  componentDidMount() {
-    window.scrollTo(0, 0);
-  }
 
   render() {
     const { count, page, dispatch, searchKey, user } = this.props;

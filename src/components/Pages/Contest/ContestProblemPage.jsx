@@ -2,7 +2,7 @@
  * Create by cpc on 4/12/16.
  **/
 
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/Paper';
 import { connect } from 'react-redux';
@@ -10,11 +10,12 @@ import { connect } from 'react-redux';
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
-import Problem from '../../Problem.jsx';
-import Pagination from '../../Lib/Pagination.jsx';
-import SubmissionForm from '../../Forms/SubmissionForm.jsx';
 import Location from '../../../core/Location';
 import toast from '../../../core/toast';
+import Pagination from '../../Lib/Pagination';
+import SubmissionForm from '../../Forms/SubmissionForm';
+import Problem from '../../Problem';
+import BasePage from '../BasePage';
 
 @withTitle('NOJ - Contests')
 @withStyles(s)
@@ -26,7 +27,7 @@ import toast from '../../../core/toast';
     pid: contest.get('pid'),
   };
 })
-export default class ContestProblemPage extends Component {
+export default class ContestProblemPage extends BasePage {
   static propTypes = {
     problems: ImmutableTypes.list.isRequired,
     pid: PropTypes.string.isRequired,
@@ -41,10 +42,6 @@ export default class ContestProblemPage extends Component {
       toast('error', 'No such problem');
       Location.push(`/contests/${cid}`);
     }
-  }
-
-  componentDidMount() {
-    window.scrollTo(0, 0);
   }
 
   render() {

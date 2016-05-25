@@ -2,32 +2,29 @@
  * Create by cpc on 1/12/16.
  **/
 
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/Paper';
 import { connect } from 'react-redux';
 
+import { expandContestSubmission } from '../../../actions/contestActions';
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
-import SubmissionList from '../../Lists/SubmissionList.jsx';
-import { expandContestSubmission } from '../../../actions/contestActions';
+import SubmissionList from '../../Lists/SubmissionList';
+import BasePage from '../BasePage';
 
 @withTitle('NOJ - Contests')
 @withStyles(s)
 @connect(state => ({
   submissionList: state.contest.getIn(['detail', 'submissions']),
 }))
-export default class SubmissionListPage extends Component {
+export default class SubmissionListPage extends BasePage {
   static propTypes = {
     submissionList: ImmutableTypes.list.isRequired,
     dispatch: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
   };
-
-  componentDidMount() {
-    window.scrollTo(0, 0);
-  }
 
   render() {
     let { submissionList, dispatch, params: { cid } } = this.props;

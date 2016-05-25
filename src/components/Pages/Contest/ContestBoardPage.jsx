@@ -2,16 +2,17 @@
  * Create by cpc on 2/17/16.
  **/
 
-import React, { Component } from 'react';
+import React from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/Paper';
 import { connect } from 'react-redux';
 
-import Board from '../../Board.jsx';
 import s from '../common.scss';
 import cx from 'classnames';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
+import Board from '../../Board';
+import BasePage from '../BasePage';
 
 @withTitle('NOJ - Contests')
 @withStyles(s)
@@ -19,7 +20,7 @@ import withStyles from '../../../decorators/withStyles';
   problems: state.contest.getIn(['detail', 'problems']),
   teams: state.contest.getIn(['detail', 'teams']),
 }))
-export default class ContestBoardPage extends Component {
+export default class ContestBoardPage extends BasePage {
   static propTypes = {
     problems: ImmutableTypes.list,
     teams: ImmutableTypes.map,

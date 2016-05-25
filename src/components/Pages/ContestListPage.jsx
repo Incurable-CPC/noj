@@ -2,20 +2,21 @@
  * Create by cpc on 3/28/16.
  **/
 
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
 
-import s from './common.scss';
-import ContestList from '../Lists/ContestList.jsx';
-import Pagination from '../Lib/Pagination.jsx';
-import SearchBar from '../Lib/SearchBar.jsx';
+import { getContestListSortBy, getContestListByKeyword } from '../../actions/contestActions';
+import Location from '../../core/Location';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
-import Location from '../../core/Location';
-import { getContestListSortBy, getContestListByKeyword } from '../../actions/contestActions';
+import s from './common.scss';
+import ContestList from '../Lists/ContestList';
+import Pagination from '../Lib/Pagination';
+import SearchBar from '../Lib/SearchBar';
+import BasePage from './BasePage';
 
 @withTitle('NOJ - Problems')
 @withStyles(s)
@@ -25,7 +26,7 @@ import { getContestListSortBy, getContestListByKeyword } from '../../actions/con
   count: state.contest.get('count'),
   page: state.contest.getIn(['condition', 'page']),
 }))
-class ContestListPage extends Component {
+class ContestListPage extends BasePage {
   static propTypes = {
     contestList: ImmutableTypes.list.isRequired,
     count: PropTypes.number.isRequired,
@@ -33,10 +34,6 @@ class ContestListPage extends Component {
     dispatch: PropTypes.func.isRequired,
     searchKey: PropTypes.string,
   };
-
-  componentDidMount() {
-    window.scrollTo(0, 0);
-  }
 
   render() {
     const { count, page, dispatch, contestList, searchKey } = this.props;
