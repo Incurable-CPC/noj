@@ -13,9 +13,10 @@ import { connect } from 'react-redux';
 import { cyan500, white, black } from 'material-ui/styles/colors';
 
 import s from './App.scss';
-import Header from './Header';
 import { showDialog, hideDialog } from '../../actions/dialogActions';
 import { login, register, logout } from '../../actions/authActions';
+import { root } from '../../config';
+import Header from './Header';
 
 import { ToastContainer, ToastMessage } from 'react-toastr';
 const ToastMessageFactory = createFactory(ToastMessage.animation);
@@ -87,9 +88,9 @@ export default class App extends Component {
 
   render() {
     const { dialog, location, params, dispatch, auth } = this.props;
-    const match = location.pathname.match((params.cid) ?
-      /\/contests\/\d*\/([^\/]*)/ :
-      /\/([^\/]*)/);
+    const match = location.pathname.match(new RegExp((params.cid) ?
+      `${root}/contests/\\d*/([^/]*)` :
+      `${root}/([^/]*)`));
     const active = (match) ? match[1] : 'empty';
     return (
       <MuiThemeProvider muiTheme={muiTheme}>

@@ -13,22 +13,23 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, IndexRoute, IndexRedirect, Route, browserHistory } from 'react-router';
 
+import { root } from './config';
 import store from './stores';
 import App from './components/App';
-import Index from './components/Pages/Index.jsx';
-import LoginForm from './components/Forms/LoginForm.jsx';
-import ProblemPage from './components/Pages/ProblemPage.jsx';
-import ProblemListPage from './components/Pages/ProblemListPage.jsx';
-import ProblemEditPage from './components/Pages/ProblemEditPage.jsx';
-import SubmissionListPage from './components/Pages/SubmissionListPage.jsx';
-import ContestListPage from './components/Pages/ContestListPage.jsx';
-import ContestEditPage from './components/Pages/ContestEditPage.jsx';
-import ContestOverviewPage from './components/Pages/Contest/ContestOverviewPage.jsx';
-import ContestProblemPage from './components/Pages/Contest/ContestProblemPage.jsx';
-import ContestSubmissionListPage from './components/Pages/Contest/ContestSubmissionListPage.jsx';
-import ContestBoardPage from './components/Pages/Contest/ContestBoardPage.jsx';
+import Index from './components/Pages/Index';
+import LoginForm from './components/Forms/LoginForm';
+import ProblemPage from './components/Pages/ProblemPage';
+import ProblemListPage from './components/Pages/ProblemListPage';
+import ProblemEditPage from './components/Pages/ProblemEditPage';
+import SubmissionListPage from './components/Pages/SubmissionListPage';
+import ContestListPage from './components/Pages/ContestListPage';
+import ContestEditPage from './components/Pages/ContestEditPage';
+import ContestOverviewPage from './components/Pages/Contest/ContestOverviewPage';
+import ContestProblemPage from './components/Pages/Contest/ContestProblemPage';
+import ContestSubmissionListPage from './components/Pages/Contest/ContestSubmissionListPage';
+import ContestBoardPage from './components/Pages/Contest/ContestBoardPage';
 import ContestClarifyPage from './components/Pages/Contest/ContestClarifyPage';
-// import Test from './components/Test.jsx';
+// import Test from './components/Test';
 
 import {
   getProblem,
@@ -97,11 +98,18 @@ const boundInit = async(nextState, replace, next) => {
   next();
 };
 
+const requireAuth = (nextState, replace) => {
+  // if (!store.state.auth.has('username')) {
+  //   toast('error', 'Please login first');
+  //   replace('/');
+  // }
+};
+
 const appContainer = document.getElementById('app');
 ReactDOM.render((
   <Provider store={store}>
     <Router history={browserHistory}>
-      <Route path="/" onEnter={boundInit} component={App}>
+      <Route path={root} onEnter={boundInit} component={App}>
         <IndexRoute component={Index}/>
         <Route path="login" component={LoginForm} />
         <Route path="problems">

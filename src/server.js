@@ -45,7 +45,7 @@ server.use(`${root}/api`, api);
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------
 
-server.use((req, res) => {
+server.use(`${root}`, (req, res) => {
   const data = { entry: assets.main.js };
   res.render('index', data);
 });

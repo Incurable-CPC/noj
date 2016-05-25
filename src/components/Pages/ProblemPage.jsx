@@ -16,7 +16,7 @@ import Problem from '../Problem';
 import SubmissionForm from '../Forms/SubmissionForm';
 import BasePage from './BasePage';
 
-@withTitle('NOJ - Problems')
+@withTitle('NOJ - Problem')
 @withStyles(s)
 @connect((state) => ({
   problem: state.problem.get('detail'),

@@ -15,6 +15,7 @@ import RegisterDialog from '../Dialogs/RegisterDialog.jsx';
 import { nameToLabel } from '../../common';
 import withStyles from '../../decorators/withStyles';
 import Location from '../../core/Location';
+import { root } from '../../config';
 
 import s from './Header.scss';
 
@@ -34,7 +35,6 @@ export default class Header extends Component {
     active: PropTypes.string.isRequired,
     dialog: PropTypes.string.isRequired,
     login: PropTypes.func.isRequired,
-    logout: PropTypes.func.isRequired,
     register: PropTypes.func.isRequired,
     auth: ImmutableTypes.map.isRequired,
     cid: PropTypes.string,
@@ -42,7 +42,7 @@ export default class Header extends Component {
   render() {
     const {
       dialog, showDialog, hideDialog,
-      login, logout, register, auth,
+      login, register, auth,
       active, cid,
     } = this.props;
     const LinkTab = (name, index) => (
@@ -80,7 +80,7 @@ export default class Header extends Component {
           style={styles.nameButton}
           label={auth.get('username')}
           labelStyle={styles.nameLabel}
-          onTouchTap={logout}
+          onTouchTap={() => Location.push('/users')}
         />
       </div>
     ) : (
@@ -95,7 +95,7 @@ export default class Header extends Component {
     return (
       <Paper className={rootClassName}>
         <div className={s.container}>
-          <Link className={s.title} to="/"><strong>NOJ</strong></Link>
+          <Link className={s.title} to={root}><strong>NOJ</strong></Link>
           {leftPart}
           <div className={s.right}>
             {rightPart}
