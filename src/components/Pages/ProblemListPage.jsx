@@ -52,28 +52,12 @@ class ProblemsListPage extends Component {
     const { count, page, dispatch, searchKey, user } = this.props;
     const tried = (this.props.tried || new List()).toJS();
     const solved = (this.props.solved || new List()).toJS();
-    const pagination = [];
     const begin = Math.max(1, Math.min(page - 2, count - 4));
     const end = Math.min(count, begin + 4);
-    const pageUrl = (pageId) => `/problems/page/${pageId}`;
-    for (let index = begin; index <= end; index++) {
-      pagination.push({
-        content: `${index}`,
-        href: pageUrl(index),
-      });
-    }
-
-    const first = { content: 'first', href: pageUrl(1) };
-    const last = { content: 'last', href: pageUrl(count) };
-    const previous = {
-      content: '<',
-      href: pageUrl(Math.max(1, page - 1)),
+    const paginationRange = {
+      begin, end, count, page,
+      href: '/problems/page',
     };
-    const next = {
-      content: '>',
-      href: pageUrl(Math.min(page + 1, count)),
-    };
-
     const problemList = this.props.problemList.map((problem) => {
       const pid = problem.get('pid');
       let ret = problem.set('statu', 'normal');
@@ -91,10 +75,7 @@ class ProblemsListPage extends Component {
               width={320}
             />
             <div style={{ textAlign: 'center' }}>
-              <Pagination
-                current={`${page}`}
-                list={[first, previous].concat(pagination, [next, last])}
-              />
+              <Pagination range={paginationRange} />
             </div>
             <ProblemList
               problemList={problemList}

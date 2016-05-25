@@ -40,26 +40,11 @@ class ContestListPage extends Component {
 
   render() {
     const { count, page, dispatch, contestList, searchKey } = this.props;
-    const pagination = [];
     const begin = Math.max(1, Math.min(page - 2, count - 4));
     const end = Math.min(count, begin + 4);
-    const pageUrl = (pageId) => `/contests/page/${pageId}`;
-    for (let index = begin; index <= end; index++) {
-      pagination.push({
-        content: `${index}`,
-        href: pageUrl(index),
-      });
-    }
-
-    const first = { content: 'first', href: pageUrl(1) };
-    const last = { content: 'last', href: pageUrl(count) };
-    const previous = {
-      content: '<',
-      href: pageUrl(Math.max(1, page - 1)),
-    };
-    const next = {
-      content: '>',
-      href: pageUrl(Math.min(page + 1, count)),
+    const paginationRange = {
+      begin, end, count, page,
+      href: '/contests/page',
     };
     return (
       <div className={s.div}>
@@ -71,10 +56,7 @@ class ContestListPage extends Component {
               width={280}
             />
             <div style={{ textAlign: 'center' }}>
-              <Pagination
-                list={[first, previous].concat(pagination, [next, last])}
-                current={`${page}`}
-              />
+              <Pagination range={paginationRange} />
             </div>
             <ContestList
               contestList={contestList}

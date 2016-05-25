@@ -15,12 +15,43 @@ export default class Pagination extends Component {
         href: PropTypes.string,
       })
     ),
+    range: PropTypes.shape({
+      begin: PropTypes.number,
+      end: PropTypes.number,
+      count: PropTypes.number,
+      page: PropTypes.number,
+      href: PropTypes.string,
+    }),
     current: PropTypes.string,
   };
 
   render() {
-    const { list, current } = this.props;
-    const nodeList = list.map((node, index) => {
+    let { list, range, current } = this.props;
+    if ((!list) && range) {
+      const { href, begin, end, count, page } = range;
+      const pageUrl = (pageId) => `${href}/${pageId}`;
+      const first = { content: 'first', href: pageUrl(1) };
+      const previous = {
+        content: '<',
+        href: pageUrl(Math.max(1, page - 1)),
+      };
+      list = [first, previous];
+      for (let index = begin; index <= end; index++) {
+        list.push({
+          content: `${index}`,
+          href: pageUrl(index),
+        });
+      }
+      const last = { content: 'last', href: pageUrl(count) };
+      const next = {
+        content: '>',
+        href: pageUrl(Math.min(page + 1, count)),
+      };
+      list.push(next);
+      list.push(last);
+      current = `${page}`;
+    }
+    const nodeList = list && list.map((node, index) => {
       const { content, href, isCurrent, ...props } = node;
       return (
         <RaisedButton
