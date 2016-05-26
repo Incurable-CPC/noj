@@ -29,6 +29,7 @@ import ContestProblemPage from './components/Pages/Contest/ContestProblemPage';
 import ContestSubmissionListPage from './components/Pages/Contest/ContestSubmissionListPage';
 import ContestBoardPage from './components/Pages/Contest/ContestBoardPage';
 import ContestClarifyPage from './components/Pages/Contest/ContestClarifyPage';
+import UserInfoPage from './components/Pages/User/UserInfoPage';
 // import Test from './components/Test';
 
 import {
@@ -140,6 +141,10 @@ ReactDOM.render((
           </Route>
         </Route>
         <Route path="status" onEnter={boundGetSubmissionList} component={SubmissionListPage} />
+        <Route path="users" >
+          <IndexRoute onEnter={requireAuth} component={UserInfoPage} />
+          <Route path=":username" onEnter={requireAuth} component={UserInfoPage} />
+        </Route>
         <Route path="*" component={Index} />
       </Route>
     </Router>

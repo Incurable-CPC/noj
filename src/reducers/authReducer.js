@@ -2,7 +2,6 @@
  * Created by cpc on 2/5/16.
  */
 
-import cookie from 'react-cookie';
 import { fromJS } from 'immutable';
 import AuthConstants from '../constants/AuthConstants';
 
