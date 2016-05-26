@@ -4,9 +4,11 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import Avatar from 'material-ui/Avatar';
 import Paper from 'material-ui/Paper';
 import { grey500 } from 'material-ui/styles/colors';
+
+import UserAvatar from '../Lib/UserAvatar';
+import Location from '../../core/Location';
 
 const styles = {
   container: {
@@ -33,7 +35,7 @@ export default class UserInfoBox extends Component {
     return (
       <Paper style={styles.container}>
         <div style={styles.avatar}>
-          <Avatar src={user.getIn(['info', 'avatar'])} size={96}/>
+          <UserAvatar user={user} size={96} />
         </div>
         <div style={styles.username}>{user.get('username')}</div>
         <div style={styles.content}>
