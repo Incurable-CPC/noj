@@ -4,17 +4,17 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import Paper from 'material-ui/Paper';
 import { grey500 } from 'material-ui/styles/colors';
+import FlatButton from 'material-ui/FlatButton';
+import Paper from 'material-ui/Paper';
 
 import UserAvatar from '../Lib/UserAvatar';
 import Location from '../../core/Location';
+import { nameToStr } from '../../common';
 
 const styles = {
-  container: {
-    textAlign: 'center',
-    padding: 20,
-  },
+  container: { padding: 20 },
+  center: { textAlign: 'center' },
   username: { fontSize: 20 },
   avatar: { padding: 5 },
   content: {
@@ -23,6 +23,10 @@ const styles = {
   },
   info: { color: grey500 },
   count: { margin: 10 },
+  pid: {
+    textTransform: null,
+    padding: 4,
+  },
 };
 
 export default class UserInfoBox extends Component {
@@ -32,24 +36,44 @@ export default class UserInfoBox extends Component {
 
   render() {
     const { user } = this.props;
+    const username = user.get('username');
+    const notSolved = user.get('notSolved');
+    const showCount = (field, index) => (
+      <span key={index} style={styles.count}>
+        <span style={styles.info}>{nameToStr(field)}: </span>
+        {user.get(field).size}
+      </span>
+    );
+    const showPid = (pid, index) => (
+      <FlatButton
+        key={index}
+        label={pid}
+        secondary
+        labelStyle={styles.pid}
+        onTouchTap={() => Location.push(`/problems/${pid}`)}
+      />
+    );
     return (
       <Paper style={styles.container}>
-        <div style={styles.avatar}>
-          <UserAvatar user={user} size={96} />
-        </div>
-        <div style={styles.username}>{user.get('username')}</div>
-        <div style={styles.content}>
-          <div>
-            <span style={styles.count}>
-              <span style={styles.info}>Solved: </span>
-              {user.get('solved').size}
-            </span>
-            <span style={styles.count}>
-              <span style={styles.info}>Tried: </span>
-              {user.get('tried').size}
-            </span>
+        <div style={styles.center}>
+          <div style={styles.avatar}>
+            <UserAvatar user={user} size={96} />
+          </div>
+          <div style={styles.username}>{username}</div>
+          <div style={styles.content}>
+            <div>
+              {['tried', 'solved'].map(showCount)}
+            </div>
           </div>
         </div>
+        {(notSolved.size > 0) && (
+          <div style={styles.content}>
+            <div style={styles.info}>Problems not solved yet:</div>
+            <div>
+              {notSolved.map(showPid)}
+            </div>
+          </div>
+        )}
       </Paper>
     );
   }

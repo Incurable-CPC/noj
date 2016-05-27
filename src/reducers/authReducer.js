@@ -14,7 +14,11 @@ export default function reducer(state = initState, action) {
     case AuthConstants.REGISTER:
       return state.set('status', 'registering');
     case AuthConstants.SET:
-      return fromJS(action.user);
+      const user = fromJS(action.user);
+      const notSolved = user
+        .get('tried')
+        .filter((pid) => !user.get('solved').includes(pid));
+      return user.set('notSolved', notSolved);
     case AuthConstants.CLEAR:
       return fromJS({});
     default: return state;

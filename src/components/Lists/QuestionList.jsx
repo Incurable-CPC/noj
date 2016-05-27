@@ -25,7 +25,12 @@ const styles = {
     color: grey500,
     // textAlign: 'right',
   },
-  marginTop: { paddingTop: 20 },
+  paddingTop: { paddingTop: 20 },
+  divider: {
+    marginLeft: -30,
+    marginRight: -40,
+    marginTop: 10,
+  },
 };
 
 const multiLines = (str) => {
@@ -46,7 +51,7 @@ class Question extends Component {
     const answers = question.get('answers');
     const answerNodeList = answers && answers.map((answer, index) => {
       return (
-        <div key={index} style={index > 0 ? styles.marginTop : {}}>
+        <div key={index} style={index > 0 ? styles.paddingTop: {}}>
           {multiLines(answer.get('content'))}
           <div style={styles.info}>
             from {answer.get('username')}
@@ -90,7 +95,7 @@ export default class QuestionList extends Component {
     const questionNodeList =
       questionList && questionList.reverse().map((question, index) =>
         <div key={index}>
-          {(index > 0) && <Divider /> }
+          {(index > 0) && <Divider style={styles.divider} /> }
           <Question isManager={isManager} question={question} />
         </div>);
     return (
