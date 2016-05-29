@@ -7,9 +7,9 @@ import ImmutableTypes from 'react-immutable-proptypes';
 import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
 import { grey50, grey500 } from 'material-ui/styles/colors';
-import moment from 'moment';
 
 import ClarificationForm from '../Forms/ClarificationForm.jsx';
+import { formatTime } from '../../common';
 
 const styles = {
   content: {
@@ -55,12 +55,11 @@ class Question extends Component {
           {multiLines(answer.get('content'))}
           <div style={styles.info}>
             from {answer.get('username')}
-            , {moment(answer.get('time')).format('YYYY-MM-DD hh:mm:ss')}
+            , {formatTime(answer.get('time'))}
           </div>
         </div>
       );
     });
-    const { username, time, qid } = question.toJS();
     return (
       <div style={{ paddingTop: 20, paddingBottom: 20 }}>
         <div style={{ paddingBottom: 4 }}>
@@ -68,7 +67,8 @@ class Question extends Component {
           <Paper style={styles.content}>
             {multiLines(question.get('content'))}
             <div style={styles.info}>
-              from {username}, {moment(time).format('YYYY-MM-DD hh:mm:ss')}
+              from {question.get('username')}
+              , {formatTime(question.get('time'))}
             </div>
           </Paper>
         </div>
@@ -76,7 +76,7 @@ class Question extends Component {
           <strong>Answer(s):</strong>
           <Paper style={styles.content}>
             {answerNodeList}
-            {isManager && <ClarificationForm formKey={qid.toString()} />}
+            {isManager && <ClarificationForm formKey={question.get('qid').toString()} />}
           </Paper>
         </div>
       </div>

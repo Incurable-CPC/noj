@@ -7,12 +7,12 @@ import ImmutableTypes from 'react-immutable-proptypes';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Divider from 'material-ui/Divider';
-import moment from 'moment';
 
 import withStyles from '../../decorators/withStyles';
 import cs from 'classnames';
 import s from './ContestList.scss';
 import Location from '../../core/Location';
+import { formatTime } from '../../common';
 
 @withStyles(s)
 export default class ProblemList extends Component {
@@ -28,7 +28,7 @@ export default class ProblemList extends Component {
     const contestNodeList = contestList.map((contest, index) => {
       const cid = contest.get('cid');
       const showContest = contest
-        .update('start', (start) => moment(start).format('YYYY-MM-DD hh:mm'))
+        .update('start', formatTime)
         .update('duration', (duration) => (duration > 24) ?
           `${(duration / 24).toFixed(1)} days` :
           `${duration} hours`);

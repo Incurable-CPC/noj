@@ -11,7 +11,6 @@ import Divider from 'material-ui/Divider';
 import List from 'material-ui/List/List';
 import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
-import moment from 'moment';
 
 import CodeBlock from '../Lib/CodeBlock.jsx';
 import Animate from '../Lib/Animate.jsx';
@@ -21,6 +20,7 @@ import withStyles from '../../decorators/withStyles';
 import Location from '../../core/Location';
 import { LANGUAGES, RESULTS } from '../../constants';
 import { isCompleted, isCompileError, isAccepted } from '../../check/submissionChecker';
+import { formatTime } from '../../common';
 
 const styles = {
   label: { textTransform: null },
@@ -116,7 +116,7 @@ export default class SubmissionList extends Component {
             {codeLength}
           </span>
           <span className={cs(s.col, s.date)}>
-            {moment(date).format('YYYY-MM-DD HH:mm:ss')}
+            {formatTime(date)}
           </span>
         </div>
       );

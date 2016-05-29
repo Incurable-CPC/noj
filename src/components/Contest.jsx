@@ -11,6 +11,7 @@ import withStyle from '../decorators/withStyles';
 import withTime from '../decorators/withTime';
 import ProblemList from './Lists/ProblemList.jsx';
 import s from './Contest.scss';
+import { formatTime } from '../common';
 
 @withTime()
 @withStyle(s)
@@ -36,14 +37,14 @@ class TimeInfo extends Component {
       <div>
         <div>
             <span className={s.center}>
-              Start Time: {start.format('YYYY-MM-DD HH:mm')}
+              Start Time: {formatTime(start)}
             </span>
             <span className={s.center}>
-              End Time: {end.format('YYYY-MM-DD HH:mm')}
+              End Time: {formatTime(end)}
             </span>
         </div>
         <div>
-          Current Time: {time.format('YYYY-MM-DD HH:mm:ss')}
+          Current Time: {formatTime(time)}
         </div>
         <div className={s.timebar}>
           <LinearProgress mode="determinate" value={progress} />

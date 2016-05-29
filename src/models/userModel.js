@@ -19,6 +19,8 @@ export const userSchema = {
     school: String,
     email: String,
   },
+  followers: [String],
+  following: [String],
 };
 
 const schema = new Schema(userSchema);

@@ -68,7 +68,7 @@ export default class UserInfoBox extends Component {
         </div>
         {(notSolved.size > 0) && (
           <div style={styles.content}>
-            <div style={styles.info}>Problems not solved yet:</div>
+            <div style={styles.info}>Problems tried but unsolved:</div>
             <div>
               {notSolved.map(showPid)}
             </div>

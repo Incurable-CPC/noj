@@ -3,6 +3,7 @@
  */
 
 import { RESULT_VALUES } from './constants';
+import moment from 'moment';
 
 export function nameToStr(str) {
   return (str.charAt(0).toUpperCase() + str.slice(1)).split(/(?=[A-Z])/).join(' ');
@@ -64,3 +65,5 @@ export const markWithMath = (src) => marked(src, {
 });
 
 export const isAccepted = (result) => result === RESULT_VALUES.Accepted;
+
+export const formatTime = (date) => moment(date).format('YYYY-MM-DD hh:mm:ss');
