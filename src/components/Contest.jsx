@@ -11,7 +11,7 @@ import withStyle from '../decorators/withStyles';
 import withTime from '../decorators/withTime';
 import ProblemList from './Lists/ProblemList.jsx';
 import s from './Contest.scss';
-import { formatTime } from '../common';
+import { formatTime } from '../core';
 
 @withTime()
 @withStyle(s)

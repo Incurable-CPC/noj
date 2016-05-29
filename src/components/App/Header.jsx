@@ -12,7 +12,7 @@ import { Link } from 'react-router';
 
 import LoginDialog from '../Dialogs/LoginDialog.jsx';
 import RegisterDialog from '../Dialogs/RegisterDialog.jsx';
-import { nameToLabel } from '../../common';
+import { nameToLabel } from '../../core';
 import withStyles from '../../decorators/withStyles';
 import Location from '../../core/Location';
 import { root } from '../../config';

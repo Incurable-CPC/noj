@@ -12,7 +12,7 @@ import { List, ListItem } from 'material-ui/List';
 import Paper from 'material-ui/Paper';
 
 import UserAvatar from './Lib/UserAvatar';
-import { formatTime, nameToStr } from '../common';
+import { formatTime, nameToStr } from '../core';
 import Location from '../core/Location';
 
 const leftWidth = 180;

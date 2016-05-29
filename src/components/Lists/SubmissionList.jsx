@@ -20,7 +20,7 @@ import withStyles from '../../decorators/withStyles';
 import Location from '../../core/Location';
 import { LANGUAGES, RESULTS } from '../../constants';
 import { isCompleted, isCompileError, isAccepted } from '../../check/submissionChecker';
-import { formatTime } from '../../common';
+import { formatTime } from '../../core';
 
 const styles = {
   label: { textTransform: null },

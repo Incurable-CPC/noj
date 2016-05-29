@@ -12,7 +12,7 @@ import withStyles from '../../decorators/withStyles';
 import cs from 'classnames';
 import s from './ContestList.scss';
 import Location from '../../core/Location';
-import { formatTime } from '../../common';
+import { formatTime } from '../../core';
 
 @withStyles(s)
 export default class ProblemList extends Component {

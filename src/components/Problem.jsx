@@ -5,7 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 
-import { nameToStr, markWithMath } from '../common';
+import { nameToStr, markWithMath } from '../core';
 import withStyle from '../decorators/withStyles';
 import s from './Problem.scss';
 

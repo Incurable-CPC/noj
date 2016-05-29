@@ -9,7 +9,7 @@ import Paper from 'material-ui/Paper';
 import { grey50, grey500 } from 'material-ui/styles/colors';
 
 import ClarificationForm from '../Forms/ClarificationForm.jsx';
-import { formatTime } from '../../common';
+import { formatTime } from '../../core';
 
 const styles = {
   content: {

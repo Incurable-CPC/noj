@@ -7,7 +7,7 @@ const router = new Router();
 
 import { requireAuth, requireAdmin } from './common';
 import Problem from '../models/problemModel';
-import { markWithMath } from '../common';
+import { markWithMath } from '../core';
 import fetch from '../core/fetch';
 import problemChecker from '../check/problemChecker';
 

@@ -10,7 +10,7 @@ import Paper from 'material-ui/Paper';
 
 import UserAvatar from '../Lib/UserAvatar';
 import Location from '../../core/Location';
-import { nameToStr } from '../../common';
+import { nameToStr } from '../../core';
 
 const styles = {
   container: { padding: 20 },

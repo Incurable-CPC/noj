@@ -3,7 +3,7 @@
  **/
 
 import React, { Component, PropTypes } from 'react';
-import { markWithMath } from '../../common';
+import { markWithMath } from '../../core';
 export default class Marked extends Component {
   static propTypes = {
     src: PropTypes.string.isRequired,

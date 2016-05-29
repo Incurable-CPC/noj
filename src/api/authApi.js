@@ -6,7 +6,7 @@ import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import User from '../models/userModel';
 import { requireAuth, getUsername } from './common';
-import { useAwait } from '../common';
+import { useAwait } from '../core';
 import { loginChecker, registerChecker } from '../check/authChecker';
 const router = new Router();
 

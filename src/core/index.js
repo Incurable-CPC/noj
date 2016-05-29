@@ -2,7 +2,6 @@
  * Created by cpc on 1/3/16.
  */
 
-import { RESULT_VALUES } from './constants';
 import moment from 'moment';
 
 export function nameToStr(str) {
@@ -63,7 +62,5 @@ renderer.codespan = (code) => {
 export const markWithMath = (src) => marked(src, {
   renderer,
 });
-
-export const isAccepted = (result) => result === RESULT_VALUES.Accepted;
 
 export const formatTime = (date) => moment(date).format('YYYY-MM-DD hh:mm:ss');

@@ -2,6 +2,8 @@
  * Created by cpc on 3/12/16.
  */
 
+import { RESULT_VALUES } from '../constants';
+
 export default (submission) => {
   const code = (submission.code || '').trim();
   if (code.length < 64) {
@@ -15,6 +17,6 @@ export default (submission) => {
   return '';
 };
 
-export const isCompleted = (result) => (result >= 4);
-export const isAccepted = (result) => (result === 4);
-export const isCompileError = (result) => (result === 11);
+export const isCompleted = (result) => (result >= RESULT_VALUES.AC);
+export const isAccepted = (result) => (result === RESULT_VALUES.AC);
+export const isCompileError = (result) => (result === RESULT_VALUES.CE);

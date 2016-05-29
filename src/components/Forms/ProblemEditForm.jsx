@@ -9,7 +9,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { fromJS } from 'immutable';
 
-import { nameToStr } from '../../common';
+import { nameToStr } from '../../core';
 import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
 import Animate from '../Lib/Animate.jsx';
