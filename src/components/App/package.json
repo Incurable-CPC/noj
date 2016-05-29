@@ -8,6 +8,7 @@
     "react-immutable-proptypes": "latest",
     "react-redux": "latest",
     "react": "latest",
-    "react-toastr": "latest"
+    "react-toastr": "latest",
+    "react-router": "latest"
   }
 }

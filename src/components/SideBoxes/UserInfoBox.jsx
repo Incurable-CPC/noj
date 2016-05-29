@@ -25,7 +25,7 @@ const styles = {
   count: { margin: 10 },
   pid: {
     textTransform: null,
-    padding: 4,
+    padding: 8,
   },
 };
 

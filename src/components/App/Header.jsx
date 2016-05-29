@@ -4,14 +4,19 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import { white, black, cyan500 } from 'material-ui/styles/colors';
+import * as colors from 'material-ui/styles/colors';
 import Paper from 'material-ui/Paper';
-import FlatButton from 'material-ui/FlatButton';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton/IconButton';
+import Divider from 'material-ui/Divider';
+import { NavigationMoreVert } from 'material-ui/svg-icons';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { Link } from 'react-router';
 
 import LoginDialog from '../Dialogs/LoginDialog.jsx';
 import RegisterDialog from '../Dialogs/RegisterDialog.jsx';
+import UserAvatar from '../Lib/UserAvatar';
 import { nameToLabel } from '../../core';
 import withStyles from '../../decorators/withStyles';
 import Location from '../../core/Location';
@@ -21,10 +26,14 @@ import s from './Header.scss';
 
 const height = 48;
 const styles = {
-  ink: { backgroundColor: cyan500 },
+  ink: { backgroundColor: colors.cyan500 },
   nameLabel: { textTransform: null },
-  nameButton: { height },
   tabs: { height },
+  right: {
+    float: 'right',
+    marginRight: 20,
+  },
+  rightItem: { float: 'right' },
 };
 
 @withStyles(s)
@@ -35,6 +44,7 @@ export default class Header extends Component {
     active: PropTypes.string.isRequired,
     dialog: PropTypes.string.isRequired,
     login: PropTypes.func.isRequired,
+    logout: PropTypes.func.isRequired,
     register: PropTypes.func.isRequired,
     auth: ImmutableTypes.map.isRequired,
     cid: PropTypes.string,
@@ -42,7 +52,7 @@ export default class Header extends Component {
   render() {
     const {
       dialog, showDialog, hideDialog,
-      login, register, auth,
+      login, logout, register, auth,
       active, cid,
     } = this.props;
     const LinkTab = (name, index) => (
@@ -74,14 +84,31 @@ export default class Header extends Component {
       >{items.map(LinkTab)}</Tabs>
     );
     const rightPart = auth.has('username') ? (
-      <div className={s.right}>
-        <FlatButton
-          className={s.button}
-          style={styles.nameButton}
-          label={auth.get('username')}
-          labelStyle={styles.nameLabel}
-          onTouchTap={() => Location.push('/users')}
-        />
+      <div style={styles.right}>
+        <span style={styles.rightItem}>
+          <IconMenu
+            iconButtonElement={<IconButton><NavigationMoreVert /></IconButton>}
+            anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+          >
+            <MenuItem
+              primaryText="Profile"
+              onTouchTap={() => Location.push(`/users/${auth.get('username')}`)}
+            />
+            <MenuItem
+              primaryText="Settings"
+            />
+            <Divider />
+            <MenuItem
+              primaryText="Log out"
+              onTouchTap={logout}
+              style={{ color: colors.pinkA200 }}
+            />
+          </IconMenu>
+        </span>
+        <span style={styles.rightItem}>
+          <UserAvatar user={auth} size={48} />
+        </span>
       </div>
     ) : (
       <div className={s.right}>
