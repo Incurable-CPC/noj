@@ -50,6 +50,9 @@ import {
 import {
   loadAuthedUserInfo,
 } from './actions/authActions';
+import {
+  loadUserInfo,
+} from './actions/userActions';
 
 const boundGetProblem = async (nextState, replace, next) => {
   const { params: { pid } } = nextState;
@@ -99,6 +102,11 @@ const boundInit = async(nextState, replace, next) => {
   next();
 };
 
+const boundLoadUserInfo = async (nextState, replace, next) => {
+  const { username } = nextState.params;
+  if (await store.dispatch(loadUserInfo(username))) next();
+};
+
 const requireAuth = (nextState, replace) => {
   // if (!store.state.auth.has('username')) {
   //   toast('error', 'Please login first');
@@ -143,7 +151,7 @@ ReactDOM.render((
         <Route path="status" onEnter={boundGetSubmissionList} component={SubmissionListPage} />
         <Route path="users" >
           <IndexRoute onEnter={requireAuth} component={UserInfoPage} />
-          <Route path=":username" onEnter={requireAuth} component={UserInfoPage} />
+          <Route path=":username" onEnter={boundLoadUserInfo} component={UserInfoPage} />
         </Route>
         <Route path="*" component={Index} />
       </Route>

@@ -10,6 +10,7 @@ import thunk from 'redux-thunk';
 
 import dialogReducer from './reducers/dialogReducer';
 import authReducer from './reducers/authReducer';
+import userReducer from './reducers/userReducer';
 import problemReducer from './reducers/problemReducer';
 import submissionReducer from './reducers/submissionReducer';
 import contestReducer from './reducers/contestReducer';
@@ -18,6 +19,7 @@ const reducer = combineReducers({
   routing: routeReducer,
   dialog: dialogReducer,
   auth: authReducer,
+  user: userReducer,
   form: formReducer,
   problem: problemReducer,
   contest: contestReducer,

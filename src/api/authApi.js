@@ -79,7 +79,7 @@ const getUserInfo = async (req, res, next) => {
     const user = await User
       .findOne({ username })
       .select('-password -tokens');
-    res.send(user);
+    res.send({ user });
   } catch (err) {
     next(err);
   }

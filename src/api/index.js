@@ -9,6 +9,7 @@
 
 import { Router } from 'express';
 import authApi from './authApi';
+import userApi from './usersApi';
 import problemApi from './problemsApi';
 import submissionApi from './submissionsApi';
 import contestsApi from './contestsApi';
@@ -16,6 +17,7 @@ import moment from 'moment';
 const router = new Router();
 
 router.use('/auth', authApi);
+router.use('/users', userApi);
 router.use('/problems', problemApi);
 router.use('/submissions', submissionApi);
 router.use('/contests', contestsApi);

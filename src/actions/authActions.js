@@ -36,7 +36,7 @@ const clearUserInfo = () => {
 export const loadAuthedUserInfo = () => async (dispatch) => {
   try {
     if (!cookie.load('username', cookieOpt)) return;
-    const user = await getJSON(`${api}/auth/info`);
+    const { user } = await getJSON(`${api}/auth/info`);
     dispatch(setUserInfo(user));
   } catch (err) {
     toast('error', err.message);
@@ -102,7 +102,6 @@ export const register = () => async(dispatch, getState) => {
         password,
         confirmPassword,
       });
-      const { token } = await res.json();
       toast('success', 'Register succeed', 'Welcome to NJU Online Judge');
       loginSuccess({ username, token });
       await dispatch(loadAuthedUserInfo());
