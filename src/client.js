@@ -48,7 +48,7 @@ import {
   getSubmissionList,
 } from './actions/submissionActions';
 import {
-  loadUserInfo,
+  loadAuthedUserInfo,
 } from './actions/authActions';
 
 const boundGetProblem = async (nextState, replace, next) => {
@@ -94,7 +94,7 @@ const boundGetSubmissionList = async(nextState, replace, next) => {
 };
 
 const boundInit = async(nextState, replace, next) => {
-  await store.dispatch(loadUserInfo());
+  await store.dispatch(loadAuthedUserInfo());
   // await store.dispatch(timeInit());
   next();
 };

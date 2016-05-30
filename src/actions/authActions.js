@@ -33,7 +33,7 @@ const clearUserInfo = () => {
   return ({ type: AuthConstants.CLEAR });
 };
 
-export const loadUserInfo = () => async (dispatch) => {
+export const loadAuthedUserInfo = () => async (dispatch) => {
   try {
     if (!cookie.load('username', cookieOpt)) return;
     const res = await getJSON(`${api}/auth/info`);
@@ -61,7 +61,7 @@ export const login = () => async(dispatch, getState) => {
       const { token } = await res.json();
       toast('success', 'Login succeed', 'Welcome to NJU Online Judge');
       loginSuccess({ username, token });
-      await dispatch(loadUserInfo());
+      await dispatch(loadAuthedUserInfo());
       nprogress.done();
       return true;
     }
@@ -107,7 +107,7 @@ export const register = () => async(dispatch, getState) => {
       const { token } = await res.json();
       toast('success', 'Register succeed', 'Welcome to NJU Online Judge');
       loginSuccess({ username, token });
-      await dispatch(loadUserInfo());
+      await dispatch(loadAuthedUserInfo());
       nprogress.done();
       return true;
     }
