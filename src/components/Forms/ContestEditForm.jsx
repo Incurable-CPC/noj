@@ -53,8 +53,7 @@ export default class ContestEditForm extends Component {
     clearTimeout(this._updateProblem[index]);
     this._updateProblem[index] = setTimeout(async () => {
       try {
-        const res = await getJSON(`${api}/problems/${pid}`);
-        const { problem: { title } } = await res.json();
+        const { problem: { title } } = await getJSON(`${api}/problems/${pid}`);
         this.setProblemInfoText(index, title);
       } catch (err) {
         this.setProblemInfoText(index, '', problemNotExist(pid, index));

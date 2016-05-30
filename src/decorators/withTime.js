@@ -9,8 +9,7 @@ let _diff = 0;
 let _time = moment();
 let _func = [];
 const init = async() => {
-  const res = await getJSON(`${api}/time`);
-  const { time } = await res.json();
+  const { time } = await getJSON(`${api}/time`);
   clearInterval(_interval);
   _diff = moment().diff(time);
   _interval = setInterval(() => {

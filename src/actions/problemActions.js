@@ -27,8 +27,7 @@ export const postProblem = async (problem, dispatch) => {
     if (error) return toast('warning', error);
     nprogress.start();
     const action = problem.pid ? 'saved' : 'added';
-    const res = await postJSON(`${api}/problems`, { problem });
-    const data = await res.json();
+    const data = await postJSON(`${api}/problems`, { problem });
     dispatch(setProblem(data.problem));
     toast('success', `Problem ${action}`);
     Location.push(`/problems/${data.problem.pid}`);
@@ -44,8 +43,7 @@ export const getProblem = (pid) => async (dispatch, getState) => {
     const state = getState();
     if (state.problem.getIn(['detail', 'pid']) === pid) return true;
     nprogress.start();
-    const res = await getJSON(`${api}/problems/${pid}`);
-    const { problem } = await res.json();
+    const { problem } = await getJSON(`${api}/problems/${pid}`);
     dispatch(setProblem(problem));
     await nprogress.done();
     return true;
@@ -70,8 +68,7 @@ export const getProblemList = (condition) => async (dispatch, getState) => {
     // const oldCondition = state.problem.get('condition');
     // if (is(oldCondition, fromJS(condition))) return true;
     nprogress.start();
-    const res = await getJSON(`${api}/problems`, condition);
-    const { problemList, count } = await res.json();
+    const { problemList, count } = await getJSON(`${api}/problems`, condition);
     dispatch(setProblemList(condition, count, problemList));
     await nprogress.done();
     return true;

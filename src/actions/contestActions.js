@@ -44,8 +44,7 @@ export const getContest = (cid, force) => async (dispatch, getState) => {
       }
     }
     nprogress.start();
-    const res = await getJSON(`${api}/contests/${cid}`);
-    const { contest } = await res.json();
+    const { contest } = await getJSON(`${api}/contests/${cid}`);
     dispatch(setContest(contest));
     await nprogress.done();
     clearInterval(_updateInterval);
@@ -82,12 +81,11 @@ export const updateContest = (force) => async (dispatch, getState) => {
     const cid = contest.get('cid');
     const submissionSkip = contest.get('submissions').size;
     const clarifyLogSkip = contest.get('clarifyLogs').size;
-    const res = await getJSON(
+    const { submissionList, clarifyLogList } = await getJSON(
       `${api}/contests/${cid}/update`, {
         submission: { skip: submissionSkip },
         clarifyLog: { skip: clarifyLogSkip },
       });
-    const { submissionList, clarifyLogList } = await res.json();
     dispatch({
       type: ContestConstants.UPDATE,
       submissionList,
@@ -103,8 +101,7 @@ export const postContest = async (contest, dispatch) => {
     if (error) return toast('warning', error);
     nprogress.start();
     const action = contest.cid ? 'saved' : 'added';
-    const res = await postJSON(`${api}/contests`, { contest });
-    const data = await res.json();
+    const data = await postJSON(`${api}/contests`, { contest });
     toast('success', `Contest ${action}`);
     dispatch(getContest(data.contest.cid, true));
     Location.push(`/contests/${data.contest.cid}`);
@@ -120,8 +117,7 @@ export const getContestList = (condition) => async (dispatch) => {
     // const oldCondition = state.contest.get('condition');
     // if (is(oldCondition, fromJS(condition))) return true;
     nprogress.start();
-    const res = await getJSON(`${api}/contests`, condition);
-    const { contestList, count } = await res.json();
+    const { contestList, count } = await getJSON(`${api}/contests`, condition);
     dispatch(setContestList(condition, count, contestList));
     await nprogress.done();
     return true;
@@ -186,8 +182,7 @@ export const getContestSubmission = (index) => async(dispatch, getState) => {
     nprogress.start();
     const cid = state.contest.getIn(['detail', 'cid']);
     const sid = state.contest.getIn(['detail', 'submissions', index, 'sid']);
-    const res = await getJSON(`${api}/contests/${cid}/submissions/${sid}`);
-    const { submission } = await res.json();
+    const { submission } = await getJSON(`${api}/contests/${cid}/submissions/${sid}`);
     dispatch(reciveContestSubmission(index, submission));
     await nprogress.done();
     return true;
@@ -227,10 +222,9 @@ export const clarifyContest = (clear) => async (values, dispatch) => {
     // }
     nprogress.start();
     const { cid } = values;
-    const res = await postJSON(
+    const data = await postJSON(
       `${api}/contests/${cid}/clarification`,
       values);
-    const data = await res.json();
     dispatch(updateContest(true));
     if (clear) clear();
     toast('success', 'Post succeed');

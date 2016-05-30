@@ -14,8 +14,7 @@ const setUserInfo = (user) => ({
 
 export const loadUserInfo = (username) => async (dispatch) => {
   try {
-    const res = await getJSON(`${api}/users/${username}`);
-    const user = await res.json();
+    const user = await getJSON(`${api}/users/${username}`);
     dispatch(setUserInfo(user));
   } catch (err) {
     toast('error', err.message);
