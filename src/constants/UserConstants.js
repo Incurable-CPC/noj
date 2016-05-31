@@ -4,4 +4,7 @@
 
 export default {
   SET: 'user-set',
+  UPDATE: 'user-update',
 };
+
+export const listFields = ['solved', 'tried', 'following', 'followers'];

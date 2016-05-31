@@ -6,7 +6,7 @@ import { Router } from 'express';
 const router = new Router();
 import moment from 'moment';
 
-import { requireAuth, requireAdmin, getUsername } from './common';
+import { requireAuth, requireAdmin, getUsername, setListSkip } from './common';
 import Contest from '../models/contestModel';
 import Problem from '../models/problemModel';
 import { submissionCheckUser, submissionListCheckUser } from '../models/submissionModel';
@@ -91,15 +91,10 @@ const getcontestUpdate = async (req, res, next) => {
   try {
     const { cid } = req.params;
     const username = getUsername(req);
-    const submissionSkip = Number(req.query.submission.skip) || 0;
-    const submissionLimit = Number(req.query.submission.limit) || 100000;
-    const clarifyLogSkip = Number(req.query.clarifyLog.skip) || 0;
-    const clarifyLogLimit = Number(req.query.clarifyLog.limit) || 100000;
-    const { submissions, clarifyLogs } = await Contest
-      .findOne({ cid })
-      .select('submissions clarifyLogs')
-      .slice('submissions', [submissionSkip, submissionLimit])
-      .slice('clarifyLogs', [clarifyLogSkip, clarifyLogLimit]);
+    const query = Contest.findOne({ cid })
+      .select('submissions clarifyLogs');
+    ['submission', 'clarifyLog'].forEach(setListSkip(req, query));
+    const { submissions, clarifyLogs } = await query;
     submissionListCheckUser(submissions, username);
     res.send({
       submissionList: submissions,

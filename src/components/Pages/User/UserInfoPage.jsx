@@ -11,6 +11,7 @@ import Paper from 'material-ui/Paper';
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
+import { followUser } from '../../../actions/userActions';
 import UserInfoBox from '../../SideBoxes/UserInfoBox';
 import UserInfo from '../../UserInfo';
 import BasePage from '../BasePage';
@@ -23,7 +24,9 @@ import BasePage from '../BasePage';
 }))
 export default class UserInfoPage extends BasePage {
   static propTypes = {
+    dispatch: PropTypes.func.isRequired,
     authedUser: ImmutableTypes.map,
+    user: ImmutableTypes.map,
     params: PropTypes.object,
   };
 
@@ -31,6 +34,7 @@ export default class UserInfoPage extends BasePage {
     let {
       params: { username },
       authedUser, user,
+      dispatch,
     } = this.props;
     if ((!username) || (!user)) user = authedUser;
     let following = 0;
@@ -40,7 +44,11 @@ export default class UserInfoPage extends BasePage {
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
-            <UserInfo user={user} following={following}/>
+            <UserInfo
+              user={user}
+              following={following}
+              follow={() => dispatch(followUser())}
+            />
           </Paper>
         </div>
         <div className={s.right}>

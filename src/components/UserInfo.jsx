@@ -47,10 +47,11 @@ export default class UserInfo extends Component {
   static propTypes = {
     user: ImmutableTypes.map.isRequired,
     following: PropTypes.number.isRequired,
+    follow: PropTypes.func.isRequired,
   };
 
   render() {
-    const { user, following } = this.props;
+    const { user, following, follow } = this.props;
     const showCount = (field, index) => (
       <span key={index} style={styles.count}>
         {user.get(field).size}
@@ -72,9 +73,14 @@ export default class UserInfo extends Component {
         label="edit profile"
       />
     ), () => (
-      <div />
+      <RaisedButton
+        label="follow"
+        onTouchTap={follow}
+      />
     ), () => (
-      <div />
+      <RaisedButton
+        label="unfollow"
+      />
     )];
     return (
       <div>

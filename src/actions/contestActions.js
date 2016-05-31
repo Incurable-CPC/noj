@@ -79,13 +79,13 @@ export const updateContest = (force) => async (dispatch, getState) => {
     if (_updateLock) return;
     _updateLock = true;
     const cid = contest.get('cid');
-    const submissionSkip = contest.get('submissions').size;
-    const clarifyLogSkip = contest.get('clarifyLogs').size;
+    const cond = {};
+    ['submissions', 'clarifyLogs'].forEach((field) => {
+      const skip = contest.get(field).size;
+      cond[field] = { skip };
+    });
     const { submissionList, clarifyLogList } = await getJSON(
-      `${api}/contests/${cid}/update`, {
-        submission: { skip: submissionSkip },
-        clarifyLog: { skip: clarifyLogSkip },
-      });
+      `${api}/contests/${cid}/update`, cond);
     dispatch({
       type: ContestConstants.UPDATE,
       submissionList,
@@ -222,7 +222,7 @@ export const clarifyContest = (clear) => async (values, dispatch) => {
     // }
     nprogress.start();
     const { cid } = values;
-    const data = await postJSON(
+    await postJSON(
       `${api}/contests/${cid}/clarification`,
       values);
     dispatch(updateContest(true));

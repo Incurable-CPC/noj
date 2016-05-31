@@ -34,3 +34,17 @@ export const requireAdmin = async (req, res, next) => {
     next(err);
   }
 };
+
+export const setListSkip = (req, query) => (field) => {
+  const skip = (req.query[field] || {}).skip || 0;
+  const limit = (req.query[field]|| {}).limit || 100000;
+  query.slice(field, [skip, limit]);
+};
+
+export const handleError = (work) => async (req, res, next) => {
+  try {
+    await work(req, res, next);
+  } catch (error) {
+    next(error);
+  }
+};

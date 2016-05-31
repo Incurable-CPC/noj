@@ -4,6 +4,7 @@
 
 import { fromJS } from 'immutable';
 import AuthConstants from '../constants/AuthConstants';
+import { updateUser } from './userReducer';
 
 const initState = fromJS({});
 
@@ -14,11 +15,7 @@ export default function reducer(state = initState, action) {
     case AuthConstants.REGISTER:
       return state.set('status', 'registering');
     case AuthConstants.SET:
-      const user = fromJS(action.user);
-      const notSolved = user
-        .get('tried')
-        .filter((pid) => !user.get('solved').includes(pid));
-      return user.set('notSolved', notSolved);
+      return updateUser(fromJS(action.user));
     case AuthConstants.CLEAR:
       return fromJS({});
     default: return state;

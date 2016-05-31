@@ -35,8 +35,9 @@ const clearUserInfo = () => {
 
 export const loadAuthedUserInfo = () => async (dispatch) => {
   try {
-    if (!cookie.load('username', cookieOpt)) return;
-    const { user } = await getJSON(`${api}/auth/info`);
+    const username = cookie.load('username', cookieOpt);
+    if (!username) return;
+    const { user } = await getJSON(`${api}/users/${username}`);
     dispatch(setUserInfo(user));
   } catch (err) {
     toast('error', err.message);
