@@ -14,6 +14,7 @@ export const userSchema = {
   tried: [String],
   lastSubmit: Date,
   registerTime: { type: Date, default: Date.now },
+  lastOperate: { type: Date, default: Date.now },
   info: {
     avatar: { type: String, default: '/img/default.png' },
     school: String,

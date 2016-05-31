@@ -11,3 +11,5 @@ export default {
   SET_SUBMISSION: 'contest-submission-set',
   CHANGE_SUBMISSION_EXPAND_STATE: 'contest-submission-change-state',
 };
+
+export const listFileds = ['submission', 'clarifyLog'];

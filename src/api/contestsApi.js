@@ -6,11 +6,12 @@ import { Router } from 'express';
 const router = new Router();
 import moment from 'moment';
 
-import { requireAuth, requireAdmin, getUsername, setListSkip } from './common';
+import { requireAuth, requireAdmin, getUsername, setListSkip, handleError } from './common';
 import Contest from '../models/contestModel';
 import Problem from '../models/problemModel';
 import { submissionCheckUser, submissionListCheckUser } from '../models/submissionModel';
 import submissionChecker from '../check/submissionChecker';
+import { listFileds } from '../constants/ContestConstants';
 
 import contestChecker, { problemNotExist } from '../check/contestChekcer';
 const checkContest = async (contest) => {
@@ -53,181 +54,152 @@ const checkManager = async (cid, username) => {
     'Unauthorized opeartion' : '';
 };
 
-const checkCid = async (req, res, next) => {
+const checkCid = handleError(async (req, res, next) => {
   const { cid } = req.params;
   const contest = await Contest
     .findOne({ cid })
     .select('cid');
   if (contest) next();
   else res.status(404).send({ error: 'Contest not exist' });
-};
+});
 
-const getContest = async (req, res, next) => {
-  try {
-    const { cid } = req.params;
-    const username = getUsername(req);
-    const contest = await Contest.findOne({ cid });
-    const isManager = contest.manager === username;
-    if ((await checkStarted(cid)) || isManager) {
-      const { problems, submissions } = contest;
-      for (let i = 0; i < problems.length; i++) {
-        let { pid } = problems[i];
-        problems[i] = await Problem.findOne({ pid });
-        if (!isManager) problems[i].pid = undefined;
-      }
-      submissionListCheckUser(submissions, username);
-    } else {
-      contest.problems = [];
-      contest.submissions = [];
-      contest.clarifyLogs = [];
+const getContest = handleError(async (req, res) => {
+  const { cid } = req.params;
+  const username = getUsername(req);
+  const contest = await Contest.findOne({ cid });
+  const isManager = contest.manager === username;
+  if ((await checkStarted(cid)) || isManager) {
+    const { problems, submissions } = contest;
+    for (let i = 0; i < problems.length; i++) {
+      let { pid } = problems[i];
+      problems[i] = await Problem.findOne({ pid });
+      if (!isManager) problems[i].pid = undefined;
     }
-    res.send({ contest });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const getcontestUpdate = async (req, res, next) => {
-  try {
-    const { cid } = req.params;
-    const username = getUsername(req);
-    const query = Contest.findOne({ cid })
-      .select('submissions clarifyLogs');
-    ['submission', 'clarifyLog'].forEach(setListSkip(req, query));
-    const { submissions, clarifyLogs } = await query;
     submissionListCheckUser(submissions, username);
-    res.send({
-      submissionList: submissions,
-      clarifyLogList: clarifyLogs,
-    });
-  } catch (err) {
-    next(err);
+  } else {
+    contest.problems = [];
+    contest.submissions = [];
+    contest.clarifyLogs = [];
   }
-};
+  res.send({ contest });
+});
 
-const postContest = async (req, res, next) => {
-  try {
-    const username = getUsername(req);
-    let { contest } = req.body;
-    let error = await checkContest(contest);
-    if (error) return res.status(406).send({ error });
-    const { cid } = contest;
-    if (contest.cid) {
-      error = await checkManager(cid, username);
-      if (error) return res.status(401).send({ error });
-      contest = await Contest.findOneAndUpdate({ cid },
-        contest, { upsert: true, new: true });
-    } else {
-      contest.manager = username;
-      contest = new Contest(contest);
-      contest = await contest.save();
-    }
-    res.send({ contest });
-  } catch (err) {
-    next(err);
+const getcontestUpdate = handleError(async (req, res) => {
+  const { cid } = req.params;
+  const username = getUsername(req);
+  const query = Contest.findOne({ cid })
+    .select('submissions clarifyLogs');
+  listFileds.forEach(setListSkip(req, query));
+  const { submissions, clarifyLogs } = await query;
+  submissionListCheckUser(submissions, username);
+  res.send({
+    submissionList: submissions,
+    clarifyLogList: clarifyLogs,
+  });
+});
+
+const postContest = handleError(async (req, res) => {
+  const username = getUsername(req);
+  let { contest } = req.body;
+  let error = await checkContest(contest);
+  if (error) return res.status(406).send({ error });
+  const { cid } = contest;
+  if (contest.cid) {
+    error = await checkManager(cid, username);
+    if (error) return res.status(401).send({ error });
+    contest = await Contest.findOneAndUpdate({ cid },
+      contest, { upsert: true, new: true });
+  } else {
+    contest.manager = username;
+    contest = new Contest(contest);
+    contest = await contest.save();
   }
-};
+  res.send({ contest });
+});
 
 const NUM_PEER_PAGE = 25;
-const getContestList = async (req, res, next) => {
-  try {
-    const page = Number(req.query.page) || 1;
-    const order = Number(req.query.order) || -1;
-    const sortKey = req.query.sortKey || 'cid';
-    const { searchKey } = req.query;
-    const condition = {};
-    if (searchKey) {
-      condition.title = {
-        $regex: searchKey,
-        $options: 'i',
-      };
-    }
-
-    const contestList = await Contest.find(condition)
-      .select('cid title start duration')
-      .sort({ [sortKey]: order })
-      .skip((page - 1) * NUM_PEER_PAGE)
-      .limit(NUM_PEER_PAGE);
-    const count = Math.ceil((await Contest.find(condition).count()) / NUM_PEER_PAGE);
-    res.send({
-      count,
-      contestList,
-    });
-  } catch (err) {
-    next(err);
+const getContestList = handleError(async (req, res) => {
+  const page = Number(req.query.page) || 1;
+  const order = Number(req.query.order) || -1;
+  const sortKey = req.query.sortKey || 'cid';
+  const { searchKey } = req.query;
+  const condition = {};
+  if (searchKey) {
+    condition.title = {
+      $regex: searchKey,
+      $options: 'i',
+    };
   }
-};
+  const contestList = await Contest.find(condition)
+    .select('cid title start duration')
+    .sort({ [sortKey]: order })
+    .skip((page - 1) * NUM_PEER_PAGE)
+    .limit(NUM_PEER_PAGE);
+  const count = Math.ceil((await Contest.find(condition).count()) / NUM_PEER_PAGE);
+  res.send({
+    count,
+    contestList,
+  });
+});
 
-const postSubmission = async (req, res, next) => {
-  try {
-    const {
-      submission: { cid, pid, language, code },
-    } = req.body;
-    const username = getUsername(req);
-    let submission = { username, cid, pid, language, code };
-    const error = await checkSubmission(submission);
-    if (error) return res.status(406).send({ error });
-    const index = pid.charCodeAt(0) - 'A'.charCodeAt(0);
-    const contest = await Contest.findOne({ cid });
-    const problem = await Problem
-      .findOne({ pid: contest.problems[index].pid })
-      .select('originOJ originPid');
-    submission.originOJ = problem.originOJ;
-    submission.originPid = problem.originPid;
-    await Contest
+const postSubmission = handleError(async (req, res) => {
+  const {
+    submission: { cid, pid, language, code },
+  } = req.body;
+  const username = getUsername(req);
+  let submission = { username, cid, pid, language, code };
+  const error = await checkSubmission(submission);
+  if (error) return res.status(406).send({ error });
+  const index = pid.charCodeAt(0) - 'A'.charCodeAt(0);
+  const contest = await Contest.findOne({ cid });
+  const problem = await Problem
+    .findOne({ pid: contest.problems[index].pid })
+    .select('originOJ originPid');
+  submission.originOJ = problem.originOJ;
+  submission.originPid = problem.originPid;
+  await Contest
+    .findOneAndUpdate(
+      { cid },
+      { $push: { submissions: submission } });
+  res.send({ submission });
+});
+
+const getSubmission = handleError(async (req, res) => {
+  const { cid, sid } = req.params;
+  const username = getUsername(req);
+  let submission = await Contest
+    .findOne({ cid })
+    .select(`submissions.${sid}`);
+  submissionCheckUser(submission, username);
+  res.send({ submission });
+});
+
+const clarifyContest = handleError(async (req, res) => {
+  let {
+    params: { cid },
+    body: { content, qid },
+  } = req;
+  const username = getUsername(req);
+  let kind = 1;
+  if (Number(qid) < 0) {
+    const { questionCnt } = await Contest
       .findOneAndUpdate(
         { cid },
-        { $push: { submissions: submission } });
-    res.send({ submission });
-  } catch (err) {
-    next(err);
+        { $inc: { questionCnt: 1 } })
+      .select('questionCnt');
+    qid = questionCnt;
+    kind = 0;
   }
-};
-
-const getSubmission = async (req, res, next) => {
-  try {
-    const { cid, sid } = req.params;
-    const username = getUsername(req);
-    let submission = await Contest
-      .findOne({ cid })
-      .select(`submissions.${sid}`);
-    submissionCheckUser(submission, username);
-    res.send({ submission });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const clarifyContest = async (req, res, next) => {
-  try {
-    let {
-      params: { cid },
-      body: { content, qid },
-    } = req;
-    const username = getUsername(req);
-    let kind = 1;
-    if (Number(qid) < 0) {
-      const { questionCnt } = await Contest
-        .findOneAndUpdate(
-          { cid },
-          { $inc: { questionCnt: 1 } })
-        .select('questionCnt');
-      qid = questionCnt;
-      kind = 0;
-    }
-    const newLog = { kind, qid, content, username };
-    const { clarifyLogs } = await Contest
-      .findOneAndUpdate(
-        { cid },
-        { $push: { clarifyLogs: newLog } },
-        { new: true })
-      .select('clarifyLogs')
-      .slice('clarifyLogs', -1);
-    res.send({ clarifyLog: clarifyLogs[0] });
-  } catch (err) {
-    next(err);
-  }
-};
+  const newLog = { kind, qid, content, username };
+  const { clarifyLogs } = await Contest
+    .findOneAndUpdate(
+      { cid },
+      { $push: { clarifyLogs: newLog } },
+      { new: true })
+    .select('clarifyLogs')
+    .slice('clarifyLogs', -1);
+  res.send({ clarifyLog: clarifyLogs[0] });
+});
 
 const generateTest = async (req, res) => {
   const contest = await Contest.findOne({ cid: 10000 });

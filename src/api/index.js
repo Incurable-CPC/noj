@@ -13,9 +13,24 @@ import userApi from './usersApi';
 import problemApi from './problemsApi';
 import submissionApi from './submissionsApi';
 import contestsApi from './contestsApi';
+import { getUsername, handleError } from './common';
+import User from '../models/userModel';
 import moment from 'moment';
 const router = new Router();
 
+const checkTime = handleError(async (req, res, next) => {
+  const username = getUsername(req);
+  const { lastOperate } = await User
+    .findOneAndUpdate(
+      { username },
+      { $currentDate: { lastOperate: true } })
+    .select('lastOperate');
+  const cur = moment();
+  const diff = cur.diff(lastOperate, 'seconds');
+  if (diff < 5) res.status(406).send({ error: 'Operate too fast' });
+  else next();
+});
+router.post('*', checkTime);
 router.use('/auth', authApi);
 router.use('/users', userApi);
 router.use('/problems', problemApi);

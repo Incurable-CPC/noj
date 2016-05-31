@@ -5,7 +5,7 @@
 import { Router } from 'express';
 const router = new Router();
 
-import { requireAuth, requireAdmin } from './common';
+import { requireAuth, requireAdmin, handleError } from './common';
 import Problem from '../models/problemModel';
 import { markWithMath } from '../core';
 import fetch from '../core/fetch';
@@ -13,76 +13,63 @@ import problemChecker from '../check/problemChecker';
 
 const checkProblem = async (problem) => problemChecker(problem);
 
-const getProblem = async (req, res, next) => {
-  try {
-    const { pid } = req.params;
-    const problem = await Problem.findOne({ pid });
-    if (problem) {
-      res.send({ problem });
-    } else {
+const getProblem = handleError(async (req, res) => {
+  const { pid } = req.params;
+  const problem = await Problem.findOne({ pid });
+  if (problem) {
+    res.send({ problem });
+  } else {
       res.status(404).send({ error: 'Problem not exist' });
     }
-  } catch (err) {
-    next(err);
-  }
-};
+});
 
 const NUM_PEER_PAGE = 25;
-const getProblemList = async (req, res, next) => {
-  try {
-    const page = Number(req.query.page) || 1;
-    const order = Number(req.query.order) || 1;
-    const sortKey = req.query.sortKey || 'pid';
-    const { searchKey } = req.query;
-    const condition = {};
-    if (searchKey) {
-      condition.$or = [
-        { pid: { $regex: searchKey, $options: 'i' } },
-        { title: { $regex: searchKey, $options: 'i' } },
-      ];
-    }
-
-    const problemList = await Problem.find(condition)
-      .select('pid title accepted submit ratio')
-      .sort({ [sortKey]: order })
-      .skip((page - 1) * NUM_PEER_PAGE)
-      .limit(NUM_PEER_PAGE);
-    const count = Math.ceil((await Problem.find(condition).count()) / NUM_PEER_PAGE);
-    res.send({
-      count,
-      problemList,
-    });
-  } catch (err) {
-    next(err);
+const getProblemList = handleError(async (req, res) => {
+  const page = Number(req.query.page) || 1;
+  const order = Number(req.query.order) || 1;
+  const sortKey = req.query.sortKey || 'pid';
+  const { searchKey } = req.query;
+  const condition = {};
+  if (searchKey) {
+    condition.$or = [
+      { pid: { $regex: searchKey, $options: 'i' } },
+      { title: { $regex: searchKey, $options: 'i' } },
+    ];
   }
-};
+
+  const problemList = await Problem.find(condition)
+    .select('pid title accepted submit ratio')
+    .sort({ [sortKey]: order })
+    .skip((page - 1) * NUM_PEER_PAGE)
+    .limit(NUM_PEER_PAGE);
+  const count = Math.ceil((await Problem.find(condition).count()) / NUM_PEER_PAGE);
+  res.send({
+    count,
+    problemList,
+  });
+});
 
 const srcFields = ['description', 'input', 'output', 'source', 'hint'];
-const postProblem = async (req, res, next) => {
-  try {
-    let { problem } = req.body;
-    let error = await checkProblem(problem);
-    if (error) return res.status(406).send({ error });
-    srcFields.forEach((field) => {
-      const src = problem[`${field}Src`];
-      if (src) {
-        problem[field] = markWithMath(src);
-      }
-    });
-    if (problem.pid) {
-      problem = await Problem.findOneAndUpdate({
-        pid: problem.pid,
-      }, problem, { upsert: true, new: true });
-    } else {
-      problem = new Problem(problem);
-      problem = await problem.save();
+const postProblem = handleError(async (req, res) => {
+  let { problem } = req.body;
+  let error = await checkProblem(problem);
+  if (error) return res.status(406).send({ error });
+  srcFields.forEach((field) => {
+    const src = problem[`${field}Src`];
+    if (src) {
+      problem[field] = markWithMath(src);
     }
-
-    res.send({ problem });
-  } catch (err) {
-    next(err);
+  });
+  if (problem.pid) {
+    problem = await Problem.findOneAndUpdate({
+      pid: problem.pid,
+    }, problem, { upsert: true, new: true });
+  } else {
+    problem = new Problem(problem);
+    problem = await problem.save();
   }
-};
+  res.send({ problem });
+});
 
 const getProblemFromPOJ = async () => {
   for (let id = 1000; id < 2000; id++) {
