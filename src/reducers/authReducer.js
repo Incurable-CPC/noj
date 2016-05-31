@@ -18,6 +18,9 @@ export default function reducer(state = initState, action) {
       return updateUser(fromJS(action.user));
     case AuthConstants.CLEAR:
       return fromJS({});
+    case AuthConstants.UPDATE:
+      console.log(action.updates.username);
+      return updateUser(state, fromJS(action.updates));
     default: return state;
   }
 }

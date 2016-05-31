@@ -4,7 +4,6 @@
 
 import React, { PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import { is } from 'immutable';
 import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
 
@@ -39,7 +38,7 @@ export default class UserInfoPage extends BasePage {
     if ((!username) || (!user)) user = authedUser;
     let following = 0;
     if (authedUser.get('following').includes(username)) following = 1;
-    if (is(user, authedUser)) following = -1;
+    if (user.get('username') === authedUser.get('username')) following = -1;
     return (
       <div className={s.div}>
         <div className={s.left}>
@@ -47,7 +46,8 @@ export default class UserInfoPage extends BasePage {
             <UserInfo
               user={user}
               following={following}
-              follow={() => dispatch(followUser())}
+              follow={() => dispatch(followUser(true))}
+              unfollow={() => dispatch(followUser(false))}
             />
           </Paper>
         </div>

@@ -7,4 +7,4 @@ export default {
   UPDATE: 'user-update',
 };
 
-export const listFields = ['solved', 'tried', 'following', 'followers'];
+export const listFields = ['solved', 'tried', 'followLogs'];

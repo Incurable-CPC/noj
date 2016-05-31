@@ -47,11 +47,19 @@ export default class UserInfo extends Component {
   static propTypes = {
     user: ImmutableTypes.map.isRequired,
     following: PropTypes.number.isRequired,
+    unfollow: PropTypes.func.isRequired,
     follow: PropTypes.func.isRequired,
   };
 
+  state = {
+    inside: false,
+  };
+
+  _handleMouseEnter = () => this.setState({ inside: true });
+  _handleMouseLeave = () => this.setState({ inside: false });
+
   render() {
-    const { user, following, follow } = this.props;
+    const { user, following, follow, unfollow } = this.props;
     const showCount = (field, index) => (
       <span key={index} style={styles.count}>
         {user.get(field).size}
@@ -59,29 +67,29 @@ export default class UserInfo extends Component {
         <span style={styles.info}>{nameToStr(field)}</span>
       </span>
     );
-    const showPid = (pid, index) => (
+    const showPid = (solved) => (pid, index) => (
       <FlatButton
         key={index}
         label={pid}
-        primary
+        primary={solved}
+        secondary={!solved}
         labelStyle={styles.pid}
         onTouchTap={() => Location.push(`/problems/${pid}`)}
       />
     );
-    const buttons = [() => (
-      <RaisedButton
-        label="edit profile"
-      />
-    ), () => (
-      <RaisedButton
-        label="follow"
-        onTouchTap={follow}
-      />
-    ), () => (
-      <RaisedButton
-        label="unfollow"
-      />
-    )];
+    const buttonProps = [() => ({
+      label: 'edit profile',
+    }), () => ({
+      label: 'follow',
+      onTouchTap: follow,
+    }), () => this.state.inside ? ({
+      secondary: true,
+      label: 'unfollow',
+      onTouchTap: unfollow,
+    }) : ({
+      primary: true,
+      label: 'following',
+    })];
     return (
       <div>
         <div style={styles.left}>
@@ -89,7 +97,11 @@ export default class UserInfo extends Component {
           <div>
             {['followers', 'following'].map(showCount)}
           </div>
-          {buttons[following + 1]()}
+          <RaisedButton
+            onMouseEnter={this._handleMouseEnter}
+            onMouseLeave={this._handleMouseLeave}
+            {...buttonProps[following + 1]()}
+          />
         </div>
         <div style={styles.right}>
           <div style={styles.username}>
@@ -116,7 +128,12 @@ export default class UserInfo extends Component {
           <Paper style={{ padding: 20 }}>
             Problems solved:
             <div>
-              {user.get('solved').map(showPid)}
+              {user.get('solved').map(showPid(true))}
+            </div>
+            <div style={{ height: 40 }} />
+            Problems tried but unsolved:
+            <div>
+              {user.get('notSolved').map(showPid(false))}
             </div>
           </Paper>
         </div>

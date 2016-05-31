@@ -3,7 +3,7 @@
  */
 
 import UserConstants from '../constants/UserConstants';
-import { fromJS, List } from 'immutable';
+import { fromJS, List, Set } from 'immutable';
 
 const initState = fromJS({});
 
@@ -15,18 +15,26 @@ export const updateUser = (user, updates) => {
           _.concat(value) : value);
     });
   }
-  const notSolved = user
+  let notSolved = user
     .get('tried')
     .filter((pid) => !user.get('solved').includes(pid));
+  user = user.set('followers', new Set());
+  user = user.set('following', new Set());
+  user.get('followLogs').forEach((log) => {
+    const field = log.get('target') ? 'following' : 'followers';
+    const method = log.get('follow') ? 'add' : 'remove';
+    user = user.update(field,
+      (s = new Set()) => s[method](log.get('username')));
+  });
   return user.set('notSolved', notSolved);
 };
 
 export default function (state = initState, action) {
   switch (action.type) {
     case UserConstants.SET:
-      return fromJS(action.user);
+      return updateUser(fromJS(action.user));
     case UserConstants.UPDATE:
-      return updateUser(state, action.updates);
+      return updateUser(state, fromJS(action.updates));
     default:
       return state;
   }

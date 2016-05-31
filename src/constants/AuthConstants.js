@@ -7,4 +7,5 @@ export default {
   CLEAR: 'auth-clear',
   LOGIN: 'auth-login',
   REGISTER: 'auth-register',
+  UPDATE: 'auth-update',
 };

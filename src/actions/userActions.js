@@ -2,9 +2,8 @@
  * Created by cpc on 5/30/16.
  */
 
-import { fromJS } from 'immutable';
-
 import UserConstants, { listFields } from '../constants/UserConstants';
+import AuthConstants from '../constants/AuthConstants';
 import { postJSON, getJSON } from '../core/fetchJSON';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
@@ -16,24 +15,28 @@ const setUserInfo = (user) => ({
   user,
 });
 
-let _updateLock = false;
-export const updateUser = () => async (dispatch, getState) => {
-  const user = getState().user;
-  if (_updateLock) return;
-  _updateLock = true;
+let _updateLock = {
+  auth: false,
+  user: false,
+};
+export const updateUser = (field) => async (dispatch, getState) => {
+  const state = getState();
+  const user = state[field];
+  if (_updateLock[field]) return;
+  _updateLock[field] = true;
   const username = user.get('username');
   const cond = {};
-  listFields.forEach((field) => {
-    const skip = user.get(field).size;
-    cond[field] = { skip };
+  listFields.forEach((key) => {
+    const skip = user.get(key).size;
+    cond[key] = { skip };
   });
   const data = await getJSON(
     `${api}/users/${username}/update`, cond);
   dispatch({
-    type: UserConstants.UPDATE,
-    updates: fromJS(data.user),
+    type: ((field === 'auth') ? AuthConstants : UserConstants).UPDATE,
+    updates: data.user,
   });
-  _updateLock = false;
+  _updateLock[field] = false;
 };
 
 export const loadUserInfo = (username) => async (dispatch) => {
@@ -51,14 +54,16 @@ export const loadUserInfo = (username) => async (dispatch) => {
   }
 };
 
-export const followUser = () => async (dispatch, getState) => {
+export const followUser = (follow) => async (dispatch, getState) => {
   try {
     nprogress.start();
     const user = getState().user;
     const username = user.get('username');
-    await postJSON(`${api}/users/${username}/followers`);
-    dispatch(updateUser());
-    toast('success', 'Follow succeed');
+    const action = `${follow ? 'F' : 'Unf'}ollow`;
+    await postJSON(`${api}/users/${username}/followLogs`, { follow });
+    dispatch(updateUser('user'));
+    dispatch(updateUser('auth'));
+    toast('success', `${action} succeed`);
   } catch (err) {
     toast('error', err.message);
   }

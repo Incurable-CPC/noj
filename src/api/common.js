@@ -36,8 +36,8 @@ export const requireAdmin = async (req, res, next) => {
 };
 
 export const setListSkip = (req, query) => (field) => {
-  const skip = (req.query[field] || {}).skip || 0;
-  const limit = (req.query[field]|| {}).limit || 100000;
+  const skip = Number((req.query[field] || {}).skip) || 0;
+  const limit = Number((req.query[field] || {}).limit) || 100000;
   query.slice(field, [skip, limit]);
 };
 

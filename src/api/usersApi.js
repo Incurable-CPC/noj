@@ -36,28 +36,35 @@ const getUserInfoUpdate = handleError(async (req, res) => {
 });
 
 const followUser = handleError(async (req, res) => {
-  const { username } = req.params;
+  const {
+    params: { username },
+    body: { follow },
+  } = req;
   const authedUser = getUsername(req);
+  const action = `${follow ? '' : 'un'}follow`;
   if (username === authedUser) {
-    return res.status(406).send({ error: 'You can\'t follow yourself'});
+    return res.status(406).send({ error: `You can't ${action} yourself` });
   }
+  const log1 = { username: authedUser, follow, target: false };
+  const log2 = { username, follow, target: true };
   await User.findOneAndUpdate(
     { username },
-    { $addToSet: { followers: authedUser } });
+    { $push: { followLogs: log1 } });
   await User.findOneAndUpdate(
     { username: authedUser },
-    { $addToSet: { following: username } });
+    { $push: { followLogs: log2 } });
   res.send({
-    auth: { following: username },
-    user: { followers: authedUser },
+    auth: { followLogs: log1 },
+    user: { followLogs: log2 },
   });
 });
+
 
 router.all('/:username', checkUsername);
 router.get('/:username', getUserInfo);
 router.get('/:username/update', getUserInfoUpdate);
 
 router.all('*', requireAuth);
-router.post('/:username/followers', followUser);
+router.post('/:username/followLogs', followUser);
 
 export default router;
