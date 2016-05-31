@@ -19,8 +19,8 @@ const getProblem = handleError(async (req, res) => {
   if (problem) {
     res.send({ problem });
   } else {
-      res.status(404).send({ error: 'Problem not exist' });
-    }
+    res.status(404).send({ error: 'Problem not exist' });
+  }
 });
 
 const NUM_PEER_PAGE = 25;

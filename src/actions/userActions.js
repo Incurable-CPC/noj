@@ -21,7 +21,7 @@ let _updateLock = {
 };
 export const updateUser = (field) => async (dispatch, getState) => {
   const state = getState();
-  const user = state[field];
+  const user = (field === 'auth') ? state.auth : state.user.get('detail');
   if (_updateLock[field]) return;
   _updateLock[field] = true;
   const username = user.get('username');

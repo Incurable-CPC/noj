@@ -14,7 +14,7 @@ import submissionChecker, { isCompleted, isAccepted } from '../check/submissionC
 
 const checkSubmission = async (submission) => submissionChecker(submission);
 
-const getSubmissionList = handleError(async (req, res, next) => {
+const getSubmissionList = handleError(async (req, res) => {
   const { pid } = req.query;
   const cond = {};
   if (pid) cond.pid = pid;
@@ -24,7 +24,7 @@ const getSubmissionList = handleError(async (req, res, next) => {
   res.send({ submissionList });
 });
 
-const getSubmission = handleError(async (req, res, next) => {
+const getSubmission = handleError(async (req, res) => {
   const { sid } = req.params;
   const username = getUsername(req);
   let submission = await Submission
@@ -35,7 +35,7 @@ const getSubmission = handleError(async (req, res, next) => {
   res.send({ submission });
 });
 
-const postSubmission = handleError(async (req, res, next) => {
+const postSubmission = handleError(async (req, res) => {
   const {
     submission: { pid, language, code },
   } = req.body;
@@ -62,7 +62,7 @@ const postSubmission = handleError(async (req, res, next) => {
   res.send({ submission });
 });
 
-const getUnjudgedSubmission = handleError(async (req, res, next) => {
+const getUnjudgedSubmission = handleError(async (req, res) => {
   const submission = await Submission
     .findOneAndUpdate(
       { result: 0 },
@@ -75,7 +75,7 @@ const getUnjudgedSubmission = handleError(async (req, res, next) => {
     }
 });
 
-const updateSubmissionResult = handleError(async (req, res, next) => {
+const updateSubmissionResult = handleError(async (req, res) => {
   const { sid } = req.params;
   let submission = await Submission.findOne({ sid });
   if (isCompleted(submission.result)) {

@@ -5,7 +5,10 @@
 import UserConstants from '../constants/UserConstants';
 import { fromJS, List, Set } from 'immutable';
 
-const initState = fromJS({});
+const initState = fromJS({
+  detail: {},
+  list: [],
+});
 
 export const updateUser = (user, updates) => {
   if (updates) {
@@ -32,9 +35,10 @@ export const updateUser = (user, updates) => {
 export default function (state = initState, action) {
   switch (action.type) {
     case UserConstants.SET:
-      return updateUser(fromJS(action.user));
+      return state.set('detail', updateUser(fromJS(action.user)));
     case UserConstants.UPDATE:
-      return updateUser(state, fromJS(action.updates));
+      return state.update('detail', user =>
+        updateUser(user, fromJS(action.updates)));
     default:
       return state;
   }

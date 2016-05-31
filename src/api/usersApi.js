@@ -35,6 +35,26 @@ const getUserInfoUpdate = handleError(async (req, res) => {
   res.send({ user });
 });
 
+const NUM_PEER_PAGE = 25;
+const getUserList = handleError(async (req, res) => {
+  const page = Number(req.query.page) || 1;
+  const userList = await User.aggregate([
+    { $project: {
+      username: true,
+      info: { avatar: true, nick: true },
+      solved: { $size: '$solved' },
+    } },
+    { $sort: { solved: -1 } },
+    { $skip: NUM_PEER_PAGE * (page - 1) },
+    { $limit: NUM_PEER_PAGE },
+  ]).exec();
+  const count = Math.ceil((await User.find().count()) / NUM_PEER_PAGE);
+  res.send({
+    count,
+    userList,
+  });
+});
+
 const followUser = handleError(async (req, res) => {
   const {
     params: { username },
@@ -60,6 +80,7 @@ const followUser = handleError(async (req, res) => {
 });
 
 
+router.get('/', getUserList);
 router.all('/:username', checkUsername);
 router.get('/:username', getUserInfo);
 router.get('/:username/update', getUserInfoUpdate);
