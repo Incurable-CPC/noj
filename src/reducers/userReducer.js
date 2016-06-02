@@ -3,7 +3,7 @@
  */
 
 import UserConstants from '../constants/UserConstants';
-import { fromJS, List, Set } from 'immutable';
+import { fromJS, Iterable } from 'immutable';
 
 const initState = fromJS({
   detail: {},
@@ -11,24 +11,17 @@ const initState = fromJS({
 });
 
 export const updateUser = (user, updates) => {
+  ['solved', 'tried'].forEach((field) =>
+    user = user.update(field, _ => _.toSet()));
   if (updates) {
     updates.forEach((value, key) => {
       user = user.update(key, (_) =>
-        List.isList(_) ?
-          _.concat(value) : value);
+        Iterable.isIterable(_) ? _.concat(value) : value);
     });
   }
   let notSolved = user
     .get('tried')
     .filter((pid) => !user.get('solved').includes(pid));
-  user = user.set('followers', new Set());
-  user = user.set('following', new Set());
-  user.get('followLogs').forEach((log) => {
-    const field = log.get('target') ? 'following' : 'followers';
-    const method = log.get('follow') ? 'add' : 'remove';
-    user = user.update(field,
-      (s = new Set()) => s[method](log.get('username')));
-  });
   return user.set('notSolved', notSolved);
 };
 

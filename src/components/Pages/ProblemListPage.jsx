@@ -37,8 +37,8 @@ class ProblemsListPage extends BasePage {
   static propTypes = {
     problemList: ImmutableTypes.list.isRequired,
     searchKey: PropTypes.string,
-    solved: ImmutableTypes.list,
-    tried: ImmutableTypes.list,
+    solved: ImmutableTypes.set,
+    tried: ImmutableTypes.set,
     user: ImmutableTypes.map,
     count: PropTypes.number.isRequired,
     page: PropTypes.number.isRequired,
@@ -46,9 +46,11 @@ class ProblemsListPage extends BasePage {
   };
 
   render() {
-    const { count, page, dispatch, searchKey, user } = this.props;
-    const tried = (this.props.tried || new List()).toJS();
-    const solved = (this.props.solved || new List()).toJS();
+    const {
+      count, page, searchKey,
+      user, tried, solved,
+      dispatch,
+    } = this.props;
     const begin = Math.max(1, Math.min(page - 2, count - 4));
     const end = Math.min(count, begin + 4);
     const paginationRange = {
@@ -57,10 +59,10 @@ class ProblemsListPage extends BasePage {
     };
     const problemList = this.props.problemList.map((problem) => {
       const pid = problem.get('pid');
-      let ret = problem.set('statu', 'normal');
-      if (tried.indexOf(pid) >= 0) ret = ret.set('status', 'tried');
-      if (solved.indexOf(pid) >= 0) ret = ret.set('status', 'solved');
-      return ret;
+      let status = 'normal';
+      if (tried && tried.includes(pid)) status = 'tried';
+      if (solved && solved.includes(pid)) status = 'solved';
+      return problem.set('status', status);
     });
     return (
       <div className={s.div}>
