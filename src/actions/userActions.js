@@ -60,7 +60,7 @@ export const followUser = (follow) => async (dispatch, getState) => {
     const user = getState().user;
     const username = user.getIn(['detail', 'username']);
     const action = `${follow ? 'F' : 'Unf'}ollow`;
-    await postJSON(`${api}/users/${username}/followLogs`, { follow });
+    await postJSON(`${api}/users/${username}/followers`, { follow });
     dispatch(updateUser('user'));
     dispatch(updateUser('auth'));
     toast('success', `${action} succeed`);

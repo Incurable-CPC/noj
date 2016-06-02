@@ -88,6 +88,21 @@ const getUserFollowingList = handleError(async (req, res) => {
   });
 });
 
+const getUserFollowersList = handleError(async (req, res) => {
+  const page = Number(req.query.page) || 1;
+  const { username } = req.params;
+  const { followers } = await User
+    .findOne({ username })
+    .select('followers');
+  const cond = { username: { $in: followers } };
+  const userList = await getUserListFromDB(page, cond);
+  const count = followers.length;
+  res.send({
+    count,
+    userList,
+  });
+});
+
 const followUser = handleError(async (req, res) => {
   const {
     params: { username },
@@ -116,8 +131,9 @@ router.all('/:username', checkUsername);
 router.get('/:username', getUserInfo);
 router.get('/:username/update', getUserInfoUpdate);
 router.get('/:username/following', getUserFollowingList);
+router.get('/:username/followers', getUserFollowersList);
 
 router.all('*', requireAuth);
-router.post('/:username/followLogs', followUser);
+router.post('/:username/followers', followUser);
 
 export default router;
