@@ -46,9 +46,9 @@ const styles = {
 export default class UserInfo extends Component {
   static propTypes = {
     user: ImmutableTypes.map.isRequired,
-    following: PropTypes.number.isRequired,
     unfollow: PropTypes.func.isRequired,
     follow: PropTypes.func.isRequired,
+    self: PropTypes.bool,
   };
 
   state = {
@@ -59,10 +59,10 @@ export default class UserInfo extends Component {
   _handleMouseLeave = () => this.setState({ inside: false });
 
   render() {
-    const { user, following, follow, unfollow } = this.props;
+    const { user, self, follow, unfollow } = this.props;
     const showCount = (field, index) => (
       <span key={index} style={styles.count}>
-        {user.get(field).size}
+        {user.get(`${field}Cnt`)}
         <br />
         <span style={styles.info}>{nameToStr(field)}</span>
       </span>
@@ -90,6 +90,8 @@ export default class UserInfo extends Component {
       primary: true,
       label: 'following',
     })];
+    let buttonId = self ? 0 : 1;
+    if (user.get('isFollowing')) buttonId = 2;
     return (
       <div>
         <div style={styles.left}>
@@ -100,7 +102,7 @@ export default class UserInfo extends Component {
           <RaisedButton
             onMouseEnter={this._handleMouseEnter}
             onMouseLeave={this._handleMouseLeave}
-            {...buttonProps[following + 1]()}
+            {...buttonProps[buttonId]()}
           />
         </div>
         <div style={styles.right}>

@@ -17,28 +17,41 @@ const checkUsername = handleError(async (req, res, next) => {
   else res.status(404).send({ error: 'User not exist' });
 });
 
+const handleUserFollowInfo = (user, authedUser) => {
+  const { followers, following } = user;
+  user.followersCnt = followers.length;
+  user.followingCnt = following.length;
+  user.isFollower = followers.indexOf(authedUser) >= 0;
+  user.isFollowing = following.indexOf(authedUser) >= 0;
+  user.followers = user.following = undefined;
+};
 const getUserInfo = handleError(async (req, res) => {
+  const authedUser = getUsername(req);
   const { username } = req.params;
-  const user = await User
+  const user = (await User
     .findOne({ username })
-    .select('-password -tokens');
+    .select('-password -tokens')).toObject();
+  handleUserFollowInfo(user, authedUser);
   res.send({ user });
 });
 
 const getUserInfoUpdate = handleError(async (req, res) => {
+  const authedUser = getUsername(req);
   const { username } = req.params;
   const query = User
     .findOne({ username })
     .select('-password -tokens');
   listFields.forEach(setListSkip(req, query));
-  const user = await query;
+  const user = (await query.exec()).toObject();
+  handleUserFollowInfo(user, authedUser);
   res.send({ user });
 });
 
 const NUM_PEER_PAGE = 25;
-const getUserList = handleError(async (req, res) => {
-  const page = Number(req.query.page) || 1;
-  const userList = await User.aggregate([
+const getUserListFromDB = async (page, cond) => {
+  let stages = [];
+  if (cond) stages.push({ $match: cond });
+  stages = stages.concat([
     { $project: {
       username: true,
       info: { avatar: true, nick: true },
@@ -47,8 +60,28 @@ const getUserList = handleError(async (req, res) => {
     { $sort: { solved: -1 } },
     { $skip: NUM_PEER_PAGE * (page - 1) },
     { $limit: NUM_PEER_PAGE },
-  ]).exec();
+  ]);
+  return await User.aggregate(stages).exec();
+};
+const getUserList = handleError(async (req, res) => {
+  const page = Number(req.query.page) || 1;
+  const userList = await getUserListFromDB(page);
   const count = Math.ceil((await User.find().count()) / NUM_PEER_PAGE);
+  res.send({
+    count,
+    userList,
+  });
+});
+
+const getUserFollowingList = handleError(async (req, res) => {
+  const page = Number(req.query.page) || 1;
+  const { username } = req.params;
+  const { following } = await User
+    .findOne({ username })
+    .select('following');
+  const cond = { username: { $in: following } };
+  const userList = await getUserListFromDB(page, cond);
+  const count = following.length;
   res.send({
     count,
     userList,
@@ -65,25 +98,24 @@ const followUser = handleError(async (req, res) => {
   if (username === authedUser) {
     return res.status(406).send({ error: `You can't ${action} yourself` });
   }
-  const log1 = { username: authedUser, follow, target: false };
-  const log2 = { username, follow, target: true };
+  const operate = follow ? '$addToSet' : '$pull';
   await User.findOneAndUpdate(
     { username },
-    { $push: { followLogs: log1 } });
+    { [operate]: { followers: authedUser } });
   await User.findOneAndUpdate(
     { username: authedUser },
-    { $push: { followLogs: log2 } });
+    { [operate]: { following: username } });
   res.send({
-    auth: { followLogs: log1 },
-    user: { followLogs: log2 },
+    auth: { following: username },
+    user: { followers: authedUser },
   });
 });
-
 
 router.get('/', getUserList);
 router.all('/:username', checkUsername);
 router.get('/:username', getUserInfo);
 router.get('/:username/update', getUserInfoUpdate);
+router.get('/:username/following', getUserFollowingList);
 
 router.all('*', requireAuth);
 router.post('/:username/followLogs', followUser);

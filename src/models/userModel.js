@@ -20,12 +20,8 @@ export const userSchema = {
     school: String,
     email: String,
   },
-  followLogs: [{
-    follow: Boolean,
-    target: Boolean,
-    username: String,
-    Time: { type: Date, default: Date.now },
-  }],
+  following: [String],
+  followers: [String],
 };
 
 const schema = new Schema(userSchema);

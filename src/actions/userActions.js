@@ -58,7 +58,7 @@ export const followUser = (follow) => async (dispatch, getState) => {
   try {
     nprogress.start();
     const user = getState().user;
-    const username = user.get('username');
+    const username = user.getIn(['detail', 'username']);
     const action = `${follow ? 'F' : 'Unf'}ollow`;
     await postJSON(`${api}/users/${username}/followLogs`, { follow });
     dispatch(updateUser('user'));
