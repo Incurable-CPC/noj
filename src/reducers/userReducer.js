@@ -32,6 +32,9 @@ export default function (state = initState, action) {
     case UserConstants.UPDATE:
       return state.update('detail', user =>
         updateUser(user, fromJS(action.updates)));
+    case UserConstants.SET_LIST:
+      return state.set('list', fromJS(action.userList))
+        .set('count', action.count);
     default:
       return state;
   }

@@ -15,7 +15,7 @@ const styles = {
 export default class UserAvatar extends Component {
   static propTypes = {
     user: ImmutableTypes.map.isRequired,
-    size: PropTypes.number.isRequired,
+    size: PropTypes.number,
   };
 
   render() {

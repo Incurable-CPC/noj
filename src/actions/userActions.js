@@ -15,6 +15,12 @@ const setUserInfo = (user) => ({
   user,
 });
 
+const setUserInfoList = (userList, count) => ({
+  type: UserConstants.SET_LIST,
+  userList,
+  count,
+});
+
 let _updateLock = {
   auth: false,
   user: false,
@@ -39,11 +45,26 @@ export const updateUser = (field) => async (dispatch, getState) => {
   _updateLock[field] = false;
 };
 
-export const loadUserInfo = (username) => async (dispatch) => {
+export const getUserInfo = (username) => async (dispatch) => {
   try {
     nprogress.start();
     const { user } = await getJSON(`${api}/users/${username}`);
     dispatch(setUserInfo(user));
+    await nprogress.done();
+    return true;
+  } catch (err) {
+    Location.push('/');
+    toast('error', err.message);
+    await nprogress.done();
+    return false;
+  }
+};
+
+export const getUserList = () => async (dispatch) => {
+  try {
+    nprogress.start();
+    const { userList, count } = await getJSON(`${api}/users`);
+    dispatch(setUserInfoList(userList, count));
     await nprogress.done();
     return true;
   } catch (err) {

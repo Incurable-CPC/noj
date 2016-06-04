@@ -2,29 +2,31 @@
  * Create by cpc on 2/17/16.
  **/
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import Board from './Board.jsx';
+import UserList from './Lists/UserList';
 import { connect } from 'react-redux';
 
+import { getUserList } from '../actions/userActions';
+
 @connect(state => ({
-  problems: state.contest.getIn(['detail', 'problems']),
-  teams: state.contest.getIn(['detail', 'teams']),
+  users: state.user.get('list'),
 }))
 export default class Test extends Component {
   static propTypes = {
-    problems: ImmutableTypes.list,
-    teams: ImmutableTypes.map,
+    users: ImmutableTypes.list,
+    dispatch: PropTypes.func,
   };
 
+  componentDidMount() {
+    this.props.dispatch(getUserList());
+  }
+
   render() {
-    const { problems, teams } = this.props;
+    const { users } = this.props;
     return (
       <div>
-        <Board
-          problems={problems}
-          teams={teams}
-        />
+        <UserList userList={users}/>
       </div>
     );
   }

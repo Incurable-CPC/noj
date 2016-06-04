@@ -21,10 +21,11 @@ const handleUserFollowInfo = (user, authedUser) => {
   const { followers, following } = user;
   user.followersCnt = followers.length;
   user.followingCnt = following.length;
-  user.isFollower = followers.indexOf(authedUser) >= 0;
-  user.isFollowing = following.indexOf(authedUser) >= 0;
+  user.isFollower = following.indexOf(authedUser) >= 0;
+  user.isFollowing = followers.indexOf(authedUser) >= 0;
   user.followers = user.following = undefined;
 };
+
 const getUserInfo = handleError(async (req, res) => {
   const authedUser = getUsername(req);
   const { username } = req.params;
@@ -54,7 +55,8 @@ const getUserListFromDB = async (page, cond) => {
   stages = stages.concat([
     { $project: {
       username: true,
-      info: { avatar: true, nick: true },
+      avatar: '$info.avatar',
+      nick: '$info.nick',
       solved: { $size: '$solved' },
     } },
     { $sort: { solved: -1 } },

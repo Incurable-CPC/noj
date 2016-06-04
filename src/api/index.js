@@ -18,6 +18,7 @@ import User from '../models/userModel';
 import moment from 'moment';
 const router = new Router();
 
+const OPERATE_LIMIT = 2;
 const checkTime = handleError(async (req, res, next) => {
   const username = getUsername(req);
   const { lastOperate } = await User
@@ -27,7 +28,7 @@ const checkTime = handleError(async (req, res, next) => {
     .select('lastOperate');
   const cur = moment();
   const diff = cur.diff(lastOperate, 'seconds');
-  if (diff < 5) res.status(406).send({ error: 'Operate too fast' });
+  if (diff < OPERATE_LIMIT) res.status(406).send({ error: 'Operate too fast' });
   else next();
 });
 router.post('*', checkTime);

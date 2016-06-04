@@ -30,6 +30,7 @@ import ContestSubmissionListPage from './components/Pages/Contest/ContestSubmiss
 import ContestBoardPage from './components/Pages/Contest/ContestBoardPage';
 import ContestClarifyPage from './components/Pages/Contest/ContestClarifyPage';
 import UserInfoPage from './components/Pages/User/UserInfoPage';
+import UserListPage from './components/Pages/UserListPage';
 // import Test from './components/Test';
 
 import {
@@ -51,7 +52,8 @@ import {
   loadAuthedUserInfo,
 } from './actions/authActions';
 import {
-  loadUserInfo,
+  getUserInfo,
+  getUserList,
 } from './actions/userActions';
 
 const boundGetProblem = async (nextState, replace, next) => {
@@ -102,9 +104,13 @@ const boundInit = async(nextState, replace, next) => {
   next();
 };
 
-const boundLoadUserInfo = async (nextState, replace, next) => {
+const boundGetUserInfo = async (nextState, replace, next) => {
   const { username } = nextState.params;
-  if (await store.dispatch(loadUserInfo(username))) next();
+  if (await store.dispatch(getUserInfo(username))) next();
+};
+
+const boundGetUserList = async (nextState, replace, next) => {
+  if (await store.dispatch(getUserList())) next();
 };
 
 const requireAuth = (nextState, replace) => {
@@ -151,8 +157,9 @@ ReactDOM.render((
         <Route path="status" onEnter={boundGetSubmissionList} component={SubmissionListPage} />
         <Route path="users" >
           <IndexRoute onEnter={requireAuth} component={UserInfoPage} />
-          <Route path=":username" onEnter={boundLoadUserInfo} component={UserInfoPage} />
+          <Route path=":username" onEnter={boundGetUserInfo} component={UserInfoPage} />
         </Route>
+        <Route path="standing" onEnter={boundGetUserList} component={UserListPage} />
         <Route path="*" component={Index} />
       </Route>
     </Router>

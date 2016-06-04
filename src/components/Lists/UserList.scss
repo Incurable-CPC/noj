@@ -1,0 +1,39 @@
+.list { }
+
+.row {
+  display: table;
+  width: 100%;
+}
+
+.col {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.avatar-col {
+  width: 64px;
+}
+
+.username-col {
+  width: 25%;
+  padding-right: 12px;
+}
+
+.nick-col {
+  width: 50%;
+}
+.solved-col {
+  width: 15%;
+}
+
+.header {
+  cursor: pointer;
+}
+
+.solved {
+  background-color: rgba(212, 237, 201, 0.55);
+}
+
+.tried {
+  background-color: rgba(221, 238, 255, 0.55);
+}

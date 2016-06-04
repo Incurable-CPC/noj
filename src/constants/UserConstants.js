@@ -5,6 +5,7 @@
 export default {
   SET: 'user-set',
   UPDATE: 'user-update',
+  SET_LIST: 'user-list-set',
 };
 
 export const listFields = ['solved', 'tried'];
