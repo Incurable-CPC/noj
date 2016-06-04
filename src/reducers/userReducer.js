@@ -7,6 +7,7 @@ import { fromJS, Iterable } from 'immutable';
 
 const initState = fromJS({
   detail: {},
+  condition: {},
   list: [],
 });
 
@@ -34,6 +35,7 @@ export default function (state = initState, action) {
         updateUser(user, fromJS(action.updates)));
     case UserConstants.SET_LIST:
       return state.set('list', fromJS(action.userList))
+        .set('condition', fromJS(action.condition))
         .set('count', action.count);
     default:
       return state;

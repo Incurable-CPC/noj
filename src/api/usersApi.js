@@ -7,6 +7,7 @@ import User from '../models/userModel';
 import { requireAuth, getUsername, setListSkip, handleError } from './common';
 import { listFields } from '../constants/UserConstants';
 const router = new Router();
+import { root } from '../config';
 
 const checkUsername = handleError(async (req, res, next) => {
   const { username } = req.params;
@@ -66,10 +67,23 @@ const getUserListFromDB = async (page, cond) => {
   return await User.aggregate(stages).exec();
 };
 const getUserList = handleError(async (req, res) => {
+  const { following, follower } = req.query;
   const page = Number(req.query.page) || 1;
-  const userList = await getUserListFromDB(page);
+  const cond = {};
+  if (following) {
+    const list = (await User
+      .findOne({ username: following })
+      .select('followers')).followers;
+    cond.username = { $in: list };
+  } else if (follower) {
+    const list = (await User
+      .findOne({ username: follower })
+      .select('following')).following;
+    cond.username = { $in: list };
+  }
+  const userList = await getUserListFromDB(page, cond);
   const count = Math.ceil((await User.find().count()) / NUM_PEER_PAGE);
-  res.send({
+  return res.send({
     count,
     userList,
   });
@@ -83,7 +97,7 @@ const getUserFollowingList = handleError(async (req, res) => {
     .select('following');
   const cond = { username: { $in: following } };
   const userList = await getUserListFromDB(page, cond);
-  const count = following.length;
+  const count = Math.ceil(following.length / NUM_PEER_PAGE);
   res.send({
     count,
     userList,
@@ -98,7 +112,7 @@ const getUserFollowersList = handleError(async (req, res) => {
     .select('followers');
   const cond = { username: { $in: followers } };
   const userList = await getUserListFromDB(page, cond);
-  const count = followers.length;
+  const count = Math.ceil(followers.length / NUM_PEER_PAGE);
   res.send({
     count,
     userList,

@@ -40,10 +40,12 @@ const serialize = (data, prefix) => {
   const str = [];
   Object.keys(data).forEach((key) => {
     const value = data[key];
-    const newPrefix = prefix ? `${prefix}[${key}]` : key;
-    str.push(typeof value !== 'object' ?
-      `${encodeURIComponent(newPrefix)}=${encodeURIComponent(value)}`
-      : serialize(value, newPrefix));
+    if (value) {
+      const newPrefix = prefix ? `${prefix}[${key}]` : key;
+      str.push(typeof value !== 'object' ?
+        `${encodeURIComponent(newPrefix)}=${encodeURIComponent(value)}`
+        : serialize(value, newPrefix));
+    }
   });
   return str.join('&');
 };

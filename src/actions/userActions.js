@@ -15,10 +15,11 @@ const setUserInfo = (user) => ({
   user,
 });
 
-const setUserInfoList = (userList, count) => ({
+const setUserList = (condition, count, userList) => ({
   type: UserConstants.SET_LIST,
-  userList,
+  condition,
   count,
+  userList,
 });
 
 let _updateLock = {
@@ -60,11 +61,12 @@ export const getUserInfo = (username) => async (dispatch) => {
   }
 };
 
-export const getUserList = () => async (dispatch) => {
+export const getUserList = (condition) => async (dispatch) => {
   try {
     nprogress.start();
-    const { userList, count } = await getJSON(`${api}/users`);
-    dispatch(setUserInfoList(userList, count));
+    console.log(condition);
+    const { userList, count } = await getJSON(`${api}/users`, condition);
+    dispatch(setUserList(condition, count, userList));
     await nprogress.done();
     return true;
   } catch (err) {
@@ -73,6 +75,21 @@ export const getUserList = () => async (dispatch) => {
     await nprogress.done();
     return false;
   }
+};
+
+export const getUserListByPage = (page) => async (dispatch, getState) => {
+  const state = getState();
+  const condition = state.user.get('condition').toJS();
+  condition.page = Number(page) || 1;
+  return await dispatch(getUserList(condition));
+};
+
+export const getUserFollowingList = (username) => async (dispatch, getState) => {
+  const state = getState();
+  const condition = state.user.get('condition').toJS();
+  condition.page = 1;
+  condition.follower = username;
+  return await dispatch(getUserList(condition));
 };
 
 export const followUser = (follow) => async (dispatch, getState) => {

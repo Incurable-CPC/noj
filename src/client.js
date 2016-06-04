@@ -53,7 +53,7 @@ import {
 } from './actions/authActions';
 import {
   getUserInfo,
-  getUserList,
+  getUserListByPage,
 } from './actions/userActions';
 
 const boundGetProblem = async (nextState, replace, next) => {
@@ -109,8 +109,10 @@ const boundGetUserInfo = async (nextState, replace, next) => {
   if (await store.dispatch(getUserInfo(username))) next();
 };
 
-const boundGetUserList = async (nextState, replace, next) => {
-  if (await store.dispatch(getUserList())) next();
+const boundGetUserListByPage = async (nextState, replace, next) => {
+  const { params } = nextState;
+  const page = Number(params.page) || 1;
+  if (await store.dispatch(getUserListByPage(page))) next();
 };
 
 const requireAuth = (nextState, replace) => {
@@ -159,7 +161,10 @@ ReactDOM.render((
           <IndexRoute onEnter={requireAuth} component={UserInfoPage} />
           <Route path=":username" onEnter={boundGetUserInfo} component={UserInfoPage} />
         </Route>
-        <Route path="standing" onEnter={boundGetUserList} component={UserListPage} />
+        <Route path="standing">
+          <IndexRoute onEnter={boundGetUserListByPage} component={UserListPage} />
+          <Route path="page/:page" onEnter={boundGetUserListByPage} component={UserListPage}/>
+        </Route>
         <Route path="*" component={Index} />
       </Route>
     </Router>

@@ -79,7 +79,7 @@ export default class SubmissionList extends Component {
           <span className={cs(s.col, s.username)}>
             <FlatButton
               labelStyle={styles.label}
-              onTouchTap={() => ({})}
+              onTouchTap={() => Location.push(`users/${username}`)}
               label={username}
             />
           </span>
