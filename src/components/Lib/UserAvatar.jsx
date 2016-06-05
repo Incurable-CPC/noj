@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import Avatar from 'material-ui/Avatar';
+import Avatar from './Avatar';
 
 import Location from '../../core/Location';
 

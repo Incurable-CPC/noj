@@ -32,7 +32,7 @@ class UserListPage extends BasePage {
     user: ImmutableTypes.map,
     count: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired,
-    condition: PropTypes.number.isRequired,
+    condition: PropTypes.object.isRequired,
   };
 
   state = {

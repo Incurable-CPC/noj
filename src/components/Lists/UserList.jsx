@@ -6,9 +6,9 @@ import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
-import Avatar from 'material-ui/Avatar';
 import cs from 'classnames';
 
+import Avatar from '../Lib/Avatar';
 import Location from '../../core/Location';
 import withStyle from '../../decorators/withStyles';
 import s from './UserList.scss';

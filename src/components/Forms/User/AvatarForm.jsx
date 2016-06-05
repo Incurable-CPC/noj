@@ -5,9 +5,9 @@
 import React, { Component, PropTypes } from 'react';
 import { FileFileUpload } from 'material-ui/svg-icons';
 import RaisedButton from 'material-ui/RaisedButton';
-import Avatar from 'material-ui/Avatar';
 
 import FileInput from '../../Lib/FileInput';
+import Avatar from '../../Lib/Avatar';
 
 const styles = {
   fileInput: { paddingBottom: 20 },
@@ -28,8 +28,7 @@ export default class AvatarForm extends Component {
   };
 
   _modifyAvatar = (src) => {
-    this.setState({ src: null });
-    setTimeout(() => this.setState({ src }), 0);
+    this.setState({ src });
   }
 
   _handleChange = (evt, files) => {

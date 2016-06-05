@@ -160,7 +160,7 @@ const unlink = useAwait(fs.unlink);
 const modifyAvatar = handleError(async (req, res) => {
   const avatar = req.file;
   const data = await readFile(avatar.path);
-  const newPath = path.join('img', 'uploads', avatar.filename);
+  const newPath = path.join('/img', 'uploads', avatar.filename);
   await writeFile(path.join(__dirname, 'public', newPath), data);
   await unlink(avatar.path);
   const { username } = req.params;
