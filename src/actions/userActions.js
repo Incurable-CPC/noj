@@ -4,7 +4,7 @@
 
 import UserConstants, { listFields } from '../constants/UserConstants';
 import AuthConstants from '../constants/AuthConstants';
-import { postJSON, getJSON } from '../core/fetchJSON';
+import { postJSON, postFile, getJSON } from '../core/fetchJSON';
 import fetch from '../core/fetch';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
@@ -122,15 +122,9 @@ export const postAvatar = (avatar) => async (dispatch, getState) => {
     }
     nprogress.start();
     const username = getState().auth.get('username');
-    const data = new FormData();
-    data.append('avatar', avatar);
-    await fetch(`${api}/users/${username}/avatar`, {
-      method: 'post',
-      enctype: 'multipart/form-data',
-      credentials: 'same-origin',
-      body: data,
-    });
+    await postFile(`${api}/users/${username}/avatar`, { avatar });
     await dispatch(updateUser('auth'));
+    toast('success', 'New picture uploaded');
   } catch (err) {
     toast('error', err.message);
     ok = false;

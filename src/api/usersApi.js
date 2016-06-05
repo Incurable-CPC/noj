@@ -6,13 +6,17 @@ import fs from 'fs';
 import path from 'path';
 import { Router } from 'express';
 import multer from 'multer';
-const upload = multer({ dest: path.join(__dirname, 'tmp') });
 
 import { useAwait } from '../core';
 import User from '../models/userModel';
 import { requireAuth, getUsername, setListSkip, handleError } from './common';
 import { listFields } from '../constants/UserConstants';
+import checkAvatar from '../check/avatarChecker';
 const router = new Router();
+
+const upload = multer({
+  dest: path.join(__dirname, 'tmp'),
+});
 
 const checkUsername = handleError(async (req, res, next) => {
   const { username } = req.params;
@@ -154,15 +158,17 @@ const followUser = handleError(async (req, res) => {
   });
 });
 
-const readFile = useAwait(fs.readFile);
-const writeFile = useAwait(fs.writeFile);
+const rename = useAwait(fs.rename);
 const unlink = useAwait(fs.unlink);
 const modifyAvatar = handleError(async (req, res) => {
   const avatar = req.file;
-  const data = await readFile(avatar.path);
+  const error = checkAvatar(avatar);
+  if (error) {
+    await unlink(avatar.path);
+    return res.status(409).send({ error });
+  }
   const newPath = path.join('/img', 'uploads', avatar.filename);
-  await writeFile(path.join(__dirname, 'public', newPath), data);
-  await unlink(avatar.path);
+  await rename(avatar.path, path.join(__dirname, 'public', newPath));
   const { username } = req.params;
   await User.findOneAndUpdate(
     { username },

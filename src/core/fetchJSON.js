@@ -36,6 +36,20 @@ export const postJSON = async (url, data = {}) => {
   return handleError(res);
 };
 
+export const postFile = async(url, files = {}) => {
+  const data = new FormData();
+  Object.keys(files).forEach((key) => {
+    data.append(key, files[key]);
+  });
+  const res = await fetch(url, {
+    method: 'post',
+    enctype: 'multipart/form-data',
+    credentials: 'same-origin',
+    body: data,
+  });
+  return await handleError(res);
+};
+
 const serialize = (data, prefix) => {
   const str = [];
   Object.keys(data).forEach((key) => {
