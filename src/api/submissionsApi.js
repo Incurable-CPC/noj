@@ -71,8 +71,8 @@ const getUnjudgedSubmission = handleError(async (req, res) => {
   if (submission) {
     res.send({ submission });
   } else {
-      res.send({});
-    }
+    res.send({});
+  }
 });
 
 const updateSubmissionResult = handleError(async (req, res) => {

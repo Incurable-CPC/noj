@@ -5,7 +5,6 @@
 import moment from 'moment';
 
 import { getJSON, postJSON } from '../core/fetchJSON';
-import { is, fromJS } from 'immutable';
 import toast from '../core/toast';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';

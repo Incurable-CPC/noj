@@ -27,31 +27,29 @@ export default class AvatarForm extends Component {
     posting: false,
   };
 
-  _modifyAvatar = (src) => {
-    this.setState({ src });
-  }
-
   _handleChange = (evt, files) => {
     if (!files) return;
     this.setState({ files });
     if (files[0]) {
       const reader = new FileReader();
       reader.onload = () =>
-        this._modifyAvatar(reader.result);
+        this.setState({ src: reader.result });
       reader.readAsDataURL(files[0]);
     }
   }
 
   _clearFile = () => {
-    this._modifyAvatar(this.props.src);
-    this.setState({ files: { length: 0 } });
+    this.setState({
+      src: this.props.src,
+      files: { length: 0 },
+    });
   }
 
   _handlePost = async() => {
     const { postAvatar } = this.props;
     const { files } = this.state;
     this.setState({ posting: true });
-    await postAvatar(files[0]);
+    if (await postAvatar(files[0])) this._clearFile();
     this.setState({ posting: false });
   }
 
@@ -67,8 +65,9 @@ export default class AvatarForm extends Component {
           <div style={styles.fileInput}>
             <FileInput
               files={files}
-              onChange={this._handleChange}
               accept="image/*"
+              label="choose new picture"
+              onChange={this._handleChange}
             />
           </div>
           <RaisedButton

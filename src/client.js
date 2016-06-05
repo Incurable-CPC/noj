@@ -32,7 +32,7 @@ import ContestClarifyPage from './components/Pages/Contest/ContestClarifyPage';
 import UserInfoPage from './components/Pages/User/UserInfoPage';
 import SettingsPage from './components/Pages/User/SettingsPage';
 import UserListPage from './components/Pages/UserListPage';
-import Test from './components/Test';
+// import Test from './components/Test';
 
 import {
   getProblem,
@@ -116,7 +116,8 @@ const boundGetUserListByPage = async (nextState, replace, next) => {
   if (await store.dispatch(getUserListByPage(page))) next();
 };
 
-const requireAuth = (nextState, replace) => {
+const requireAuth = () => {
+  // TODO: requireAuth
   // if (!store.state.auth.has('username')) {
   //   toast('error', 'Please login first');
   //   replace('/');

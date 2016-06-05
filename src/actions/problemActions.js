@@ -2,8 +2,6 @@
  * Created by cpc on 1/20/16.
  */
 
-import { fromJS, is } from 'immutable';
-
 import ProblemConstants from '../constants/ProblemConstants';
 import { getJSON, postJSON } from '../core/fetchJSON';
 import toast from '../core/toast';
@@ -62,7 +60,7 @@ export const setProblemList = (condition, count, list) => ({
   list,
 });
 
-export const getProblemList = (condition) => async (dispatch, getState) => {
+export const getProblemList = (condition) => async (dispatch) => {
   try {
     // const state = getState();
     // const oldCondition = state.problem.get('condition');

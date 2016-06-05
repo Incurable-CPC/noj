@@ -10,6 +10,7 @@ import nprogress from '../core/nprogress';
 import Location from '../core/Location';
 import toast from '../core/toast';
 import { api } from '../config';
+import checkAvatar from '../check/avatarChecker';
 
 const setUserInfo = (user) => ({
   type: UserConstants.SET,
@@ -48,33 +49,33 @@ export const updateUser = (field) => async (dispatch, getState) => {
 };
 
 export const getUserInfo = (username) => async (dispatch) => {
+  let ok = true;
   try {
     nprogress.start();
     const { user } = await getJSON(`${api}/users/${username}`);
     dispatch(setUserInfo(user));
-    await nprogress.done();
-    return true;
   } catch (err) {
     Location.push('/');
     toast('error', err.message);
-    await nprogress.done();
-    return false;
+    ok = false;
   }
+  await nprogress.done();
+  return ok;
 };
 
 export const getUserList = (condition) => async (dispatch) => {
+  let ok = true;
   try {
     nprogress.start();
     const { userList, count } = await getJSON(`${api}/users`, condition);
     dispatch(setUserList(condition, count, userList));
-    await nprogress.done();
-    return true;
   } catch (err) {
     Location.push('/');
     toast('error', err.message);
-    await nprogress.done();
-    return false;
+    ok = false;
   }
+  await nprogress.done();
+  return ok;
 };
 
 export const getUserListByPage = (page) => async (dispatch, getState) => {
@@ -93,23 +94,32 @@ export const getUserFollowingList = (username) => async (dispatch, getState) => 
 };
 
 export const followUser = (follow) => async (dispatch, getState) => {
+  let ok = true;
   try {
     nprogress.start();
     const user = getState().user;
     const username = user.getIn(['detail', 'username']);
     const action = `${follow ? 'F' : 'Unf'}ollow`;
     await postJSON(`${api}/users/${username}/followers`, { follow });
-    dispatch(updateUser('user'));
-    dispatch(updateUser('auth'));
+    await dispatch(updateUser('user'));
+    await dispatch(updateUser('auth'));
     toast('success', `${action} succeed`);
   } catch (err) {
     toast('error', err.message);
+    ok = false;
   }
   await nprogress.done();
+  return ok;
 };
 
 export const postAvatar = (avatar) => async (dispatch, getState) => {
+  let ok = true;
   try {
+    const error = checkAvatar(avatar);
+    if (error) {
+      toast('warning', error);
+      return false;
+    }
     nprogress.start();
     const username = getState().auth.get('username');
     const data = new FormData();
@@ -120,8 +130,11 @@ export const postAvatar = (avatar) => async (dispatch, getState) => {
       credentials: 'same-origin',
       body: data,
     });
+    await dispatch(updateUser('auth'));
   } catch (err) {
-
+    toast('error', err.message);
+    ok = false;
   }
   await nprogress.done();
+  return ok;
 };

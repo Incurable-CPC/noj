@@ -6,7 +6,7 @@ import { Router } from 'express';
 const router = new Router();
 import moment from 'moment';
 
-import { requireAuth, requireAdmin, getUsername, setListSkip, handleError } from './common';
+import { requireAuth, getUsername, setListSkip, handleError } from './common';
 import Contest from '../models/contestModel';
 import Problem from '../models/problemModel';
 import { submissionCheckUser, submissionListCheckUser } from '../models/submissionModel';

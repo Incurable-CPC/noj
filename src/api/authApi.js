@@ -5,7 +5,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import User from '../models/userModel';
-import { requireAuth, getUsername, handleError } from './common';
+import { requireAuth, handleError } from './common';
 import { useAwait } from '../core';
 import { loginChecker, registerChecker } from '../check/authChecker';
 const router = new Router();

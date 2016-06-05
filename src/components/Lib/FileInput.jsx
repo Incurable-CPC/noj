@@ -7,7 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 const styles = {
   fileInput: { display: 'none' },
-  label: {
+  fileInfo: {
     paddingLeft: 20,
   },
 };
@@ -23,33 +23,34 @@ const filesToStr = (files) => {
 export default class FileInput extends Component {
   static propTypes = {
     onChange: PropTypes.func,
+    label: PropTypes.string,
     files: PropTypes.object,
     accept: PropTypes.string,
     multiple: PropTypes.bool,
   };
 
   state = {
-    label: '',
+    fileInfo: '',
   };
 
   _handleChange = (evt) => {
     const { files } = evt.target;
     const { onChange } = this.props;
-    this.setState({ label: filesToStr(files) });
+    this.setState({ fileInfo: filesToStr(files) });
     if (onChange) onChange(evt, files);
   };
 
   render() {
-    const { files, accept, multiple, ...props } = this.props;
-    const label = files ?
-      filesToStr(files) : this.state.label;
+    const { files, accept, multiple, label, ...props } = this.props;
+    const fileInfo = files ?
+      filesToStr(files) : this.state.fileInfo;
     return (
       <span {...props}>
         <RaisedButton
-          label="browse"
+          label={label || 'browse'}
           onTouchTap={() => this.refs.file.click()}
         />
-        <span style={styles.label}>{label}</span>
+        <span style={styles.fileInfo}>{fileInfo}</span>
         <input
           ref="file"
           type="file"
