@@ -24,26 +24,28 @@ import BasePage from './BasePage';
   userList: state.user.get('list'),
   count: state.user.get('count'),
   condition: state.user.get('condition'),
-  // searchKey: state.problem.getIn(['condition', 'searchKey']),
-  // solved: state.auth.get('solved'),
-  // tried: state.auth.get('tried'),
   user: state.auth,
 }))
 class UserListPage extends BasePage {
   static propTypes = {
     userList: ImmutableTypes.list.isRequired,
-    // searchKey: PropTypes.string,
     user: ImmutableTypes.map,
     count: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired,
     condition: PropTypes.number.isRequired,
   };
 
-  _handleCheck = (evt, checked) => {
+  state = {
+    updating: false,
+  };
+
+  _handleCheck = async (evt, checked) => {
     const { user, dispatch } = this.props;
     if (!user) return;
     const username = checked ? user.get('username') : null;
-    dispatch(getUserFollowingList(username));
+    this.setState({ updating: true });
+    await dispatch(getUserFollowingList(username));
+    this.setState({ updating: false });
   };
 
   render() {
@@ -58,7 +60,6 @@ class UserListPage extends BasePage {
       begin, end, count, page,
       href: '/standing/page',
     };
-    console.log(follower);
     return (
       <div className={s.div}>
         <div className={s.left}>
@@ -68,6 +69,7 @@ class UserListPage extends BasePage {
               label="Following Only"
               defaultChecked={Boolean(follower)}
               onCheck={this._handleCheck}
+              disabled={this.state.updating}
             />}
             <div style={{ textAlign: 'center' }}>
               <Pagination range={paginationRange} />
