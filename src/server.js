@@ -14,6 +14,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import engine from 'ejs-mate';
+import mkdirp from 'mkdirp';
 import assets from './assets';
 import { port, mongoSetting, root } from './config';
 
@@ -50,6 +51,8 @@ server.use(`${root}`, (req, res) => {
   res.render('index', data);
 });
 
+mkdirp(path.join(__dirname, 'tmp'));
+mkdirp(path.join(__dirname, 'public', 'img', 'uploads'));
 //
 // Launch the server
 // -----------------------------------------------------------------------------

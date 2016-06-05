@@ -4,10 +4,9 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
-import UserList from './Lists/UserList';
 import { connect } from 'react-redux';
 
-import { getUserList } from '../actions/userActions';
+import FileInput from './Lib/FileInput';
 
 @connect(state => ({
   users: state.user.get('list'),
@@ -15,18 +14,20 @@ import { getUserList } from '../actions/userActions';
 export default class Test extends Component {
   static propTypes = {
     users: ImmutableTypes.list,
-    dispatch: PropTypes.func,
   };
 
-  componentDidMount() {
-    this.props.dispatch(getUserList());
+  state = {
+    files: null,
+  }
+
+  _handleChange = (files) => {
+    this.setState({ files });
   }
 
   render() {
-    const { users } = this.props;
     return (
       <div>
-        <UserList userList={users}/>
+        <FileInput multiple style={{ maxWidth: 240 }}/>
       </div>
     );
   }

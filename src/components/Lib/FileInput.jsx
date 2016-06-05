@@ -4,15 +4,16 @@
 
 import React, { Component, PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
 
 const styles = {
   fileInput: { display: 'none' },
-  label: { paddingLeft: 20 },
+  label: {
+    paddingLeft: 20,
+  },
 };
 
 const filesToStr = (files) => {
-  if (!files) return '';
+  if ((!files) || files.length === 0) return '';
   if (files.length === 1) {
     return files[0].name;
   }
@@ -35,14 +36,15 @@ export default class FileInput extends Component {
     const { files } = evt.target;
     const { onChange } = this.props;
     this.setState({ label: filesToStr(files) });
-    if (onChange) onChange(files);
+    if (onChange) onChange(evt, files);
   };
 
   render() {
-    const { files, accept, multiple } = this.props;
-    const label = filesToStr(files) || this.state.label;
+    const { files, accept, multiple, ...props } = this.props;
+    const label = files ?
+      filesToStr(files) : this.state.label;
     return (
-      <span>
+      <span {...props}>
         <RaisedButton
           label="browse"
           onTouchTap={() => this.refs.file.click()}

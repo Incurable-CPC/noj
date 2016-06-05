@@ -5,6 +5,7 @@
 import UserConstants, { listFields } from '../constants/UserConstants';
 import AuthConstants from '../constants/AuthConstants';
 import { postJSON, getJSON } from '../core/fetchJSON';
+import fetch from '../core/fetch';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
 import toast from '../core/toast';
@@ -64,7 +65,6 @@ export const getUserInfo = (username) => async (dispatch) => {
 export const getUserList = (condition) => async (dispatch) => {
   try {
     nprogress.start();
-    console.log(condition);
     const { userList, count } = await getJSON(`${api}/users`, condition);
     dispatch(setUserList(condition, count, userList));
     await nprogress.done();
@@ -104,6 +104,24 @@ export const followUser = (follow) => async (dispatch, getState) => {
     toast('success', `${action} succeed`);
   } catch (err) {
     toast('error', err.message);
+  }
+  await nprogress.done();
+};
+
+export const postAvatar = (avatar) => async (dispatch, getState) => {
+  try {
+    nprogress.start();
+    const username = getState().auth.get('username');
+    const data = new FormData();
+    data.append('avatar', avatar);
+    await fetch(`${api}/users/${username}/avatar`, {
+      method: 'post',
+      enctype: 'multipart/form-data',
+      credentials: 'same-origin',
+      body: data,
+    });
+  } catch (err) {
+
   }
   await nprogress.done();
 };

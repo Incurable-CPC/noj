@@ -2,12 +2,17 @@
  * Created by cpc on 1/12/16.
  */
 
+import fs from 'fs';
+import path from 'path';
 import { Router } from 'express';
+import multer from 'multer';
+const upload = multer({ dest: path.join(__dirname, 'tmp') });
+
+import { useAwait } from '../core';
 import User from '../models/userModel';
 import { requireAuth, getUsername, setListSkip, handleError } from './common';
 import { listFields } from '../constants/UserConstants';
 const router = new Router();
-import { root } from '../config';
 
 const checkUsername = handleError(async (req, res, next) => {
   const { username } = req.params;
@@ -16,6 +21,13 @@ const checkUsername = handleError(async (req, res, next) => {
     .select('username');
   if (user) next();
   else res.status(404).send({ error: 'User not exist' });
+});
+
+const checkSelf = handleError(async (req, res, next) => {
+  const { username } = req.params;
+  const authedUser = getUsername(req);
+  if (username === authedUser) next();
+  else res.status(401).send({ error: 'You can only modify your own account' });
 });
 
 const handleUserFollowInfo = (user, authedUser) => {
@@ -142,6 +154,22 @@ const followUser = handleError(async (req, res) => {
   });
 });
 
+const readFile = useAwait(fs.readFile);
+const writeFile = useAwait(fs.writeFile);
+const unlink = useAwait(fs.unlink);
+const modifyAvatar = handleError(async (req, res) => {
+  const avatar = req.file;
+  const data = await readFile(avatar.path);
+  const newPath = path.join('img', 'uploads', avatar.filename);
+  await writeFile(path.join(__dirname, 'public', newPath), data);
+  await unlink(avatar.path);
+  const { username } = req.params;
+  await User.findOneAndUpdate(
+    { username },
+    { $set: { ['info.avatar']: newPath } });
+  res.send({ user: { avatar: newPath } });
+});
+
 router.get('/', getUserList);
 router.all('/:username', checkUsername);
 router.get('/:username', getUserInfo);
@@ -151,5 +179,8 @@ router.get('/:username/followers', getUserFollowersList);
 
 router.all('*', requireAuth);
 router.post('/:username/followers', followUser);
+
+router.post('/:username', checkSelf);
+router.post('/:username/avatar', upload.single('avatar'), modifyAvatar);
 
 export default router;

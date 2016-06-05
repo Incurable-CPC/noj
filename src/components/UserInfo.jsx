@@ -79,6 +79,7 @@ export default class UserInfo extends Component {
     );
     const buttonProps = [() => ({
       label: 'edit profile',
+      onTouchTap: () => Location.push('/settings'),
     }), () => ({
       label: 'follow',
       onTouchTap: follow,

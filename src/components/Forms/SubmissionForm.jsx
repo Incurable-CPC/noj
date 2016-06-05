@@ -47,7 +47,7 @@ export default class SubmissionForm extends Component {
       submitting,
       problem,
       } = this.props;
-    const { pid, title } = problem.toJS();
+    const pid = problem.get('pid');
     const langs = LANGUAGES[problem.get('originOJ')].map((lang, index) => (
       <MenuItem value={index} key={index} primaryText={lang} />
     ));

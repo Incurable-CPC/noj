@@ -30,8 +30,9 @@ import ContestSubmissionListPage from './components/Pages/Contest/ContestSubmiss
 import ContestBoardPage from './components/Pages/Contest/ContestBoardPage';
 import ContestClarifyPage from './components/Pages/Contest/ContestClarifyPage';
 import UserInfoPage from './components/Pages/User/UserInfoPage';
+import SettingsPage from './components/Pages/User/SettingsPage';
 import UserListPage from './components/Pages/UserListPage';
-// import Test from './components/Test';
+import Test from './components/Test';
 
 import {
   getProblem,
@@ -160,6 +161,9 @@ ReactDOM.render((
         <Route path="users" >
           <IndexRoute onEnter={requireAuth} component={UserInfoPage} />
           <Route path=":username" onEnter={boundGetUserInfo} component={UserInfoPage} />
+        </Route>
+        <Route path="settings">
+          <IndexRoute onEnter={requireAuth} component={SettingsPage} />
         </Route>
         <Route path="standing">
           <IndexRoute onEnter={boundGetUserListByPage} component={UserListPage} />

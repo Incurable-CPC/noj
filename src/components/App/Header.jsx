@@ -97,6 +97,7 @@ export default class Header extends Component {
             />
             <MenuItem
               primaryText="Settings"
+              onTouchTap={() => Location.push('/settings')}
             />
             <Divider />
             <MenuItem
