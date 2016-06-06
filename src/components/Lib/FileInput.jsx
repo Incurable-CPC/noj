@@ -6,9 +6,16 @@ import React, { Component, PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 
 const styles = {
+  root: { height: 36 },
   fileInput: { display: 'none' },
+  button: { float: 'left' },
   fileInfo: {
-    paddingLeft: 20,
+    padding: 9,
+    maxWidth: 200,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    float: 'left',
   },
 };
 
@@ -27,6 +34,7 @@ export default class FileInput extends Component {
     files: PropTypes.object,
     accept: PropTypes.string,
     multiple: PropTypes.bool,
+    style: PropTypes.object,
   };
 
   state = {
@@ -41,16 +49,20 @@ export default class FileInput extends Component {
   };
 
   render() {
-    const { files, accept, multiple, label, ...props } = this.props;
+    const {
+      files, accept, multiple, label,
+      style, ...props,
+    } = this.props;
     const fileInfo = files ?
       filesToStr(files) : this.state.fileInfo;
     return (
-      <span {...props}>
+      <div style={Object.assign({}, styles.root, style)} {...props}>
         <RaisedButton
           label={label || 'browse'}
+          style={styles.button}
           onTouchTap={() => this.refs.file.click()}
         />
-        <span style={styles.fileInfo}>{fileInfo}</span>
+        <div style={styles.fileInfo}>{fileInfo}</div>
         <input
           ref="file"
           type="file"
@@ -59,7 +71,8 @@ export default class FileInput extends Component {
           accept={accept}
           multiple={multiple}
         />
-      </span>
+        <div style={{ clear: 'both' }}/>
+      </div>
     );
   }
 }

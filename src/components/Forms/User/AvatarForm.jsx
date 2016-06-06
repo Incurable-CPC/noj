@@ -71,14 +71,15 @@ export default class AvatarForm extends Component {
             />
           </div>
           <RaisedButton
+            label="clear"
+            onTouchTap={this._clearFile}
+          />
+          <RaisedButton
             primary
             label="upload"
             icon={<FileFileUpload />}
             onTouchTap={this._handlePost}
-          />
-          <RaisedButton
-            label="clear"
-            onTouchTap={this._clearFile}
+            labelPosition="before"
           />
         </div>
       </div>

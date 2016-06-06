@@ -5,7 +5,6 @@
 import UserConstants, { listFields } from '../constants/UserConstants';
 import AuthConstants from '../constants/AuthConstants';
 import { postJSON, postFile, getJSON } from '../core/fetchJSON';
-import fetch from '../core/fetch';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
 import toast from '../core/toast';
@@ -48,10 +47,14 @@ export const updateUser = (field) => async (dispatch, getState) => {
   _updateLock[field] = false;
 };
 
-export const getUserInfo = (username) => async (dispatch) => {
+export const getUserInfo = (username) => async (dispatch, getState) => {
   let ok = true;
   try {
     nprogress.start();
+    const oldUser = getState().user.get('detail');
+    if (oldUser.get('username') === username) {
+      return await dispatch(updateUser('user'));
+    }
     const { user } = await getJSON(`${api}/users/${username}`);
     dispatch(setUserInfo(user));
   } catch (err) {
