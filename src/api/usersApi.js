@@ -90,11 +90,13 @@ const getUserList = handleError(async (req, res) => {
     const list = (await User
       .findOne({ username: following })
       .select('followers')).followers;
+    list.push(following);
     cond.username = { $in: list };
   } else if (follower) {
     const list = (await User
       .findOne({ username: follower })
       .select('following')).following;
+    list.push(follower);
     cond.username = { $in: list };
   }
   const userList = await getUserListFromDB(page, cond);
@@ -111,6 +113,7 @@ const getUserFollowingList = handleError(async (req, res) => {
   const { following } = await User
     .findOne({ username })
     .select('following');
+  following.push(username);
   const cond = { username: { $in: following } };
   const userList = await getUserListFromDB(page, cond);
   const count = Math.ceil(following.length / NUM_PEER_PAGE);
@@ -126,6 +129,7 @@ const getUserFollowersList = handleError(async (req, res) => {
   const { followers } = await User
     .findOne({ username })
     .select('followers');
+  followers.push(username);
   const cond = { username: { $in: followers } };
   const userList = await getUserListFromDB(page, cond);
   const count = Math.ceil(followers.length / NUM_PEER_PAGE);
