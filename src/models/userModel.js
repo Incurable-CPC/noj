@@ -19,6 +19,7 @@ export const userSchema = {
     avatar: { type: String, default: '/img/default.png' },
     school: String,
     email: String,
+    nick: String,
   },
   following: [String],
   followers: [String],

@@ -78,7 +78,7 @@ export default class ProblemEditForm extends Component {
     };
 
     return (
-      <form className={s.form} onSubmit={handleSubmit(postProblem)}>
+      <form className={s.form} onSubmit={handleSubmit(postProblem())}>
         {(this.state.status === 'edit') ? (
           <div>
             <div>
@@ -145,6 +145,7 @@ export default class ProblemEditForm extends Component {
             disabled={submitting}
           />
         </div>
+        <div style={{ clear: 'both' }} />
       </form>
     );
   }

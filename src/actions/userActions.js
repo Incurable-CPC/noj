@@ -9,7 +9,7 @@ import nprogress from '../core/nprogress';
 import Location from '../core/Location';
 import toast from '../core/toast';
 import { api } from '../config';
-import checkAvatar from '../check/avatarChecker';
+import { checkAvatar, checkInfo } from '../check/userChecker';
 
 const setUserInfo = (user) => ({
   type: UserConstants.SET,
@@ -38,8 +38,10 @@ export const updateUser = (field) => async (dispatch, getState) => {
     const skip = user.get(key).size;
     cond[key] = { skip };
   });
+  nprogress.start();
   const data = await getJSON(
     `${api}/users/${username}/update`, cond);
+  nprogress.done();
   dispatch({
     type: ((field === 'auth') ? AuthConstants : UserConstants).UPDATE,
     updates: data.user,
@@ -53,10 +55,11 @@ export const getUserInfo = (username) => async (dispatch, getState) => {
     nprogress.start();
     const oldUser = getState().user.get('detail');
     if (oldUser.get('username') === username) {
-      return await dispatch(updateUser('user'));
+      await dispatch(updateUser('user'));
+    } else {
+      const { user } = await getJSON(`${api}/users/${username}`);
+      dispatch(setUserInfo(user));
     }
-    const { user } = await getJSON(`${api}/users/${username}`);
-    dispatch(setUserInfo(user));
   } catch (err) {
     Location.push('/');
     toast('error', err.message);
@@ -131,6 +134,26 @@ export const postAvatar = (avatar) => async (dispatch, getState) => {
   } catch (err) {
     toast('error', err.message);
     ok = false;
+  }
+  await nprogress.done();
+  return ok;
+};
+
+export const postUserInfo = (username) => async (info, dispatch) => {
+  let ok = true;
+  try {
+    let error = checkInfo(info);
+    if (error) {
+      toast('warning', error);
+      return false;
+    }
+    nprogress.start();
+    await postJSON(`${api}/users/${username}/info`, { info });
+    await dispatch(updateUser('auth'));
+    toast('success', 'Your info updated');
+  } catch (err) {
+    ok = false;
+    toast('error', err.message);
   }
   await nprogress.done();
   return ok;

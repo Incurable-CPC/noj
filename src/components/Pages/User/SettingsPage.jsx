@@ -6,13 +6,13 @@ import React, { PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
-import { is } from 'immutable';
 
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
 import { postAvatar } from '../../../actions/userActions';
 import UserInfoBox from '../../SideBoxes/UserInfoBox';
+import UserInfoForm from '../../Forms/User/UserInfoForm';
 import AvatarForm from '../../Forms/User/AvatarForm';
 import BasePage from '../BasePage';
 
@@ -38,6 +38,9 @@ export default class UserInfoPage extends BasePage {
               src={user.getIn(['info', 'avatar'])}
               postAvatar={async (_) => await dispatch(postAvatar(_))}
             />
+          </Paper>
+          <Paper className={s.paper} >
+            <UserInfoForm username={user.get('username')} />
           </Paper>
         </div>
         <div className={s.right}>

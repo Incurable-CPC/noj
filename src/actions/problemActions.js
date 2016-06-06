@@ -19,7 +19,7 @@ export const initProblem = () => ({
   type: ProblemConstants.INIT,
 });
 
-export const postProblem = async (problem, dispatch) => {
+export const postProblem = () => async (problem, dispatch) => {
   try {
     const error = problemChecker(problem);
     if (error) return toast('warning', error);
@@ -32,7 +32,6 @@ export const postProblem = async (problem, dispatch) => {
   } catch (err) {
     toast('error', err.message);
   }
-
   await nprogress.done();
 };
 

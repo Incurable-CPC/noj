@@ -5,6 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import { FileFileUpload } from 'material-ui/svg-icons';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 
 import FileInput from '../../Lib/FileInput';
 import Avatar from '../../Lib/Avatar';
@@ -13,6 +14,7 @@ const styles = {
   fileInput: { paddingBottom: 20 },
   avatar: { float: 'left' },
   right: { paddingLeft: 160 },
+  actions: { float: 'right' },
 };
 
 export default class AvatarForm extends Component {
@@ -61,7 +63,7 @@ export default class AvatarForm extends Component {
           {src && <Avatar src={src} size={128} />}
         </div>
         <div style={styles.right}>
-          <div><h3>Update new picture</h3></div>
+          <div><h3>Avatar</h3></div>
           <div style={styles.fileInput}>
             <FileInput
               files={files}
@@ -70,17 +72,20 @@ export default class AvatarForm extends Component {
               onChange={this._handleChange}
             />
           </div>
-          <RaisedButton
-            label="clear"
-            onTouchTap={this._clearFile}
-          />
-          <RaisedButton
-            primary
-            label="upload"
-            icon={<FileFileUpload />}
-            onTouchTap={this._handlePost}
-            labelPosition="before"
-          />
+          <div style={styles.actions} >
+            <FlatButton
+              label="clear"
+              onTouchTap={this._clearFile}
+            />
+            <RaisedButton
+              primary
+              label="upload"
+              icon={<FileFileUpload />}
+              onTouchTap={this._handlePost}
+              labelPosition="before"
+            />
+          </div>
+          <div style={{ clear: 'both' }} />
         </div>
       </div>
     );

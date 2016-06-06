@@ -11,7 +11,7 @@ import { useAwait } from '../core';
 import User from '../models/userModel';
 import { requireAuth, getUsername, setListSkip, handleError } from './common';
 import { listFields } from '../constants/UserConstants';
-import checkAvatar from '../check/avatarChecker';
+import { checkAvatar, checkInfo } from '../check/userChecker';
 const router = new Router();
 
 const upload = multer({
@@ -160,7 +160,7 @@ const followUser = handleError(async (req, res) => {
 
 const rename = useAwait(fs.rename);
 const unlink = useAwait(fs.unlink);
-const modifyAvatar = handleError(async (req, res) => {
+const postAvatar = handleError(async (req, res) => {
   const avatar = req.file;
   const error = checkAvatar(avatar);
   if (error) {
@@ -176,6 +176,25 @@ const modifyAvatar = handleError(async (req, res) => {
   res.send({ user: { avatar: newPath } });
 });
 
+const postInfo = handleError(async (req, res) => {
+  const {
+    params: { username },
+    body: { info },
+  } = req;
+  const error = checkInfo(info);
+  if (error) return res.status(409).send({ error });
+  const $set = {};
+  Object.keys(info).forEach((key) =>
+    $set[`info.${key}`] = info[key]);
+  const user = await User
+    .findOneAndUpdate(
+      { username },
+      { $set }, { new: true })
+    .select('info');
+  res.send({ user });
+});
+
+
 router.get('/', getUserList);
 router.all('/:username', checkUsername);
 router.get('/:username', getUserInfo);
@@ -187,6 +206,7 @@ router.all('*', requireAuth);
 router.post('/:username/followers', followUser);
 
 router.post('/:username', checkSelf);
-router.post('/:username/avatar', upload.single('avatar'), modifyAvatar);
+router.post('/:username/avatar', upload.single('avatar'), postAvatar);
+router.post('/:username/info', postInfo);
 
 export default router;

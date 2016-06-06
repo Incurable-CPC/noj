@@ -60,6 +60,7 @@ export default class LoginForm extends Component {
           type="submit"
           primary
         />
+        <div style={{ clear: 'both' }} />
       </form>
     );
   }

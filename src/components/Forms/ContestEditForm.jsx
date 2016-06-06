@@ -18,7 +18,6 @@ import { problemNotExist, MAX_PROBLEM_CNT } from '../../check/contestChekcer';
 import toast from '../../core/toast';
 import { api } from '../../config';
 
-
 const fields = [
   'cid',
   'title',
@@ -83,7 +82,7 @@ export default class ContestEditForm extends Component {
     start.value = start.value || start.initialValue;
     const startDate = start.value && new Date(start.value);
     return (
-      <form className={s.form} onSubmit={handleSubmit(postContest)}>
+      <form className={s.form} onSubmit={handleSubmit(postContest())}>
         <div>
           <TextField
             floatingLabelText="Title"
@@ -141,6 +140,7 @@ export default class ContestEditForm extends Component {
             disabled={submitting}
           />
         </div>
+        <div style={{ clear: 'both' }} />
       </form>
     );
   }

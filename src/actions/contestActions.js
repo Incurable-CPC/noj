@@ -94,7 +94,7 @@ export const updateContest = (force) => async (dispatch, getState) => {
   }
 };
 
-export const postContest = async (contest, dispatch) => {
+export const postContest = () => async (contest, dispatch) => {
   try {
     const error = contestChecker(contest);
     if (error) return toast('warning', error);
