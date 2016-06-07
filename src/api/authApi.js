@@ -5,9 +5,9 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import User from '../models/userModel';
-import { requireAuth, handleError } from './common';
+import { getUsername, requireAuth, handleError } from './common';
 import { useAwait } from '../core';
-import { loginChecker, registerChecker } from '../check/authChecker';
+import { loginChecker, registerChecker, passwordsChecker } from '../check/authChecker';
 const router = new Router();
 
 const compare = useAwait(bcrypt.compare);
@@ -57,10 +57,37 @@ const register = handleError(async (req, res) => {
   }
 });
 
+const changePassword = handleError(async (req, res) => {
+  const { oldPassword, password, confirmPassword } = req.body;
+  const username = getUsername(req);
+  console.log(username);
+  const user = await User.findOne({ username });
+  let error = passwordsChecker(oldPassword, password, confirmPassword);
+  if (!user) {
+    error = 'User not exist';
+  } else if (!(await compare(oldPassword, user.password))) {
+    error = 'Password not correct';
+  }
+  if (error) {
+    res.status(406).send({ error });
+  } else {
+    const salt = await genSalt();
+    const bcrypted = await hash(password, salt);
+    await User.findOneAndUpdate(
+      { username }, {
+        $set: { password: bcrypted },
+        $unset: { tokens: true },
+      });
+    const token = await User.addToken(username);
+    res.status(200).send({ token });
+  }
+});
+
 router.post('/login', login);
-router.post('/logout', logout);
 router.post('/register', register);
 
 router.all('*', requireAuth);
+router.post('/logout', logout);
+router.post('/passwords', changePassword);
 
 export default router;

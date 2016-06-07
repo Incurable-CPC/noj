@@ -21,6 +21,10 @@ const styles = {
     fontSize: 28,
     paddingLeft: 20,
   },
+  nick: {
+    paddingTop: 10,
+    paddingLeft: 20,
+  },
   left: {
     float: 'left',
     textAlign: 'center',
@@ -43,6 +47,24 @@ const styles = {
   },
 };
 
+const _showCount = (user) => (field, index) => (
+  <span key={index} style={styles.count}>
+        {user.get(`${field}Cnt`)}
+    <br />
+        <span style={styles.info}>{nameToStr(field)}</span>
+      </span>
+);
+const _showPid = (solved) => (pid, index) => (
+  <FlatButton
+    key={index}
+    label={pid}
+    primary={solved}
+    secondary={!solved}
+    labelStyle={styles.pid}
+    onTouchTap={() => Location.push(`/problems/${pid}`)}
+  />
+);
+
 export default class UserInfo extends Component {
   static propTypes = {
     user: ImmutableTypes.map.isRequired,
@@ -60,23 +82,6 @@ export default class UserInfo extends Component {
 
   render() {
     const { user, self, follow, unfollow } = this.props;
-    const showCount = (field, index) => (
-      <span key={index} style={styles.count}>
-        {user.get(`${field}Cnt`)}
-        <br />
-        <span style={styles.info}>{nameToStr(field)}</span>
-      </span>
-    );
-    const showPid = (solved) => (pid, index) => (
-      <FlatButton
-        key={index}
-        label={pid}
-        primary={solved}
-        secondary={!solved}
-        labelStyle={styles.pid}
-        onTouchTap={() => Location.push(`/problems/${pid}`)}
-      />
-    );
     const buttonProps = [() => ({
       label: 'edit profile',
       onTouchTap: () => Location.push('/settings'),
@@ -98,7 +103,7 @@ export default class UserInfo extends Component {
         <div style={styles.left}>
           <UserAvatar user={user} size={128} />
           <div>
-            {['followers', 'following'].map(showCount)}
+            {['followers', 'following'].map(_showCount(user))}
           </div>
           <RaisedButton
             onMouseEnter={this._handleMouseEnter}
@@ -109,6 +114,9 @@ export default class UserInfo extends Component {
         <div style={styles.right}>
           <div style={styles.username}>
             {user.get('username')}
+          </div>
+          <div style={styles.nick}>
+            {user.getIn(['info', 'nick'])}
           </div>
           <div>
             <List>
@@ -131,12 +139,12 @@ export default class UserInfo extends Component {
           <Paper style={{ padding: 20 }}>
             Problems solved:
             <div>
-              {user.get('solved').map(showPid(true))}
+              {user.get('solved').map(_showPid(true))}
             </div>
             <div style={{ height: 40 }} />
             Problems tried but unsolved:
             <div>
-              {user.get('notSolved').map(showPid(false))}
+              {user.get('notSolved').map(_showPid(false))}
             </div>
           </Paper>
         </div>

@@ -5,8 +5,9 @@
 import { getValues } from 'redux-form';
 import cookie from 'react-cookie';
 import AuthConstants from '../constants/AuthConstants';
-import { loginChecker, registerChecker } from '../check/authChecker';
+import { loginChecker, registerChecker, passwordsChecker } from '../check/authChecker';
 import { getJSON, postJSON } from '../core/fetchJSON';
+import { updateUser } from './userActions';
 import nprogress from '../core/nprogress';
 import toast from '../core/toast';
 import { api } from '../config';
@@ -89,12 +90,14 @@ export const logout = (option) => async(dispatch) => {
 };
 
 export const register = () => async(dispatch, getState) => {
+  let ok = true;
   try {
     const state = getState();
     const { username, password, confirmPassword } = getValues(state.form.register) || {};
     const error = registerChecker(username, password, confirmPassword);
     if (error) {
       toast('warning', error);
+      ok = false;
     } else {
       nprogress.start();
       dispatch({ type: AuthConstants.REGISTER });
@@ -106,12 +109,34 @@ export const register = () => async(dispatch, getState) => {
       toast('success', 'Register succeed', 'Welcome to NJU Online Judge');
       loginSuccess({ username, token });
       await dispatch(loadAuthedUserInfo());
-      nprogress.done();
-      return true;
     }
   } catch (err) {
     toast('error', err.message);
-    nprogress.done();
+    ok = false;
   }
-  return false;
+  await nprogress.done();
+  return ok;
+};
+
+export const changePassword = (username) => async (passwords, dispatch) => {
+  let ok = true;
+  try {
+    const { oldPassword, password, confirmPassword } = passwords;
+    const error = passwordsChecker(oldPassword, password, confirmPassword);
+    if (error) {
+      toast('warning', error);
+      ok = false;
+    } else {
+      nprogress.start();
+      const { token } = await postJSON(`${api}/auth/passwords`, passwords);
+      toast('success', 'Change password succeed');
+      loginSuccess({ username, token });
+      await dispatch(updateUser('auth'));
+    }
+  } catch (err) {
+    toast('error', err.message);
+    ok = false;
+  }
+  await nprogress.done();
+  return ok;
 };

@@ -10,6 +10,7 @@ const ERROR_MSG = [
   'Passwords not match',
   'Username can only contain letters numbers and underscores',
   'Username must be between 3 and 12 characters long',
+  'Please input old password',
 ];
 export const loginChecker = (username, password) => {
   if (checkEmpty(username)) return ERROR_MSG[0];
@@ -32,4 +33,9 @@ export const usernameChecker = (username) => {
   const { length } = username;
   if ((length < 3) || (length > 12)) return ERROR_MSG[4];
   return '';
+};
+
+export const passwordsChecker = (oldPassword, password, confirmPassword) => {
+  if (!oldPassword) return ERROR_MSG[5];
+  return registerChecker('aaa', password, confirmPassword);
 };

@@ -43,7 +43,7 @@ export default class UserInfoPage extends BasePage {
           <Paper className={s.paper}>
             <UserInfo
               user={user}
-              self={is(user, authedUser)}
+              self={user.get('username') === authedUser.get('username')}
               follow={() => dispatch(followUser(true))}
               unfollow={() => dispatch(followUser(false))}
             />

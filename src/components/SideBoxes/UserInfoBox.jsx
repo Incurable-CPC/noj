@@ -29,6 +29,23 @@ const styles = {
   },
 };
 
+const _showCount = (user) => (field, index) => (
+  <span key={index} style={styles.count}>
+        <span style={styles.info}>{nameToStr(field)}: </span>
+    {user.get(field).size}
+  </span>
+);
+
+const _showPid = (pid, index) => (
+  <FlatButton
+    key={index}
+    label={pid}
+    secondary
+    labelStyle={styles.pid}
+    onTouchTap={() => Location.push(`/problems/${pid}`)}
+  />
+);
+
 export default class UserInfoBox extends Component {
   static propTypes = {
     user: ImmutableTypes.map.isRequired,
@@ -38,21 +55,6 @@ export default class UserInfoBox extends Component {
     const { user } = this.props;
     const username = user.get('username');
     const notSolved = user.get('notSolved');
-    const showCount = (field, index) => (
-      <span key={index} style={styles.count}>
-        <span style={styles.info}>{nameToStr(field)}: </span>
-        {user.get(field).size}
-      </span>
-    );
-    const showPid = (pid, index) => (
-      <FlatButton
-        key={index}
-        label={pid}
-        secondary
-        labelStyle={styles.pid}
-        onTouchTap={() => Location.push(`/problems/${pid}`)}
-      />
-    );
     return (
       <Paper style={styles.container}>
         <div style={styles.center}>
@@ -62,7 +64,7 @@ export default class UserInfoBox extends Component {
           <div style={styles.username}>{username}</div>
           <div style={styles.content}>
             <div>
-              {['tried', 'solved'].map(showCount)}
+              {['tried', 'solved'].map(_showCount(user))}
             </div>
           </div>
         </div>
@@ -70,7 +72,7 @@ export default class UserInfoBox extends Component {
           <div style={styles.content}>
             <div style={styles.info}>Problems tried but unsolved:</div>
             <div>
-              {notSolved.map(showPid)}
+              {notSolved.map(_showPid)}
             </div>
           </div>
         )}

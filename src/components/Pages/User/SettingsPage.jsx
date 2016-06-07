@@ -13,6 +13,7 @@ import withStyles from '../../../decorators/withStyles';
 import { postAvatar } from '../../../actions/userActions';
 import UserInfoBox from '../../SideBoxes/UserInfoBox';
 import UserInfoForm from '../../Forms/User/UserInfoForm';
+import AccountForm from '../../Forms/User/AccountForm';
 import AvatarForm from '../../Forms/User/AvatarForm';
 import BasePage from '../BasePage';
 
@@ -41,6 +42,9 @@ export default class UserInfoPage extends BasePage {
           </Paper>
           <Paper className={s.paper} >
             <UserInfoForm username={user.get('username')} />
+          </Paper>
+          <Paper className={s.paper} >
+            <AccountForm username={user.get('username')} />
           </Paper>
         </div>
         <div className={s.right}>

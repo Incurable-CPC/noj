@@ -18,18 +18,23 @@ import User from '../models/userModel';
 import moment from 'moment';
 const router = new Router();
 
-const OPERATE_LIMIT = 2;
+const OPERATE_LIMIT = 0;
 const checkTime = handleError(async (req, res, next) => {
   const username = getUsername(req);
-  const { lastOperate } = await User
+  const user = await User
     .findOneAndUpdate(
       { username },
       { $currentDate: { lastOperate: true } })
     .select('lastOperate');
-  const cur = moment();
-  const diff = cur.diff(lastOperate, 'seconds');
-  if (diff < OPERATE_LIMIT) res.status(406).send({ error: 'Operate too fast' });
-  else next();
+  if (user) {
+    const { lastOperate } = user;
+    const cur = moment();
+    const diff = cur.diff(lastOperate, 'seconds');
+    if (diff < OPERATE_LIMIT) {
+      return res.status(406).send({ error: 'Operate too fast' });
+    }
+  }
+  next();
 });
 router.post('*', checkTime);
 router.use('/auth', authApi);
