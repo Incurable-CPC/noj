@@ -8,6 +8,14 @@ import IconButton from 'material-ui/IconButton';
 import SearchIcon from 'material-ui/svg-icons/action/search';
 import TextField from 'material-ui/TextField';
 
+const styles = {
+  root: { margin: 10 },
+  part: {
+    display: 'inline-block',
+    verticalAlign: 'top',
+  },
+};
+
 export default class SearchBar extends Component {
   static propTypes = {
     width: PropTypes.number.isRequired,
@@ -19,7 +27,8 @@ export default class SearchBar extends Component {
     keyword: this.props.initialValue || '',
   };
 
-  handleSearch = async () => {
+  _handleSubmit = async (evt) => {
+    evt.preventDefault();
     const { keyword } = this.state;
     const { search } = this.props;
     await search(keyword);
@@ -30,22 +39,24 @@ export default class SearchBar extends Component {
     const { keyword } = this.state;
     return (
       <div>
-        <Paper style={{ width, margin: 10 }}>
-          <div style={{ display: 'inline-block', verticalAlign: 'top' }}>
-            <IconButton tooltip="search" onTouchTap={this.handleSearch}>
-              <SearchIcon />
-            </IconButton>
-          </div>
-          <div style={{ display: 'inline-block', verticalAlign: 'top' }}>
-            <TextField
-              value={keyword}
-              onChange={(evt) => this.setState({ keyword: evt.target.value })}
-              style={{ width: width - 48 }}
-              hintText="Search"
-              underlineShow={false}
-              fullWidth
-            />
-          </div>
+        <Paper style={Object.assign({ width }, styles.root)}>
+          <form onSubmit={this._handleSubmit}>
+            <div style={styles.part}>
+              <IconButton tooltip="search" type="submit">
+                <SearchIcon />
+              </IconButton>
+            </div>
+            <div style={styles.part}>
+              <TextField
+                value={keyword}
+                onChange={(evt) => this.setState({ keyword: evt.target.value })}
+                style={{ width: width - 48 }}
+                hintText="Search"
+                underlineShow={false}
+                fullWidth
+              />
+            </div>
+          </form>
         </Paper>
       </div>
     );
