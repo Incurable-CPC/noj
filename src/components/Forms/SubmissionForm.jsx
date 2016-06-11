@@ -17,7 +17,7 @@ import 'codemirror/mode/clike/clike';
 import 'codemirror/mode/python/python';
 import { reduxForm } from 'redux-form';
 
-import { submit } from '../../actions/submissionActions';
+import { submit } from '../../actions/submission';
 import { LANGUAGES, LANGUAGE_MODES } from '../../constants/index';
 
 const fields = ['code', 'language', 'pid', 'cid'];

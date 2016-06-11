@@ -7,7 +7,7 @@ import { reduxForm } from 'redux-form';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import { changePassword } from '../../../actions/authActions';
+import { changePassword } from '../../../actions/auth';
 
 const fields = ['oldPassword', 'password', 'confirmPassword'];
 const styles = {

@@ -4,10 +4,10 @@
 
 import { getValues } from 'redux-form';
 import cookie from 'react-cookie';
-import AuthConstants from '../constants/AuthConstants';
-import { loginChecker, registerChecker, passwordsChecker } from '../check/authChecker';
+import AUTH from '../constants/auth';
+import { loginChecker, registerChecker, passwordsChecker } from '../check/auth';
 import { getJSON, postJSON } from '../core/fetchJSON';
-import { updateUser } from './userActions';
+import { updateUser } from './user';
 import nprogress from '../core/nprogress';
 import toast from '../core/toast';
 import { api } from '../config';
@@ -24,14 +24,14 @@ const loginSuccess = (auth) => {
 };
 
 const setUserInfo = (user) => ({
-  type: AuthConstants.SET,
+  type: AUTH.SET,
   user,
 });
 
 const clearUserInfo = () => {
   cookie.remove('username', cookieOpt);
   cookie.remove('token', cookieOpt);
-  return ({ type: AuthConstants.CLEAR });
+  return ({ type: AUTH.CLEAR });
 };
 
 export const loadAuthedUserInfo = () => async (dispatch) => {
@@ -54,7 +54,7 @@ export const login = () => async(dispatch, getState) => {
       toast('warning', error);
     } else {
       nprogress.start();
-      dispatch({ type: AuthConstants.LOGIN });
+      dispatch({ type: AUTH.LOGIN });
       const { token } = await postJSON(`${api}/auth/login`, {
         username,
         password,
@@ -100,7 +100,7 @@ export const register = () => async(dispatch, getState) => {
       ok = false;
     } else {
       nprogress.start();
-      dispatch({ type: AuthConstants.REGISTER });
+      dispatch({ type: AUTH.REGISTER });
       const { token } = await postJSON(`${api}/auth/register`, {
         username,
         password,

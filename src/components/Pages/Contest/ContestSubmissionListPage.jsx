@@ -7,7 +7,7 @@ import ImmutableTypes from 'react-immutable-proptypes';
 import Paper from 'material-ui/Paper';
 import { connect } from 'react-redux';
 
-import { expandContestSubmission } from '../../../actions/contestActions';
+import { expandContestSubmission } from '../../../actions/contest';
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';

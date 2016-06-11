@@ -10,7 +10,7 @@ import Paper from 'material-ui/Paper';
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
-import { postAvatar } from '../../../actions/userActions';
+import { postAvatar } from '../../../actions/user';
 import UserInfoBox from '../../SideBoxes/UserInfoBox';
 import UserInfoForm from '../../Forms/User/UserInfoForm';
 import AccountForm from '../../Forms/User/AccountForm';

@@ -4,10 +4,10 @@
 
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
-import User from '../models/userModel';
+import User from '../models/User';
 import { getUsername, requireAuth, handleError } from './common';
 import { useAwait } from '../core';
-import { loginChecker, registerChecker, passwordsChecker } from '../check/authChecker';
+import { loginChecker, registerChecker, passwordsChecker } from '../check/auth';
 const router = new Router();
 
 const compare = useAwait(bcrypt.compare);
@@ -60,7 +60,6 @@ const register = handleError(async (req, res) => {
 const changePassword = handleError(async (req, res) => {
   const { oldPassword, password, confirmPassword } = req.body;
   const username = getUsername(req);
-  console.log(username);
   const user = await User.findOne({ username });
   let error = passwordsChecker(oldPassword, password, confirmPassword);
   if (!user) {

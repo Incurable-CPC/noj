@@ -3,8 +3,8 @@
  */
 
 import { fromJS } from 'immutable';
-import AuthConstants from '../constants/AuthConstants';
-import { updateUser } from './userReducer';
+import AuthConstants from '../constants/auth';
+import { updateUser } from './user';
 
 const initState = fromJS({});
 

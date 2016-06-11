@@ -9,7 +9,7 @@ import FlatButton from 'material-ui/FlatButton';
 
 import withStyle from '../../decorators/withStyles';
 import s from './SmallForm.scss';
-import { usernameChecker } from '../../check/authChecker';
+import { usernameChecker } from '../../check/auth';
 
 const styles = {
   hiddlen: {

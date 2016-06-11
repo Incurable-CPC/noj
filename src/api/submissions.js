@@ -6,11 +6,11 @@ import { Router } from 'express';
 const router = new Router();
 
 import { requireAuth, requireAdmin, getUsername, handleError } from './common';
-import Submission from '../models/submissionModel';
-import Problem from '../models/problemModel';
-import User from '../models/userModel';
+import Submission from '../models/Submission';
+import Problem from '../models/Problem';
+import User from '../models/User';
 import { RESULT_VALUES } from '../constants';
-import submissionChecker, { isCompleted, isAccepted } from '../check/submissionChecker';
+import submissionChecker, { isCompleted, isAccepted } from '../check/submission';
 
 const checkSubmission = async (submission) => submissionChecker(submission);
 

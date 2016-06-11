@@ -8,12 +8,12 @@ import { browserHistory } from 'react-router';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import dialogReducer from './reducers/dialogReducer';
-import authReducer from './reducers/authReducer';
-import userReducer from './reducers/userReducer';
-import problemReducer from './reducers/problemReducer';
-import submissionReducer from './reducers/submissionReducer';
-import contestReducer from './reducers/contestReducer';
+import dialogReducer from './reducers/dialog';
+import authReducer from './reducers/auth';
+import userReducer from './reducers/user';
+import problemReducer from './reducers/problem';
+import submissionReducer from './reducers/submission';
+import contestReducer from './reducers/contest';
 
 const reducer = combineReducers({
   routing: routeReducer,

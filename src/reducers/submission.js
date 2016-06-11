@@ -4,7 +4,7 @@
 
 import { fromJS } from 'immutable';
 
-import SubmissionConstants from '../constants/SubmissionConstants';
+import SubmissionConstants from '../constants/submission';
 
 const initState = fromJS({
   condition: {},

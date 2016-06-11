@@ -2,8 +2,8 @@
  * Created by cpc on 2/24/16.
  */
 
-import submissionChecker, { isCompleted, isCompileError } from '../check/submissionChecker';
-import SubmissionConstants from '../constants/SubmissionConstants';
+import submissionChecker, { isCompleted, isCompileError } from '../check/submission';
+import SUBMISSION from '../constants/submission';
 import { getJSON, postJSON } from '../core/fetchJSON';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
@@ -11,18 +11,18 @@ import toast from '../core/toast';
 import { api } from '../config';
 
 export const reciveSubmissionList = (submissionList) => ({
-  type: SubmissionConstants.SET_LIST,
+  type: SUBMISSION.SET_LIST,
   submissionList,
 });
 
 export const reciveSubmission = (index, submission) => ({
-  type: SubmissionConstants.SET,
+  type: SUBMISSION.SET,
   index,
   submission,
 });
 
 export const changeSubmissionState = (index, content) => ({
-  type: SubmissionConstants.CHANGE_EXPAND_STATE,
+  type: SUBMISSION.CHANGE_EXPAND_STATE,
   index,
   content,
 });

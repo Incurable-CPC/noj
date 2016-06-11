@@ -2,21 +2,21 @@
  * Created by cpc on 1/20/16.
  */
 
-import ProblemConstants from '../constants/ProblemConstants';
+import PROBLEM from '../constants/problem';
 import { getJSON, postJSON } from '../core/fetchJSON';
 import toast from '../core/toast';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
-import problemChecker from '../check/problemChecker';
+import problemChecker from '../check/problem';
 import { api } from '../config';
 
 export const setProblem = (problem) => ({
-  type: ProblemConstants.SET,
+  type: PROBLEM.SET,
   problem,
 });
 
 export const initProblem = () => ({
-  type: ProblemConstants.INIT,
+  type: PROBLEM.INIT,
 });
 
 export const postProblem = () => async (problem, dispatch) => {
@@ -53,7 +53,7 @@ export const getProblem = (pid) => async (dispatch, getState) => {
 };
 
 export const setProblemList = (condition, count, list) => ({
-  type: ProblemConstants.SET_LIST,
+  type: PROBLEM.SET_LIST,
   condition,
   count,
   list,

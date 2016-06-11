@@ -9,7 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { List } from 'immutable';
 import { connect } from 'react-redux';
 
-import { getProblemListSortBy, getProblemListByKeyword } from '../../actions/problemActions';
+import { getProblemListSortBy, getProblemListByKeyword } from '../../actions/problem';
 import { postJSON } from '../../core/fetchJSON';
 import Location from '../../core/Location';
 import { api } from '../../config';

@@ -8,13 +8,13 @@
  */
 
 import { Router } from 'express';
-import authApi from './authApi';
-import userApi from './usersApi';
-import problemApi from './problemsApi';
-import submissionApi from './submissionsApi';
-import contestsApi from './contestsApi';
+import authApi from './auth';
+import userApi from './users';
+import problemApi from './problems';
+import submissionApi from './submissions';
+import contestsApi from './contests';
 import { getUsername, handleError } from './common';
-import User from '../models/userModel';
+import User from '../models/User';
 import moment from 'moment';
 const router = new Router();
 

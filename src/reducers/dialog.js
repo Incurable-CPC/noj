@@ -2,7 +2,7 @@
  * Created by cpc on 1/30/16.
  */
 
-import DialogConstants from '../constants/DialogConstants';
+import DialogConstants from '../constants/dialog';
 
 const initState = 'empty';
 

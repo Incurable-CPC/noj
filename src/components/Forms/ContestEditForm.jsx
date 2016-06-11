@@ -11,10 +11,10 @@ import DateTimePicker from '../Lib/DateTimePicker.jsx';
 
 import Animate from '../Lib/Animate.jsx';
 import { getJSON } from '../../core/fetchJSON';
-import { postContest } from '../../actions/contestActions';
+import { postContest } from '../../actions/contest';
 import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
-import { problemNotExist, MAX_PROBLEM_CNT } from '../../check/contestChekcer';
+import { problemNotExist, MAX_PROBLEM_CNT } from '../../check/contest';
 import toast from '../../core/toast';
 import { api } from '../../config';
 

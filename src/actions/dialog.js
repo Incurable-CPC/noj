@@ -2,13 +2,13 @@
  * Created by cpc on 1/30/16.
  */
 
-import DialogConstants from '../constants/DialogConstants';
+import DIALOG from '../constants/dialog';
 
 export const showDialog = (content) => ({
-  type: DialogConstants.SHOW,
+  type: DIALOG.SHOW,
   content,
 });
 
 export const hideDialog = () => ({
-  type: DialogConstants.HIDE,
+  type: DIALOG.HIDE,
 });

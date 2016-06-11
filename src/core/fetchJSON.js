@@ -4,7 +4,7 @@
 
 import fetch from './fetch';
 import store from '../stores';
-import { logout } from '../actions/authActions';
+import { logout } from '../actions/auth';
 
 const handleError = async (res) => {
   if (res.ok) return await res.json();

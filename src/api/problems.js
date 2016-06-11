@@ -6,10 +6,10 @@ import { Router } from 'express';
 const router = new Router();
 
 import { requireAuth, requireAdmin, handleError } from './common';
-import Problem from '../models/problemModel';
+import Problem from '../models/Problem';
 import { markWithMath } from '../core';
 import fetch from '../core/fetch';
-import problemChecker from '../check/problemChecker';
+import problemChecker from '../check/problem';
 
 const checkProblem = async (problem) => problemChecker(problem);
 

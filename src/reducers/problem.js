@@ -4,7 +4,7 @@
 
 import { fromJS } from 'immutable';
 
-import ProblemConstants from '../constants/ProblemConstants';
+import ProblemConstants from '../constants/problem';
 
 const initState = fromJS({
   detail: {

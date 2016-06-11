@@ -38,24 +38,24 @@ import {
   getProblem,
   initProblem,
   getProblemListByPage,
-} from './actions/problemActions';
+} from './actions/problem';
 import {
   getContest,
   initContest,
   setContestPid,
   updateContest,
   getContestListByPage,
-} from './actions/contestActions';
+} from './actions/contest';
 import {
   getSubmissionList,
-} from './actions/submissionActions';
+} from './actions/submission';
 import {
   loadAuthedUserInfo,
-} from './actions/authActions';
+} from './actions/auth';
 import {
   getUserInfo,
   getUserListByPage,
-} from './actions/userActions';
+} from './actions/user';
 
 const boundGetProblem = async (nextState, replace, next) => {
   const { params: { pid } } = nextState;

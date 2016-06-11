@@ -8,7 +8,7 @@ import Checkbox from 'material-ui/Checkbox';
 import Paper from 'material-ui/Paper';
 import { connect } from 'react-redux';
 
-import { getUserFollowingList } from '../../actions/userActions';
+import { getUserFollowingList } from '../../actions/user';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import s from './common.scss';

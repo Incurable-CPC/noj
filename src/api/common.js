@@ -2,7 +2,7 @@
  * Created by cpc on 2/22/16.
  */
 
-import User from '../models/userModel';
+import User from '../models/User';
 
 export const getUsername = (req) => {
   const { username } = req.cookies || {};

@@ -9,7 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
-import { clarifyContest } from '../../actions/contestActions';
+import { clarifyContest } from '../../actions/contest';
 
 const fields = ['cid', 'qid', 'content'];
 

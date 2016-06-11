@@ -12,7 +12,7 @@ import s from './common.scss';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';
 import SubmissionList from '../Lists/SubmissionList';
-import { expandSubmission } from '../../actions/submissionActions';
+import { expandSubmission } from '../../actions/submission';
 import Location from '../../core/Location';
 import BasePage from './BasePage';
 

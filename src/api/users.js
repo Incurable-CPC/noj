@@ -8,10 +8,10 @@ import { Router } from 'express';
 import multer from 'multer';
 
 import { useAwait } from '../core';
-import User from '../models/userModel';
+import User from '../models/User';
 import { requireAuth, getUsername, setListSkip, handleError } from './common';
-import { listFields } from '../constants/UserConstants';
-import { checkAvatar, checkInfo } from '../check/userChecker';
+import { listFields } from '../constants/user';
+import { checkAvatar, checkInfo } from '../check/user';
 const router = new Router();
 
 const upload = multer({

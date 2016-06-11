@@ -7,7 +7,7 @@ import { reduxForm } from 'redux-form';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import { postUserInfo } from '../../../actions/userActions';
+import { postUserInfo } from '../../../actions/user';
 
 const fields = ['nick', 'school', 'email'];
 const styles = {

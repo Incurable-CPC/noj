@@ -7,13 +7,13 @@ const router = new Router();
 import moment from 'moment';
 
 import { requireAuth, getUsername, setListSkip, handleError } from './common';
-import Contest from '../models/contestModel';
-import Problem from '../models/problemModel';
-import { submissionCheckUser, submissionListCheckUser } from '../models/submissionModel';
-import submissionChecker from '../check/submissionChecker';
-import { listFileds } from '../constants/ContestConstants';
+import Contest from '../models/Contest';
+import Problem from '../models/Problem';
+import { submissionCheckUser, submissionListCheckUser } from '../models/Submission';
+import submissionChecker from '../check/submission';
+import { listFileds } from '../constants/contest';
 
-import contestChecker, { problemNotExist } from '../check/contestChekcer';
+import contestChecker, { problemNotExist } from '../check/contest';
 const checkContest = async (contest) => {
   let error = contestChecker(contest);
   if (error) return error;

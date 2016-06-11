@@ -3,9 +3,9 @@
  */
 
 import mongoose, { Schema } from 'mongoose';
-import Counter from './counterModel';
-import { problemSchema } from './problemModel';
-import { submissionSchema } from './submissionModel';
+import Counter from './Counter';
+import { problemSchema } from './Problem';
+import { submissionSchema } from './Submission';
 
 export const contestSchema = {
   cid: { type: Number, index: { unique: true } },

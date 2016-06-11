@@ -2,22 +2,22 @@
  * Created by cpc on 5/30/16.
  */
 
-import UserConstants, { listFields } from '../constants/UserConstants';
-import AuthConstants from '../constants/AuthConstants';
+import USER, { listFields } from '../constants/user';
+import AUTH from '../constants/auth';
 import { postJSON, postFile, getJSON } from '../core/fetchJSON';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
 import toast from '../core/toast';
 import { api } from '../config';
-import { checkAvatar, checkInfo } from '../check/userChecker';
+import { checkAvatar, checkInfo } from '../check/user';
 
 const setUserInfo = (user) => ({
-  type: UserConstants.SET,
+  type: USER.SET,
   user,
 });
 
 const setUserList = (condition, count, userList) => ({
-  type: UserConstants.SET_LIST,
+  type: USER.SET_LIST,
   condition,
   count,
   userList,
@@ -43,7 +43,7 @@ export const updateUser = (field) => async (dispatch, getState) => {
     `${api}/users/${username}/update`, cond);
   nprogress.done();
   dispatch({
-    type: ((field === 'auth') ? AuthConstants : UserConstants).UPDATE,
+    type: ((field === 'auth') ? AUTH : USER).UPDATE,
     updates: data.user,
   });
   _updateLock[field] = false;

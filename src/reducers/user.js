@@ -2,7 +2,7 @@
  * Created by cpc on 5/30/16.
  */
 
-import UserConstants from '../constants/UserConstants';
+import UserConstants from '../constants/user';
 import { fromJS, Iterable } from 'immutable';
 
 const initState = fromJS({

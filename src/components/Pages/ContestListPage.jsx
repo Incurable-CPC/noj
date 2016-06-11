@@ -8,7 +8,7 @@ import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
 
-import { getContestListSortBy, getContestListByKeyword } from '../../actions/contestActions';
+import { getContestListSortBy, getContestListByKeyword } from '../../actions/contest';
 import Location from '../../core/Location';
 import withTitle from '../../decorators/withTitle';
 import withStyles from '../../decorators/withStyles';

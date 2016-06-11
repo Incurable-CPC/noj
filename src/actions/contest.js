@@ -8,30 +8,30 @@ import { getJSON, postJSON } from '../core/fetchJSON';
 import toast from '../core/toast';
 import nprogress from '../core/nprogress';
 import Location from '../core/Location';
-import contestChecker from '../check/contestChekcer';
-import ContestConstants from '../constants/ContestConstants';
-import { isCompileError } from '../check/submissionChecker';
+import contestChecker from '../check/contest';
+import CONTEST from '../constants/contest';
+import { isCompileError } from '../check/submission';
 import { getTime } from '../decorators/withTime';
 import { api } from '../config';
 
 const setContest = (contest) => ({
-  type: ContestConstants.SET,
+  type: CONTEST.SET,
   contest,
 });
 
 const setContestList = (condition, count, list) => ({
-  type: ContestConstants.SET_LIST,
+  type: CONTEST.SET_LIST,
   condition,
   count,
   list,
 });
 
 export const setContestPid = (pid) => ({
-  type: ContestConstants.SET_PID,
+  type: CONTEST.SET_PID,
   pid,
 });
 
-export const initContest = () => ({ type: ContestConstants.INIT });
+export const initContest = () => ({ type: CONTEST.INIT });
 
 export const getContest = (cid, force) => async (dispatch, getState) => {
   try {
@@ -86,7 +86,7 @@ export const updateContest = (force) => async (dispatch, getState) => {
     const { submissionList, clarifyLogList } = await getJSON(
       `${api}/contests/${cid}/update`, cond);
     dispatch({
-      type: ContestConstants.UPDATE,
+      type: CONTEST.UPDATE,
       submissionList,
       clarifyLogList,
     });
@@ -157,13 +157,13 @@ export const getContestListByKeyword = (searchKey) => async(dispatch, getState) 
 };
 
 export const reciveContestSubmission = (index, submission) => ({
-  type: ContestConstants.SET_SUBMISSION,
+  type: CONTEST.SET_SUBMISSION,
   index,
   submission,
 });
 
 export const changeContestSubmissionState = (index, content) => ({
-  type: ContestConstants.CHANGE_SUBMISSION_EXPAND_STATE,
+  type: CONTEST.CHANGE_SUBMISSION_EXPAND_STATE,
   index,
   content,
 });

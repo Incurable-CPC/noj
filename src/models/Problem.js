@@ -3,7 +3,7 @@
  */
 
 import mongoose, { Schema } from 'mongoose';
-import Counter from './counterModel';
+import Counter from './Counter';
 
 export const problemSchema = {
   title: String,

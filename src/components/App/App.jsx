@@ -13,8 +13,8 @@ import { connect } from 'react-redux';
 import { cyan500, white, black } from 'material-ui/styles/colors';
 
 import s from './App.scss';
-import { showDialog, hideDialog } from '../../actions/dialogActions';
-import { login, register, logout } from '../../actions/authActions';
+import { showDialog, hideDialog } from '../../actions/dialog';
+import { login, register, logout } from '../../actions/auth';
 import { root } from '../../config';
 import Header from './Header';
 

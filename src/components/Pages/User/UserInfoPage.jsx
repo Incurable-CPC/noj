@@ -11,7 +11,7 @@ import { is } from 'immutable';
 import s from '../common.scss';
 import withTitle from '../../../decorators/withTitle';
 import withStyles from '../../../decorators/withStyles';
-import { followUser } from '../../../actions/userActions';
+import { followUser } from '../../../actions/user';
 import UserInfoBox from '../../SideBoxes/UserInfoBox';
 import UserInfo from '../../UserInfo';
 import BasePage from '../BasePage';
