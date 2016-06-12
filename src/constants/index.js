@@ -10,18 +10,6 @@ const arrToObj = (arr) => {
   return ret;
 };
 
-export const LANGUAGES = {
-  local: ['C', 'C++', 'Java', 'Python'],
-  POJ: ['G++', 'GCC', 'Java', 'Pascal', 'C++', 'C', 'Fortran'],
-};
-export const LANGUAGE_MODES = {
-  local: ['text/x-csrc', 'text/x-c++src', 'text/x-java', 'python'],
-  POJ: [
-    'text/x-c++src', 'text/x-csrc', 'text/x-java',
-    'text/x-pascal', 'text/x-c++src', 'text/x-csrc', 'text/x-fortran',
-  ],
-};
-
 export const RESULTS = [
   'Pending', 'Pending Rejudging', 'Compiling', 'Running & Judging',
   'Accepted', 'Presentation Error',

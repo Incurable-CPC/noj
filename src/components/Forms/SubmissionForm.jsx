@@ -18,7 +18,7 @@ import 'codemirror/mode/python/python';
 import { reduxForm } from 'redux-form';
 
 import { submit } from '../../actions/submission';
-import { LANGUAGES, LANGUAGE_MODES } from '../../constants/index';
+import { LANGUAGES, getModeByValue } from '../../core/languages';
 
 const fields = ['code', 'language', 'pid', 'cid'];
 @reduxForm({
@@ -48,12 +48,13 @@ export default class SubmissionForm extends Component {
       problem,
       } = this.props;
     const pid = problem.get('pid');
-    const langs = LANGUAGES[problem.get('originOJ')].map((lang, index) => (
+    const originOJ = problem.get('originOJ');
+    const langs = LANGUAGES[originOJ].map((lang, index) => (
       <MenuItem value={index} key={index} primaryText={lang} />
     ));
     const options = {
       lineNumbers: true,
-      mode: LANGUAGE_MODES[problem.get('originOJ')][language.value],
+      mode: getModeByValue(originOJ, language.value),
     };
     return (
       <Paper>
