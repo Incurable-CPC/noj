@@ -4,18 +4,19 @@ import requests
 import json
 import time
 
-username = 'CPCPC'
-token = 'gWaBosEu297UAo5P/xlbXw=='
+config = json.load(open('config.json'))
+root = config['root']
+
+username = config['judger']
+token = config['token']
 headers = {
     'Content-Type': 'application/json',
     'Cookie': 'username=' + username + '; token=' + token,
 }
 
-config = json.load(open('config.json'))
-host = config['host']
 while True:
     time.sleep(5)
-    response = requests.post('http://'+host+'/api/submissions/unjudged',
+    response = requests.post(root + '/api/submissions/unjudged',
                              headers=headers)
 
     data = response.json()
@@ -42,6 +43,6 @@ while True:
             'submission': submission
         }
 
-        res = requests.patch('http://'+host+'/api/submissions/'+str(sid),
+        res = requests.patch(root + '/api/submissions/' + str(sid),
                              data=json.dumps(data),
                              headers=headers)

@@ -1,6 +1,11 @@
 import requests
 import base64
 import re
+import json
+
+config = json.load(open('config.json'))
+username = config['remote-username']
+password = config['remote-password']
 
 s = requests.Session()
 
@@ -14,8 +19,8 @@ def is_login():
 def login():
     url = 'http://poj.org/login'
     user_info = {
-        'user_id1': '136873448',
-        'password1': '123456789',
+        'user_id1': username,
+        'password1': password,
         'B1': 'login',
         'url': '/',
     }
