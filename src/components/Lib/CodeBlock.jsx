@@ -11,7 +11,7 @@ import 'codemirror/mode/python/python';
 import 'codemirror/mode/pascal/pascal';
 import 'codemirror/mode/fortran/fortran';
 
-import { LANGUAGE_MODES } from '../../constants';
+import { getModeByValue } from '../../core/languages';
 import withStyles from '../../decorators/withStyles';
 import s from './CodeBlock.scss';
 
@@ -37,7 +37,7 @@ export default class CodeBlock extends Component {
     const options = {
       lineNumbers: true,
       readOnly: true,
-      mode: LANGUAGE_MODES[OJ][language],
+      mode: getModeByValue(OJ, language),
     };
     return (
       <div className={s['code-block']}>

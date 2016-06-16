@@ -7,7 +7,7 @@ import ImmutableTypes from 'react-immutable-proptypes';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Divider from 'material-ui/Divider';
-import { blue100, green100 } from 'material-ui/styles/colors';
+import * as colors from 'material-ui/styles/colors';
 import { fade } from 'material-ui/utils/colorManipulator';
 
 import withStyles from '../../decorators/withStyles';
@@ -17,10 +17,10 @@ import Location from '../../core/Location';
 
 const styles = {
   solved: {
-    backgroundColor: fade(green100, 0.5),
+    backgroundColor: fade(colors.green100, 0.5),
   },
   tried: {
-    backgroundColor: fade(blue100, 0.5),
+    backgroundColor: fade(colors.blue100, 0.5),
   },
 };
 

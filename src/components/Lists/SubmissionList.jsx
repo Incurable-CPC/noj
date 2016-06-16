@@ -18,7 +18,8 @@ import cs from 'classnames';
 import s from './SubmissionList.scss';
 import withStyles from '../../decorators/withStyles';
 import Location from '../../core/Location';
-import { LANGUAGES, RESULTS } from '../../constants';
+import { LANGUAGES } from '../../core/languages';
+import { RESULTS } from '../../constants';
 import { isCompleted, isCompileError, isAccepted } from '../../check/submission';
 import { formatTime } from '../../core';
 
