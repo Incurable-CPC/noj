@@ -31,6 +31,7 @@ const styles = {
     minWidth: leftWidth,
   },
   right: { paddingLeft: leftWidth + 40 },
+  followButton: { width: 128 },
   info: {
     color: colors.grey500,
     fontSize: 10,
@@ -68,7 +69,7 @@ const _showPid = (solved) => (pid, index) => (
 export default class UserInfo extends Component {
   static propTypes = {
     user: ImmutableTypes.map.isRequired,
-    unfollow: PropTypes.func.isRequired,
+    unFollow: PropTypes.func.isRequired,
     follow: PropTypes.func.isRequired,
     self: PropTypes.bool,
   };
@@ -81,7 +82,7 @@ export default class UserInfo extends Component {
   _handleMouseLeave = () => this.setState({ inside: false });
 
   render() {
-    const { user, self, follow, unfollow } = this.props;
+    const { user, self, follow, unFollow } = this.props;
     const buttonProps = [() => ({
       label: 'edit profile',
       onTouchTap: () => Location.push('/settings'),
@@ -90,8 +91,8 @@ export default class UserInfo extends Component {
       onTouchTap: follow,
     }), () => this.state.inside ? ({
       secondary: true,
-      label: 'unfollow',
-      onTouchTap: unfollow,
+      label: 'unFollow',
+      onTouchTap: unFollow,
     }) : ({
       primary: true,
       label: 'following',
@@ -108,6 +109,7 @@ export default class UserInfo extends Component {
           <RaisedButton
             onMouseEnter={this._handleMouseEnter}
             onMouseLeave={this._handleMouseLeave}
+            style={styles.followButton}
             {...buttonProps[buttonId]()}
           />
         </div>

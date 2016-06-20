@@ -1,11 +1,15 @@
 import requests
 import base64
-import re
 import json
+import time
+import re
 
 config = json.load(open('config.json'))
-username = config['remote-username']
-password = config['remote-password']
+user = config['remote']
+if config.has_key('remote-poj'):
+    user = config['remote-poj']
+username = user['username']
+password = user['password']
 
 s = requests.Session()
 
@@ -30,6 +34,7 @@ def login():
 def submit(pid, language, code):
     while not is_login():
         login()
+        time.sleep(1)
     data = {
         'problem_id': pid,
         'language': language,
@@ -49,7 +54,7 @@ def get_result(pid, language):
     while len(match) == 0:
         res = s.get('http://poj.org/status?'
                     'problem_id=' + str(pid) +
-                    '&user_id=136873448'
+                    '&user_id=' + username +
                     '&language=' + str(language))
         match = re.findall(reg, res.text)
         match2 = re.findall(reg_more, res.text)

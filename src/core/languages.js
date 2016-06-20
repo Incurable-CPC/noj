@@ -3,26 +3,29 @@
  */
 
 export const LANGUAGE_NAMES = {
+  f: ['Fortran'],
   c: ['C', 'GCC'],
+  cs: ['C#'],
   cpp: ['C++', 'G++'],
   java: ['Java'],
-  python: ['Python'],
-  pascal: ['Pascal'],
-  fortran: ['Fortran'],
+  pas: ['Pascal'],
+  py: ['Python'],
 };
 
 export const LANGUAGES = {
   local: ['C', 'C++', 'Java', 'Python'],
   POJ: ['G++', 'GCC', 'Java', 'Pascal', 'C++', 'C', 'Fortran'],
+  HDOJ: ['G++', 'GCC', 'C++', 'C', 'Pascal', 'Java', 'C#'],
 };
 
 export const LANGUAGE_MODES = {
+  f: 'text/x-fortran',
   c: 'text/x-csrc',
   cpp: 'text/c-c++src',
+  cs: 'text/x-csharp',
   java: 'text/x-java',
-  pascal: 'text/x-pascal',
-  fortran: 'text/x-fortran',
-  python: 'python',
+  pas: 'text/x-pascal',
+  py: 'python',
 };
 
 export const getModeByName = (name) => {

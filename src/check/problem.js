@@ -3,11 +3,9 @@
  */
 
 import { checkEmpty } from './index';
+import { markWithMath } from '../core';
 export default (problem) => {
-  const requiredField = [
-    'title', 'timeLimit', 'memoryLimit',
-    'description', 'input', 'output',
-  ];
+  const requiredField = ['title', 'timeLimit', 'memoryLimit', 'description'];
   for (let field of requiredField) {
     if ((checkEmpty(problem[field])) && (checkEmpty(problem[`${field}Src`]))) {
       return `Field '${field}' can't be empty`;
@@ -16,14 +14,18 @@ export default (problem) => {
   if (problem.samples.length === 0) {
     return 'At least one sample';
   }
-  for (let i = 0; i < problem.samples.length; i++) {
-    let sample = problem.samples[i];
-    for (let field of ['input', 'output']) {
-      if (checkEmpty(sample[field])) {
-        return `Sample ${field}#${i + 1} can't be empty`;
-      }
-    }
-  }
-
   return '';
+};
+
+const srcFields = ['description', 'input', 'output', 'hint', 'source'];
+export const handleProblemSrc = (problem) => {
+  if (problem.timeLimitNum) problem.timeLimit = `${problem.timeLimitNum} ms`;
+  if (problem.memoryLimitNum) problem.memoryLimit = `${problem.memoryLimitNum} MB`;
+  srcFields.forEach((field) => {
+    const src = problem[`${field}Src`];
+    if (src) {
+      problem[field] = markWithMath(src);
+    }
+  });
+  return problem;
 };

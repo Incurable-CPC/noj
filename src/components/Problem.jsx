@@ -4,29 +4,33 @@
 
 import React, { Component, PropTypes } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
+import * as colors from 'material-ui/styles/colors';
+import { fromJS } from 'immutable';
 
-import { nameToStr, markWithMath } from '../core';
+import { nameToStr } from '../core';
+import { handleProblemSrc } from '../check/problem';
 import withStyle from '../decorators/withStyles';
 import s from './Problem.scss';
+
+const styles = {
+  info: {
+    fontSize: 12,
+    color: colors.grey600,
+  },
+};
 
 @withStyle(s)
 export default class Problem extends Component {
   static propTypes = {
-    editting: PropTypes.bool,
+    editing: PropTypes.bool,
     problem: ImmutableTypes.map.isRequired,
   };
 
   render() {
-    const { editting } = this.props;
+    const { editing } = this.props;
     let { problem } = this.props;
-    const srcFields = ['description', 'input', 'output', 'hint', 'source'];
-    if (editting) {
-      srcFields.forEach((field) => {
-        const src = problem.get(`${field}Src`);
-        if (src) {
-          problem = problem.set(field, markWithMath(src));
-        }
-      });
+    if (editing) {
+      problem = fromJS(handleProblemSrc(problem.toJS()));
     }
 
     const showField = (field) => (problem.has(field) &&
@@ -44,12 +48,12 @@ export default class Problem extends Component {
           <div>
             <h1>{problem.get('title')}</h1>
           </div>
-          <div>
+          <div style={styles.info}>
             <span className={s.center}>
-              Time Limit: {problem.get('timeLimit')}ms
+              Time Limit: {problem.get('timeLimit')}
             </span>
             <span className={s.center}>
-              Memory Limit: {problem.get('memoryLimit')}MB
+              Memory Limit: {problem.get('memoryLimit')}
             </span>
           </div>
         </div>

@@ -21,7 +21,7 @@ RESULTS = {
 
 def index(string):
     if string not in RESULTS:
-        return 0
+        return 14
     return RESULTS[string]
 
 

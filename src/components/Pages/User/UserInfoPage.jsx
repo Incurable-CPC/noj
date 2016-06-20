@@ -45,7 +45,7 @@ export default class UserInfoPage extends BasePage {
               user={user}
               self={user.get('username') === authedUser.get('username')}
               follow={() => dispatch(followUser(true))}
-              unfollow={() => dispatch(followUser(false))}
+              unFollow={() => dispatch(followUser(false))}
             />
           </Paper>
         </div>

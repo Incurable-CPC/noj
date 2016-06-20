@@ -25,12 +25,12 @@ const checkTime = handleError(async (req, res, next) => {
     .findOneAndUpdate(
       { username },
       { $currentDate: { lastOperate: true } })
-    .select('lastOperate');
+    .select('lastOperate admin');
   if (user) {
-    const { lastOperate } = user;
+    const { lastOperate, admin } = user;
     const cur = moment();
     const diff = cur.diff(lastOperate, 'seconds');
-    if (diff < OPERATE_LIMIT) {
+    if ((!admin) && (diff < OPERATE_LIMIT)) {
       return res.status(406).send({ error: 'Operate too fast' });
     }
   }

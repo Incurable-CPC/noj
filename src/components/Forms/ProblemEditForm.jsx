@@ -19,8 +19,8 @@ import { postProblem } from '../../actions/problem';
 const fields = [
   'pid',
   'title',
-  'timeLimit',
-  'memoryLimit',
+  'timeLimitNum',
+  'memoryLimitNum',
   'descriptionSrc',
   'inputSrc',
   'outputSrc',
@@ -56,7 +56,7 @@ export default class ProblemEditForm extends Component {
 
   render() {
     const {
-      fields: { title, timeLimit, memoryLimit, samples },
+      fields: { title, timeLimitNum, memoryLimitNum, samples },
       handleSubmit,
       submitting,
       values,
@@ -92,13 +92,13 @@ export default class ProblemEditForm extends Component {
                 style={{ width: 150, marginRight: 60 }}
                 floatingLabelText="Time Limit / ms"
                 type="number"
-                {...timeLimit}
+                {...timeLimitNum}
               />
               <TextField
                 style={{ width: 150 }}
                 floatingLabelText="Memory Limit / MB"
                 type="number"
-                {...memoryLimit}
+                {...memoryLimitNum}
               />
             </div>
             {textarea('description', 5)}
@@ -131,7 +131,7 @@ export default class ProblemEditForm extends Component {
             {textarea('source', 1)}
             {textarea('hint', 2)}
           </div>
-        ) : <Problem editting problem={fromJS(values)} />}
+        ) : <Problem editing problem={fromJS(values)} />}
         <div className={s.action}>
           <RaisedButton
             style={{ marginRight: 40 }}

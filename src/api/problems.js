@@ -7,9 +7,8 @@ const router = new Router();
 
 import { requireAuth, requireAdmin, handleError } from './common';
 import Problem from '../models/Problem';
-import { markWithMath } from '../core';
 import fetch from '../core/fetch';
-import problemChecker from '../check/problem';
+import problemChecker, { handleProblemSrc } from '../check/problem';
 
 const checkProblem = async (problem) => problemChecker(problem);
 
@@ -49,17 +48,11 @@ const getProblemList = handleError(async (req, res) => {
   });
 });
 
-const srcFields = ['description', 'input', 'output', 'source', 'hint'];
 const postProblem = handleError(async (req, res) => {
   let { problem } = req.body;
   let error = await checkProblem(problem);
   if (error) return res.status(406).send({ error });
-  srcFields.forEach((field) => {
-    const src = problem[`${field}Src`];
-    if (src) {
-      problem[field] = markWithMath(src);
-    }
-  });
+  handleProblemSrc(problem);
   if (problem.pid) {
     problem = await Problem.findOneAndUpdate({
       pid: problem.pid,

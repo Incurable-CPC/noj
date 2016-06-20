@@ -7,8 +7,10 @@ import Counter from './Counter';
 
 export const problemSchema = {
   title: String,
-  timeLimit: { type: Number, default: 1000 },
-  memoryLimit: { type: Number, default: 256 },
+  timeLimitNum: { type: Number, default: 1000 },
+  memoryLimitNum: { type: Number, default: 256 },
+  timeLimit: String,
+  memoryLimit: String,
   descriptionSrc: String,
   description: String,
   inputSrc: String,
