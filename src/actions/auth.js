@@ -2,7 +2,7 @@
  * Created by cpc on 1/7/16.
  */
 
-import { getValues } from 'redux-form';
+import { getValues, reset } from 'redux-form';
 import cookie from 'react-cookie';
 import AUTH from '../constants/auth';
 import { loginChecker, registerChecker, passwordsChecker } from '../check/auth';
@@ -118,19 +118,20 @@ export const register = () => async(dispatch, getState) => {
   return ok;
 };
 
-export const changePassword = (username) => async (passwords, dispatch) => {
+export const changePassword = (username) => async (data, dispatch) => {
   let ok = true;
   try {
-    const { oldPassword, password, confirmPassword } = passwords;
+    const { oldPassword, password, confirmPassword } = data;
     const error = passwordsChecker(oldPassword, password, confirmPassword);
     if (error) {
       toast('warning', error);
       ok = false;
     } else {
       nprogress.start();
-      const { token } = await postJSON(`${api}/auth/passwords`, passwords);
+      const { token } = await postJSON(`${api}/auth/passwords`, data);
       toast('success', 'Change password succeed');
       loginSuccess({ username, token });
+      dispatch(reset('account'));
       await dispatch(updateUser('auth'));
     }
   } catch (err) {

@@ -3,11 +3,11 @@ import re
 
 s = requests.Session()
 title_reg = r'<h1 style=.*?>(.*?)</h1>'
-description_reg = r'Problem Description</div>(.*?)<div class=panel_bottom>&nbsp;'
-input_reg = r'Input</div>(.*?)<div class=panel_bottom>&nbsp;'
-output_reg = r'Output</div>(.*?)<div class=panel_bottom>&nbsp;'
-sample_input_reg = r'Sample Input.*?<pre><div.*?>(.*?)</div></pre>'
-sample_output_reg = r'Sample Output.*?<pre><div.*?>(.*?)</div></pre>'
+description_reg = r'>Problem Description</div>(.*?)<div class=panel_bottom>&nbsp;'
+input_reg = r'>Input</div>(.*?)<div class=panel_bottom>&nbsp;'
+output_reg = r'>Output</div>(.*?)<div class=panel_bottom>&nbsp;'
+sample_input_reg = r'>Sample Input.*?<pre><div.*?>(.*?)</div></pre>'
+sample_output_reg = r'>Sample Output.*?<pre><div.*?>(.*?)</div></pre>'
 time_limit_reg = r'Time Limit: (.*?)&nbsp;'
 memory_limit_reg = r'Memory Limit: (.*?)<br>'
 

@@ -29,7 +29,7 @@ export const requireAuth = handleError(async (req, res, next) => {
 export const requireAdmin = handleError(async (req, res, next) => {
   const { username, token } = req.cookies || {};
   if (!(await User.checkAdminToken(username, token))) {
-    res.status(401).send({ error: 'Unauthorized opeartion' });
+    res.status(401).send({ error: 'Unauthorized operation' });
   } else {
     next();
   }

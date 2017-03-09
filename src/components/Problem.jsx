@@ -33,7 +33,7 @@ export default class Problem extends Component {
       problem = fromJS(handleProblemSrc(problem.toJS()));
     }
 
-    const showField = (field) => (problem.has(field) &&
+    const showField = (field) => (problem.get(field) &&
       <div>
         <h3>{nameToStr(field)}</h3>
         <div
