@@ -5,7 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import ContentCopyIcon from 'material-ui/svg-icons/content/content-copy';
 import IconButton from 'material-ui/IconButton';
-import Codemirror from 'react-codemirror';
+import CodeMirror from 'react-codemirror';
 import 'codemirror/mode/clike/clike';
 import 'codemirror/mode/python/python';
 import 'codemirror/mode/pascal/pascal';
@@ -49,7 +49,7 @@ export default class CodeBlock extends Component {
             onTouchTap={this.copy}
           ><ContentCopyIcon/></IconButton>
         </div>
-        <Codemirror
+        <CodeMirror
           className="auto-height"
           value={code}
           options={options}

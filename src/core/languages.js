@@ -21,7 +21,7 @@ export const LANGUAGES = {
 export const LANGUAGE_MODES = {
   f: 'text/x-fortran',
   c: 'text/x-csrc',
-  cpp: 'text/c-c++src',
+  cpp: 'text/x-c++src',
   cs: 'text/x-csharp',
   java: 'text/x-java',
   pas: 'text/x-pascal',
