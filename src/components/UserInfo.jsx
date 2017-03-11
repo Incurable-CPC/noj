@@ -89,16 +89,18 @@ export default class UserInfo extends Component {
     }), () => ({
       label: 'follow',
       onTouchTap: follow,
-    }), () => this.state.inside ? ({
-      secondary: true,
+    }), () => ({
       label: 'unFollow',
+      secondary: true,
       onTouchTap: unFollow,
-    }) : ({
+    }), () => ({
       primary: true,
       label: 'following',
     })];
     let buttonId = self ? 0 : 1;
-    if (user.get('isFollowing')) buttonId = 2;
+    if (user.get('isFollowing')) {
+      buttonId = this.state.inside ? 2 : 3;
+    }
     return (
       <div>
         <div style={styles.left}>

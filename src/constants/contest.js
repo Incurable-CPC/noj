@@ -12,4 +12,4 @@ export default {
   CHANGE_SUBMISSION_EXPAND_STATE: 'contest-submission-change-state',
 };
 
-export const listFileds = ['submissions', 'clarifyLogs'];
+export const listFields = ['submissions', 'clarifyLogs'];

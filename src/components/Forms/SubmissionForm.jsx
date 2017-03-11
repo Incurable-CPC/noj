@@ -60,13 +60,13 @@ export default class SubmissionForm extends Component {
       <Paper>
         <form onSubmit={handleSubmit(submit)}>
           <Toolbar>
-            <ToolbarGroup float="left">
+            <ToolbarGroup>
               <ToolbarTitle text="Language: "/>
               <DropDownMenu {...language} onChange={(evt, index, val) => language.onChange(val)}>
                 {langs}
               </DropDownMenu>
             </ToolbarGroup>
-            <ToolbarGroup float="right">
+            <ToolbarGroup>
               <RaisedButton
                 type="submit"
                 label="submit"

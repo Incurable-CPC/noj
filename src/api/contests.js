@@ -11,7 +11,7 @@ import Contest from '../models/Contest';
 import Problem from '../models/Problem';
 import { submissionCheckUser, submissionListCheckUser } from '../models/Submission';
 import submissionChecker from '../check/submission';
-import { listFileds } from '../constants/contest';
+import { listFields } from '../constants/contest';
 
 import contestChecker, { problemNotExist } from '../check/contest';
 const checkContest = async (contest) => {
@@ -51,7 +51,7 @@ const checkManager = async (cid, username) => {
     .findOne({ cid })
     .selec('manager')) || {};
   return (username !== manager) ?
-    'Unauthorized opeartion' : '';
+    'Unauthorized operation' : '';
 };
 
 const checkCid = handleError(async (req, res, next) => {
@@ -84,12 +84,12 @@ const getContest = handleError(async (req, res) => {
   res.send({ contest });
 });
 
-const getcontestUpdate = handleError(async (req, res) => {
+const getContestUpdate = handleError(async (req, res) => {
   const { cid } = req.params;
   const username = getUsername(req);
   const query = Contest.findOne({ cid })
     .select('submissions clarifyLogs');
-  listFileds.forEach(setListSkip(req, query));
+  listFields.forEach(setListSkip(req, query));
   const { submissions, clarifyLogs } = await query;
   submissionListCheckUser(submissions, username);
   res.send({
@@ -239,7 +239,7 @@ const generateTest = async (req, res) => {
 router.get('/', getContestList);
 router.all('/:cid', checkCid);
 router.get('/:cid', getContest);
-router.get('/:cid/update', getcontestUpdate);
+router.get('/:cid/update', getContestUpdate);
 router.get('/:cid/submissions/:sid', getSubmission);
 
 router.all('*', requireAuth);

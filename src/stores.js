@@ -3,7 +3,7 @@
  */
 
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
-import { syncHistory, routeReducer } from 'react-router-redux';
+import { routerMiddleware, routerReducer } from 'react-router-redux';
 import { browserHistory } from 'react-router';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
@@ -15,8 +15,8 @@ import problemReducer from './reducers/problem';
 import submissionReducer from './reducers/submission';
 import contestReducer from './reducers/contest';
 
-const reducer = combineReducers({
-  routing: routeReducer,
+const reducers = combineReducers({
+  routing: routerReducer,
   dialog: dialogReducer,
   auth: authReducer,
   user: userReducer,
@@ -27,14 +27,13 @@ const reducer = combineReducers({
 });
 
 // Sync dispatched route actions to the history
-const reduxRouterMiddleware = syncHistory(browserHistory);
+const reduxRouterMiddleware = routerMiddleware(browserHistory);
 const createStoreWithMiddleware = compose(
   applyMiddleware(thunk),
   applyMiddleware(reduxRouterMiddleware),
   window.devToolsExtension ? window.devToolsExtension() : f => f
 )(createStore);
 
-const store = createStoreWithMiddleware(reducer);
-reduxRouterMiddleware.listenForReplays(store);
+const store = createStoreWithMiddleware(reducers);
 
 export default store;
