@@ -123,20 +123,18 @@ export default class Header extends Component {
     return (
       <Paper className={rootClassName}>
         <div className={s.container}>
-          <Link className={s.title} to={root}><strong>NOJ</strong></Link>
+          <Link className={s.title} to={`${root}/`}><strong>NOJ</strong></Link>
           {leftPart}
           <div className={s.right}>
             {rightPart}
           </div>
         </div>
         <LoginDialog
-          auth={auth}
           login={login}
           open={dialog === 'login'}
           hide={hideDialog}
         />
         <RegisterDialog
-          auth={auth}
           register={register}
           open={dialog === 'register'}
           hide={hideDialog}

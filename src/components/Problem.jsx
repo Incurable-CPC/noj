@@ -33,7 +33,7 @@ export default class Problem extends Component {
       problem = fromJS(handleProblemSrc(problem.toJS()));
     }
 
-    const showField = (field) => (problem.get(field) &&
+    const renderField = (field) => (problem.get(field) &&
       <div>
         <h3>{nameToStr(field)}</h3>
         <div
@@ -57,9 +57,9 @@ export default class Problem extends Component {
             </span>
           </div>
         </div>
-        {showField('description')}
-        {showField('input')}
-        {showField('output')}
+        {renderField('description')}
+        {renderField('input')}
+        {renderField('output')}
         <div>
           <h3>Sample(s)</h3>
           {problem.get('samples').map((sample, index) => (
@@ -71,8 +71,8 @@ export default class Problem extends Component {
             </div>
           ))}
         </div>
-        {showField('hint')}
-        {showField('source')}
+        {renderField('hint')}
+        {renderField('source')}
       </div>
     );
   }

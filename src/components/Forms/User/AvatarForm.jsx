@@ -29,7 +29,7 @@ export default class AvatarForm extends Component {
     posting: false,
   };
 
-  _handleChange = (evt, files) => {
+  _changeFiles = (evt, files) => {
     if (!files) return;
     this.setState({ files });
     if (files[0]) {
@@ -40,7 +40,7 @@ export default class AvatarForm extends Component {
     }
   }
 
-  _clearFile = () => {
+  _clearFiles = () => {
     this.setState({
       src: this.props.src,
       files: { length: 0 },
@@ -51,12 +51,12 @@ export default class AvatarForm extends Component {
     const { postAvatar } = this.props;
     const { files } = this.state;
     this.setState({ posting: true });
-    if (await postAvatar(files[0])) this._clearFile();
+    if (await postAvatar(files[0])) this._clearFiles();
     this.setState({ posting: false });
   }
 
   render() {
-    const { src, files } = this.state;
+    const { src, files, posting } = this.state;
     return (
       <div>
         <div style={styles.avatar}>
@@ -69,16 +69,17 @@ export default class AvatarForm extends Component {
               files={files}
               accept="image/*"
               label="choose new picture"
-              onChange={this._handleChange}
+              onChange={this._changeFiles}
             />
           </div>
           <div style={styles.actions} >
             <FlatButton
               label="clear"
-              onTouchTap={this._clearFile}
+              onTouchTap={this._clearFiles}
             />
             <RaisedButton
               primary
+              disabled={posting}
               label="upload"
               icon={<FileFileUpload />}
               onTouchTap={this._handlePost}

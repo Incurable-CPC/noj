@@ -3,51 +3,46 @@
  **/
 
 import React, { Component, PropTypes } from 'react';
-import { reduxForm } from 'redux-form';
-import TextField from 'material-ui/TextField';
+import { connect } from 'react-redux';
+import { Form, Field, reduxForm } from 'redux-form/immutable';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
 import { clarifyContest } from '../../actions/contest';
+import { TextInput } from './Inputs';
 
-const fields = ['cid', 'qid', 'content'];
+const form = 'clarification';
 
-@reduxForm({
-  form: 'clarification',
-  fields,
-}, (state, prop) => ({
+@connect((state, prop) => ({
   initialValues: {
-    cid: state.contest.getIn(['detail', 'cid']),
-    qid: prop.formKey,
+    cid: state.getIn(['contest', 'detail', 'cid']),
+    qid: prop.qid,
   },
 }))
+@reduxForm({ form })
 @withStyles(s)
 export default class ClarificationForm extends Component {
   static propTypes = {
-    fields: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     submitting: PropTypes.bool.isRequired,
-    formKey: PropTypes.string.isRequired,
+    qid: PropTypes.number.isRequired,
   };
 
   render() {
     const {
-      fields: { content },
       handleSubmit,
       submitting,
-      formKey,
+      qid,
     } = this.props;
-    const clear = () => content.onChange('');
-    const label = (Number(formKey) < 0) ? 'Question' : 'Answer';
+    const label = (qid < 0) ? 'Question' : 'Answer';
     return (
-      <form onSubmit={handleSubmit(clarifyContest(clear))}>
+      <Form onSubmit={handleSubmit(clarifyContest())}>
         <div>
-          <TextField
-            multiLine
-            fullWidth
-            floatingLabelText={label}
-            {...content}
+          <Field
+            name="content" label={label}
+            multiLine fullWidth
+            component={TextInput}
           />
         </div>
         <div className={s.action}>
@@ -59,7 +54,7 @@ export default class ClarificationForm extends Component {
           />
         </div>
         <div style={{ clear: 'both' }}/>
-      </form>
+      </Form>
     );
   }
 }

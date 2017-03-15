@@ -21,7 +21,7 @@ export const initProblem = () => ({
 
 export const postProblem = () => async (problem, dispatch) => {
   try {
-    const error = problemChecker(problem);
+    const error = problemChecker(problem.toJS());
     if (error) return toast('warning', error);
     nprogress.start();
     const action = problem.pid ? 'saved' : 'added';
@@ -38,7 +38,7 @@ export const postProblem = () => async (problem, dispatch) => {
 export const getProblem = (pid) => async (dispatch, getState) => {
   try {
     const state = getState();
-    if (state.problem.getIn(['detail', 'pid']) === pid) return true;
+    if (state.getIn(['problem', 'detail', 'pid']) === pid) return true;
     nprogress.start();
     const { problem } = await getJSON(`${api}/problems/${pid}`);
     dispatch(setProblem(problem));
@@ -78,14 +78,14 @@ export const getProblemList = (condition) => async (dispatch) => {
 
 export const getProblemListByPage = (page) => async(dispatch, getState) => {
   const state = getState();
-  const condition = state.problem.get('condition').toJS();
+  const condition = state.getIn(['problem', 'condition']).toJS();
   condition.page = Number(page) || 1;
   return await dispatch(getProblemList(condition));
 };
 
 export const getProblemListSortBy = (sortKey) => async(dispatch, getState) => {
   const state = getState();
-  const condition = state.problem.get('condition').toJS();
+  const condition = state.getIn(['problem', 'condition']).toJS();
   condition.page = 1;
   if (sortKey === condition.sortKey) {
     condition.order = -condition.order;
@@ -99,7 +99,7 @@ export const getProblemListSortBy = (sortKey) => async(dispatch, getState) => {
 
 export const getProblemListByKeyword = (searchKey) => async(dispatch, getState) => {
   const state = getState();
-  const condition = state.problem.get('condition').toJS();
+  const condition = state.getIn(['problem', 'condition']).toJS();
   condition.page = 1;
   condition.searchKey = searchKey;
   return await dispatch(getProblemList(condition));

@@ -19,7 +19,7 @@ import BasePage from './BasePage';
 @withTitle('NOJ - Problem')
 @withStyles(s)
 @connect((state) => ({
-  problem: state.problem.get('detail'),
+  problem: state.getIn(['problem', 'detail']),
 }))
 export default class ProblemPage extends BasePage {
   static propTypes = {

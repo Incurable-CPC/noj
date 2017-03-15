@@ -21,10 +21,10 @@ import BasePage from './BasePage';
 @withTitle('NOJ - Problems')
 @withStyles(s)
 @connect(state => ({
-  searchKey: state.contest.getIn(['condition', 'searchKey']),
-  contestList: state.contest.get('list'),
-  count: state.contest.get('count'),
-  page: state.contest.getIn(['condition', 'page']),
+  searchKey: state.getIn(['contest', 'condition', 'searchKey']),
+  contestList: state.getIn(['contest', 'list']),
+  count: state.getIn(['contest', 'count']),
+  page: state.getIn(['contest', 'condition', 'page']),
 }))
 class ContestListPage extends BasePage {
   static propTypes = {

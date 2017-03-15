@@ -17,7 +17,7 @@ import BasePage from '../BasePage';
 @withTitle('NOJ - Contests')
 @withStyles(s)
 @connect(state => ({
-  submissionList: state.contest.getIn(['detail', 'submissions']),
+  submissionList: state.getIn(['contest', 'detail', 'submissions']),
 }))
 export default class SubmissionListPage extends BasePage {
   static propTypes = {

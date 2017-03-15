@@ -18,8 +18,8 @@ import BasePage from '../BasePage';
 @withTitle('NOJ - User')
 @withStyles(s)
 @connect((state) => ({
-  authedUser: state.auth,
-  user: state.user.get('detail'),
+  authedUser: state.get('auth'),
+  user: state.getIn(['user', 'detail']),
 }))
 export default class UserInfoPage extends BasePage {
   static propTypes = {

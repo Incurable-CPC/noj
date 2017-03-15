@@ -20,7 +20,7 @@ import BasePage from '../BasePage';
 @withTitle('NOJ - Settings')
 @withStyles(s)
 @connect((state) => ({
-  user: state.auth,
+  user: state.get('auth'),
 }))
 export default class UserInfoPage extends BasePage {
   static propTypes = {

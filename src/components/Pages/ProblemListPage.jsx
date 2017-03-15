@@ -25,13 +25,11 @@ import BasePage from './BasePage';
 @withTitle('NOJ - Problems')
 @withStyles(s)
 @connect(state => ({
-  problemList: state.problem.get('list'),
-  count: state.problem.get('count'),
-  page: state.problem.getIn(['condition', 'page']),
-  searchKey: state.problem.getIn(['condition', 'searchKey']),
-  solved: state.auth.get('solved'),
-  tried: state.auth.get('tried'),
-  user: state.auth,
+  problemList: state.getIn(['problem', 'list']),
+  count: state.getIn(['problem', 'count']),
+  page: state.getIn(['problem', 'condition', 'page']),
+  searchKey: state.getIn(['problem', 'condition', 'searchKey']),
+  user: state.get('auth'),
 }))
 class ProblemsListPage extends BasePage {
   static propTypes = {
@@ -47,10 +45,11 @@ class ProblemsListPage extends BasePage {
 
   render() {
     const {
-      count, page, searchKey,
-      user, tried, solved,
+      count, page, searchKey, user,
       dispatch,
     } = this.props;
+    const tried = user.get('tried');
+    const solved = user.get('solved');
     const begin = Math.max(1, Math.min(page - 2, count - 4));
     const end = Math.min(count, begin + 4);
     const paginationRange = {

@@ -29,7 +29,7 @@ let _updateLock = {
 };
 export const updateUser = (field) => async (dispatch, getState) => {
   const state = getState();
-  const user = (field === 'auth') ? state.auth : state.user.get('detail');
+  const user = (field === 'auth') ? state.get('auth') : state.getIn(['user', 'detail']);
   if (_updateLock[field]) return;
   _updateLock[field] = true;
   const username = user.get('username');
@@ -50,10 +50,11 @@ export const updateUser = (field) => async (dispatch, getState) => {
 };
 
 export const getUserInfo = (username) => async (dispatch, getState) => {
+  const state = getState();
   let ok = true;
   try {
     nprogress.start();
-    const oldUser = getState().user.get('detail');
+    const oldUser = state.getIn(['user', 'detail']);
     if (oldUser.get('username') === username) {
       await dispatch(updateUser('user'));
     } else {
@@ -86,26 +87,26 @@ export const getUserList = (condition) => async (dispatch) => {
 
 export const getUserListByPage = (page) => async (dispatch, getState) => {
   const state = getState();
-  const condition = state.user.get('condition').toJS();
+  const condition = state.getIn(['user', 'condition']).toJS();
   condition.page = Number(page) || 1;
   return await dispatch(getUserList(condition));
 };
 
 export const getUserFollowingList = (username) => async (dispatch, getState) => {
   const state = getState();
-  const condition = state.user.get('condition').toJS();
+  const condition = state.getIn(['user', 'condition']).toJS();
   condition.page = 1;
   condition.follower = username;
   return await dispatch(getUserList(condition));
 };
 
 export const followUser = (follow) => async (dispatch, getState) => {
+  const state = getState();
   let ok = true;
   try {
     nprogress.start();
-    const user = getState().user;
-    const username = user.getIn(['detail', 'username']);
-    const action = `${follow ? 'F' : 'Unf'}ollow`;
+    const username = state.getIn(['user', 'detail', 'username']);
+    const action = follow ? 'Follow' : 'Unfollow';
     await postJSON(`${api}/users/${username}/followers`, { follow });
     await dispatch(updateUser('user'));
     await dispatch(updateUser('auth'));
@@ -120,6 +121,7 @@ export const followUser = (follow) => async (dispatch, getState) => {
 
 export const postAvatar = (avatar) => async (dispatch, getState) => {
   let ok = true;
+  const state = getState();
   try {
     const error = checkAvatar(avatar);
     if (error) {
@@ -127,7 +129,7 @@ export const postAvatar = (avatar) => async (dispatch, getState) => {
       return false;
     }
     nprogress.start();
-    const username = getState().auth.get('username');
+    const username = state.getIn(['auth', 'username']);
     await postFile(`${api}/users/${username}/avatar`, { avatar });
     await dispatch(updateUser('auth'));
     toast('success', 'New picture uploaded');

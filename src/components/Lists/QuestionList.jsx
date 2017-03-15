@@ -76,7 +76,12 @@ class Question extends Component {
           <strong>Answer(s):</strong>
           <Paper style={styles.content}>
             {answerNodeList}
-            {isManager && <ClarificationForm formKey={question.get('qid').toString()} />}
+            {isManager &&
+            <ClarificationForm
+              form={`clarification${question.get('qid')}`}
+              qid={question.get('qid')}
+            />
+            }
           </Paper>
         </div>
       </div>

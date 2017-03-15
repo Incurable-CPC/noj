@@ -3,8 +3,9 @@
  **/
 
 import React, { Component, PropTypes } from 'react';
-import { reduxForm } from 'redux-form';
-import TextField from 'material-ui/TextField';
+import ImmutableTypes from 'react-immutable-proptypes';
+import { connect } from 'react-redux';
+import { Form, Field, FieldArray, reduxForm } from 'redux-form/immutable';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { fromJS } from 'immutable';
@@ -14,33 +15,22 @@ import s from './EditForm.scss';
 import withStyles from '../../decorators/withStyles';
 import Animate from '../Lib/Animate.jsx';
 import Problem from '../Problem.jsx';
+import { TextInput } from './Inputs';
 import { postProblem } from '../../actions/problem';
 
-const fields = [
-  'pid',
-  'title',
-  'timeLimitNum',
-  'memoryLimitNum',
-  'descriptionSrc',
-  'inputSrc',
-  'outputSrc',
-  'samples[].input',
-  'samples[].output',
-  'sourceSrc',
-  'hintSrc',
-];
 const nextStatus = (status) => ((status === 'preview') ? 'edit' : 'preview');
 
-@reduxForm({
-  form: 'problemEdit',
-  fields,
-}, (state) => ({ initialValues: state.problem.get('detail').toJS() }))
+const form = 'problemEdit';
+@connect((state) => ({
+  problem: state.getIn(['form', 'problemEdit', 'values']),
+  initialValues: state.getIn(['problem', 'detail']),
+}))
+@reduxForm({ form })
 @withStyles(s)
 export default class ProblemEditForm extends Component {
   static propTypes = {
+    problem: ImmutableTypes.map,
     action: PropTypes.string,
-    fields: PropTypes.object.isRequired,
-    values: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     submitting: PropTypes.bool.isRequired,
   };
@@ -54,84 +44,88 @@ export default class ProblemEditForm extends Component {
     this.setState({ status });
   };
 
+  renderSample = ({ fields }) => (
+    <div>
+      <Animate style={s} name="sample">
+        {fields.map((sample, index) => (
+          <div className={s.sample} key={index} name="sample">
+            <Field
+              style={{ width: 250, marginRight: 60 }}
+              multiLine rows={3}
+              label={`Sample Input #${index + 1}`}
+              name={`${sample}.input`}
+              component={TextInput}
+            />
+            <Field
+              style={{ width: 250 }}
+              multiLine rows={3}
+              label={`Sample Output #${index + 1}`}
+              name={`${sample}.output`}
+              component={TextInput}
+            />
+            {(fields.length > 1) ? (
+                <FlatButton label="remove" onTouchTap={() => fields.remove(index)}/>
+              ) : null}
+          </div>
+        ))}
+      </Animate>
+      <FlatButton label="add sample" onTouchTap={() => fields.push()}/>
+    </div>
+  );
+
+
   render() {
     const {
-      fields: { title, timeLimitNum, memoryLimitNum, samples },
+      problem,
       handleSubmit,
       submitting,
-      values,
       action,
       } = this.props;
-    const textarea = (field, row) => {
-      const src = this.props.fields[`${field}Src`];
+    const renderTextarea = (field, row) => {
       return (
         <div>
-          <TextField
+          <Field
             fullWidth
-            multiLine
-            rows={row}
-            floatingLabelText={nameToStr(field)}
-            {...src}
+            multiLine rows={row}
+            label={nameToStr(field)}
+            name={`${field}Src`}
+            component={TextInput}
           />
         </div>
       );
     };
 
     return (
-      <form className={s.form} onSubmit={handleSubmit(postProblem())}>
+      <Form className={s.form} onSubmit={handleSubmit(postProblem())}>
         {(this.state.status === 'edit') ? (
-          <div>
             <div>
-              <TextField
-                floatingLabelText="Title"
-                {...title}
-              />
+              <div>
+                <Field name="title" label="Title" component={TextInput}/>
+              </div>
+              <div>
+                <Field
+                  style={{ width: 150, marginRight: 60 }}
+                  name="timeLimitNum"
+                  label="Time Limit / ms"
+                  type="number"
+                  component={TextInput}
+                />
+                <Field
+                  style={{ width: 150 }}
+                  name="memoryLimitNum"
+                  label="Memory Limit / MB"
+                  type="number"
+                  component={TextInput}
+                />
+              </div>
+              {renderTextarea('description', 5)}
+              {renderTextarea('input', 3)}
+              {renderTextarea('output', 3)}
+              <FieldArray name="samples" component={this.renderSample}/>
+              {renderTextarea('source', 1)}
+              {renderTextarea('hint', 2)}
             </div>
-            <div>
-              <TextField
-                style={{ width: 150, marginRight: 60 }}
-                floatingLabelText="Time Limit / ms"
-                type="number"
-                {...timeLimitNum}
-              />
-              <TextField
-                style={{ width: 150 }}
-                floatingLabelText="Memory Limit / MB"
-                type="number"
-                {...memoryLimitNum}
-              />
-            </div>
-            {textarea('description', 5)}
-            {textarea('input', 3)}
-            {textarea('output', 3)}
-            <Animate style={s} name="sample">
-              {samples.map((sample, index) => (
-                <div className={s.sample} key={index} name="sample">
-                  <TextField
-                    style={{ width: 250, marginRight: 60 }}
-                    multiLine
-                    rows={3}
-                    floatingLabelText={`Sample Input #${index + 1}`}
-                    {...sample.input}
-                  />
-                  <TextField
-                    style={{ width: 250 }}
-                    multiLine
-                    rows={3}
-                    floatingLabelText={`Sample Output #${index + 1}`}
-                    {...sample.output}
-                  />
-                  {(samples.length > 1) ? (
-                    <FlatButton label="REMOVE" onTouchTap={() => samples.removeField(index)}/>
-                  ) : null}
-                </div>
-              ))}
-            </Animate>
-            <FlatButton label="ADD SAMPLE" onTouchTap={() => samples.addField()}/>
-            {textarea('source', 1)}
-            {textarea('hint', 2)}
-          </div>
-        ) : <Problem editing problem={fromJS(values)} />}
+          ) : <Problem editing problem={fromJS(problem)} />}
         <div className={s.action}>
           <RaisedButton
             style={{ marginRight: 40 }}
@@ -146,7 +140,7 @@ export default class ProblemEditForm extends Component {
           />
         </div>
         <div style={{ clear: 'both' }} />
-      </form>
+      </Form>
     );
   }
 }

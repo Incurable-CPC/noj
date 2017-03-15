@@ -3,7 +3,6 @@
  **/
 
 import React, { Component, PropTypes } from 'react';
-import ImmutableTypes from 'react-immutable-proptypes';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import LoginForm from '../Forms/LoginForm.jsx';
@@ -13,18 +12,10 @@ export default class LoginDialog extends Component {
     open: PropTypes.bool.isRequired,
     hide: PropTypes.func.isRequired,
     login: PropTypes.func.isRequired,
-    auth: ImmutableTypes.map.isRequired,
   };
 
   render() {
-    const { open, hide, login, auth } = this.props;
-    const disabled = auth.has('status');
-    const handleClick = async () => {
-      if (await login()) {
-        hide();
-      }
-    };
-
+    const { open, hide, login } = this.props;
     const actions = [
       <FlatButton
         label="close"
@@ -34,8 +25,7 @@ export default class LoginDialog extends Component {
         primary
         keyboardFocused
         label="Login"
-        onTouchTap={handleClick}
-        disabled={disabled}
+        onTouchTap={login}
       />,
     ];
     return (
@@ -45,13 +35,7 @@ export default class LoginDialog extends Component {
         open={open}
         onRequestClose={hide}
         contentStyle={{ maxWidth: 450 }}
-      >
-        <LoginForm
-          withoutAction
-          login={handleClick}
-          disabled={disabled}
-        />
-      </Dialog>
+      ><LoginForm /></Dialog>
     );
   }
 }

@@ -29,7 +29,7 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(cookieParser());
 
-mongoose.Promise = global.Promise;
+mongoose.Promise = Promise;
 mongoose.connect(mongoSetting.url);
 
 //

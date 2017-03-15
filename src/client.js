@@ -12,6 +12,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, IndexRoute, IndexRedirect, Route, browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 
 import { root } from './config';
 import store from './stores';
@@ -124,10 +125,15 @@ const requireAuth = () => {
   // }
 };
 
+const history = syncHistoryWithStore(browserHistory, store, {
+  selectLocationState(state) {
+    return state.get('routing').toJS();
+  },
+});
 const appContainer = document.getElementById('app');
 ReactDOM.render((
   <Provider store={store}>
-    <Router history={browserHistory}>
+    <Router history={history}>
       <Route path={root} onEnter={boundInit} component={App}>
         <IndexRoute component={Index}/>
         <Route path="login" component={LoginForm} />

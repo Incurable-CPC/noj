@@ -3,65 +3,59 @@
  **/
 
 import React, { Component, PropTypes } from 'react';
-import { reduxForm } from 'redux-form';
-import TextField from 'material-ui/TextField';
+import { Form, Field, reduxForm } from 'redux-form/immutable';
 import FlatButton from 'material-ui/FlatButton';
 
+import { login } from '../../actions/auth';
 import withStyle from '../../decorators/withStyles';
+import { TextInput } from './Inputs';
 import s from './SmallForm.scss';
 
 const styles = {
-  hiddlen: {
-    position: 'absolute',
-    left: -9999,
+  hidden: {
+    display: 'none',
   },
 };
-const fields = ['username', 'password'];
+
+const form = 'login';
 @withStyle(s)
-@reduxForm({ form: 'login', fields })
+@reduxForm({ form })
 export default class LoginForm extends Component {
   static propTypes = {
-    login: PropTypes.func.isRequired,
-    values: PropTypes.object.isRequired,
-    fields: PropTypes.object.isRequired,
-    withoutAction: PropTypes.bool,
-    disabled: PropTypes.bool,
+    withAction: PropTypes.bool,
+    handleSubmit: PropTypes.func.isRequired,
+    submitting: PropTypes.bool.isRequired,
   };
-
-  _handleSubmit = (evt) => {
-    evt.preventDefault();
-    this.props.login();
-  }
 
   render() {
     const {
-      disabled,
-      withoutAction,
-      fields: { username, password },
+      withAction,
+      handleSubmit,
+      submitting,
       } = this.props;
     return (
-      <form className={s.form} onSubmit={this._handleSubmit}>
-        <TextField
-          {...username}
+      <Form className={s.form} onSubmit={handleSubmit(login())}>
+        <Field
+          name="username" label="Username"
           fullWidth
-          floatingLabelText="Username"
+          component={TextInput}
         />
-        <TextField
-          {...password}
-          fullWidth
+        <Field
+          name="password" label="Password"
           type="password"
-          floatingLabelText="Password"
+          fullWidth
+          component={TextInput}
         />
         <FlatButton
-          style={withoutAction ? styles.hiddlen : {}}
+          style={withAction ? {} : styles.hidden}
           className={s.action}
-          disabled={disabled}
+          disabled={submitting}
           label="Login"
           type="submit"
           primary
         />
         <div style={{ clear: 'both' }} />
-      </form>
+      </Form>
     );
   }
 }

@@ -17,30 +17,30 @@ import BasePage from '../BasePage';
 @withTitle('NOJ - Contests')
 @withStyles(s)
 @connect(state => ({
-  admin: state.auth.has('admin'),
-  username: state.auth.get('username'),
-  manager: state.contest.getIn(['detail', 'manager']),
-  questions: state.contest.getIn(['detail', 'questions']),
+  isAdmin: state.hasIn(['auth', 'admin']),
+  username: state.getIn(['auth', 'username']),
+  manager: state.getIn(['contest', 'detail', 'manager']),
+  questions: state.getIn(['contest', 'detail', 'questions']),
 }))
 export default class ContestClarifyPage extends BasePage {
   static propTypes = {
     questions: ImmutableTypes.list,
     username: PropTypes.string,
     manager: PropTypes.string,
-    admin: PropTypes.bool,
+    isAdmin: PropTypes.bool,
   };
 
   render() {
-    const { questions, username, manager, admin } = this.props;
+    const { questions, username, manager, isAdmin } = this.props;
     return (
       <div className={s.div}>
         <div className={s.left}>
           <Paper className={s.paper}>
-            <ClarificationForm formKey="-1" />
+            <ClarificationForm qid={-1} form="clarification-1"/>
           </Paper>
           <Paper className={s.paper}>
             <QuestionList
-              isManager={(username === manager) || admin}
+              isManager={(username === manager) || isAdmin}
               questionList={questions}
             />
           </Paper>

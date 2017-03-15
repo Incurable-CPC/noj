@@ -10,12 +10,12 @@ import Location from '../core/Location';
 import toast from '../core/toast';
 import { api } from '../config';
 
-export const reciveSubmissionList = (submissionList) => ({
+export const receiveSubmissionList = (submissionList) => ({
   type: SUBMISSION.SET_LIST,
   submissionList,
 });
 
-export const reciveSubmission = (index, submission) => ({
+export const receiveSubmission = (index, submission) => ({
   type: SUBMISSION.SET,
   index,
   submission,
@@ -27,10 +27,10 @@ export const changeSubmissionState = (index, content) => ({
   content,
 });
 
-export const submit = async (submission) => {
+export const submitCode = () => async (submission) => {
   try {
     const { pid, cid } = submission;
-    const error = submissionChecker(submission);
+    const error = submissionChecker(submission.toJS());
     if (error) {
       toast('warning', error);
       return false;
@@ -56,9 +56,8 @@ export const submit = async (submission) => {
 };
 
 function canSubmissionExpand(state, index) {
-  const { submission, auth } = state;
-  const username = submission.getIn(['list', index, 'username']);
-  return (username === auth.get('username'));
+  const username = state.getIn(['submission', 'list', index, 'username']);
+  return (username === state.getIn(['auth', 'username']));
 }
 
 export const getSubmission = (index) => async(dispatch, getState) => {
@@ -66,9 +65,9 @@ export const getSubmission = (index) => async(dispatch, getState) => {
     const state = getState();
     if (!canSubmissionExpand(state, index)) return true;
     nprogress.start();
-    const sid = state.submission.getIn(['list', index, 'sid']);
+    const sid = state.getIn(['submission', 'list', index, 'sid']);
     const { submission } = await getJSON(`${api}/submissions/${sid}`);
-    dispatch(reciveSubmission(index, submission));
+    dispatch(receiveSubmission(index, submission));
     await nprogress.done();
     return true;
   } catch (err) {
@@ -81,13 +80,13 @@ export const getSubmission = (index) => async(dispatch, getState) => {
 export const updateSubmissionResult = (index) => async (dispatch, getState) => {
   try {
     const state = getState();
-    const submission = state.submission.getIn(['list', index]);
+    const submission = state.getIn(['submission', 'list', index]);
     if (!isCompleted(submission.get('result'))) {
       setTimeout(() => dispatch(updateSubmissionResult(index)), 200);
       const sid = submission.get('sid');
       const data = await getJSON(`${api}/submissions/${sid}`);
       if (submission.get('result') !== data.submission.result) {
-        dispatch(reciveSubmission(index, data.submission));
+        dispatch(receiveSubmission(index, data.submission));
       }
     }
   } catch (err) {}
@@ -97,7 +96,7 @@ export const getSubmissionList = (cond) => async (dispatch) => {
   try {
     nprogress.start();
     const { submissionList } = await getJSON(`${api}/submissions`, cond);
-    dispatch(reciveSubmissionList(submissionList));
+    dispatch(receiveSubmissionList(submissionList));
     submissionList.forEach((submission, index) => {
       setTimeout(() => dispatch(updateSubmissionResult(index)), 200);
     });
@@ -115,11 +114,11 @@ export const expandSubmission = (index, content) => async (dispatch, getState) =
     const state = getState();
     if (content === 'code') {
       if (!canSubmissionExpand(state, index)) return;
-      if (!state.submission.getIn(['list', index]).has('code')) {
+      if (!state.getIn(['submission', 'list', index]).has('code')) {
         await dispatch(getSubmission(index));
       }
     } else if (content === 'CEInfo') {
-      const result = state.submission.getIn(['list', index, 'result']);
+      const result = state.getIn(['submission', 'list', index, 'result']);
       if (!isCompileError((result))) return;
     }
 

@@ -9,6 +9,7 @@
 
 import React, { Component, PropTypes, createFactory } from 'react';
 import ImmutableTypes from 'react-immutable-proptypes';
+import { submit } from 'redux-form/immutable';
 import { connect } from 'react-redux';
 import { cyan500, white, black } from 'material-ui/styles/colors';
 
@@ -58,7 +59,10 @@ const muiTheme = getMuiTheme({
   },
 });
 
-@connect(state => state)
+@connect(state => ({
+  auth: state.get('auth'),
+  dialog: state.get('dialog'),
+}))
 export default class App extends Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
@@ -100,9 +104,9 @@ export default class App extends Component {
             auth={auth}
             dialog={dialog}
             active={active}
-            login={() => dispatch(login())}
+            register={() => dispatch(submit('register'))}
+            login={() => dispatch(submit('login'))}
             logout={() => dispatch(logout())}
-            register={() => dispatch(register())}
             showDialog={(_) => dispatch(showDialog(_))}
             hideDialog={() => dispatch(hideDialog())}
           />

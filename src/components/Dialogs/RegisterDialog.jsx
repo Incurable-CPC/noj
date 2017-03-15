@@ -3,7 +3,6 @@
  **/
 
 import React, { Component, PropTypes } from 'react';
-import ImmutableTypes from 'react-immutable-proptypes';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RegisterForm from '../Forms/RegisterForm.jsx';
@@ -13,17 +12,9 @@ export default class RegisterDialog extends Component {
     open: PropTypes.bool.isRequired,
     hide: PropTypes.func.isRequired,
     register: PropTypes.func.isRequired,
-    auth: ImmutableTypes.map.isRequired,
   };
   render() {
-    const { open, hide, register, auth } = this.props;
-    const disabled = auth.has('status');
-    const handleClick = async () => {
-      if (await register()) {
-        hide();
-      }
-    };
-
+    const { open, hide, register } = this.props;
     const actions = [
       <FlatButton
         label="close"
@@ -33,8 +24,7 @@ export default class RegisterDialog extends Component {
         primary
         keyboardFocused
         label="Register"
-        onTouchTap={handleClick}
-        disabled={disabled}
+        onTouchTap={register}
       />,
     ];
     return (
@@ -44,13 +34,7 @@ export default class RegisterDialog extends Component {
         open={open}
         onRequestClose={hide}
         contentStyle={{ maxWidth: 450 }}
-      >
-        <RegisterForm
-          withoutAction
-          register={handleClick}
-          disabled={disabled}
-        />
-      </Dialog>
+      ><RegisterForm /></Dialog>
     );
   }
 }

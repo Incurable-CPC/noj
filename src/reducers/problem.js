@@ -8,8 +8,8 @@ import ProblemConstants from '../constants/problem';
 
 const initState = fromJS({
   detail: {
-    timeLimit: 1000,
-    memoryLimit: 256,
+    timeLimitNum: 1000,
+    memoryLimitNum: 256,
     samples: [{ input: '', output: '' }],
   },
   condition: {},

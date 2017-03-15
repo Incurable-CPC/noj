@@ -3,6 +3,7 @@
  */
 
 import moment from 'moment';
+import { reset } from 'redux-form/immutable';
 
 import { getJSON, postJSON } from '../core/fetchJSON';
 import toast from '../core/toast';
@@ -37,7 +38,7 @@ export const getContest = (cid, force) => async (dispatch, getState) => {
   try {
     if (!force) {
       const state = getState();
-      if (state.contest.getIn(['detail', 'cid']) === Number(cid)) {
+      if (state.getIn(['contest', 'detail', 'cid']) === Number(cid)) {
         dispatch(updateContest(true));
         return true;
       }
@@ -73,7 +74,7 @@ let _updateInterval = null;
 let _updateLock = false;
 export const updateContest = (force) => async (dispatch, getState) => {
   const state = getState();
-  const contest = state.contest.get('detail');
+  const contest = state.getIn(['contest', 'detail']);
   if (force || shouldContestUpdate(contest)) {
     if (_updateLock) return;
     _updateLock = true;
@@ -96,7 +97,7 @@ export const updateContest = (force) => async (dispatch, getState) => {
 
 export const postContest = () => async (contest, dispatch) => {
   try {
-    const error = contestChecker(contest);
+    const error = contestChecker(contest.toJS());
     if (error) return toast('warning', error);
     nprogress.start();
     const action = contest.cid ? 'saved' : 'added';
@@ -129,14 +130,14 @@ export const getContestList = (condition) => async (dispatch) => {
 
 export const getContestListByPage = (page) => async(dispatch, getState) => {
   const state = getState();
-  const condition = state.contest.get('condition').toJS();
+  const condition = state.getIn(['contest', 'condition']).toJS();
   condition.page = Number(page) || 1;
   return await dispatch(getContestList(condition));
 };
 
 export const getContestListSortBy = (sortKey) => async(dispatch, getState) => {
   const state = getState();
-  const condition = state.contest.get('condition').toJS();
+  let condition = state.get(['contest', 'condition']).toJS();
   condition.page = 1;
   if (sortKey === condition.sortKey) {
     condition.order = -condition.order;
@@ -150,13 +151,13 @@ export const getContestListSortBy = (sortKey) => async(dispatch, getState) => {
 
 export const getContestListByKeyword = (searchKey) => async(dispatch, getState) => {
   const state = getState();
-  const condition = state.contest.get('condition').toJS();
+  const condition = state.getIn(['contest', 'condition']).toJS();
   condition.page = 1;
   condition.searchKey = searchKey;
   return await dispatch(getContestList(condition));
 };
 
-export const reciveContestSubmission = (index, submission) => ({
+export const receiveContestSubmission = (index, submission) => ({
   type: CONTEST.SET_SUBMISSION,
   index,
   submission,
@@ -169,9 +170,8 @@ export const changeContestSubmissionState = (index, content) => ({
 });
 
 function canContestSubmissionExpand(state, index) {
-  const { contest, auth } = state;
-  const username = contest.getIn(['detail', 'submissions', index, 'username']);
-  return (username === auth.get('username'));
+  const username = state.getIn(['contest', 'detail', 'submissions', index, 'username']);
+  return (username === state.getIn(['auth', 'username']));
 }
 
 export const getContestSubmission = (index) => async(dispatch, getState) => {
@@ -179,10 +179,10 @@ export const getContestSubmission = (index) => async(dispatch, getState) => {
     const state = getState();
     if (!canContestSubmissionExpand(state, index)) return true;
     nprogress.start();
-    const cid = state.contest.getIn(['detail', 'cid']);
-    const sid = state.contest.getIn(['detail', 'submissions', index, 'sid']);
+    const cid = state.getIn(['contest', 'detail', 'cid']);
+    const sid = state.getIn(['contest', 'detail', 'submissions', index, 'sid']);
     const { submission } = await getJSON(`${api}/contests/${cid}/submissions/${sid}`);
-    dispatch(reciveContestSubmission(index, submission));
+    dispatch(receiveContestSubmission(index, submission));
     await nprogress.done();
     return true;
   } catch (err) {
@@ -195,7 +195,7 @@ export const getContestSubmission = (index) => async(dispatch, getState) => {
 export const expandContestSubmission = (index, content) => async (dispatch, getState) => {
   try {
     const state = getState();
-    const submission = state.contest.getIn(['detail', 'submissions', index]);
+    const submission = state.getIn(['contest', 'detail', 'submissions', index]);
     if (content === 'code') {
       if (!canContestSubmissionExpand(state, index)) return;
       if (!submission.has('code')) {
@@ -212,7 +212,7 @@ export const expandContestSubmission = (index, content) => async (dispatch, getS
   }
 };
 
-export const clarifyContest = (clear) => async (values, dispatch) => {
+export const clarifyContest = () => async (data, dispatch) => {
   try {
     // const error = question.question.trim() !== '';
     // if (error) {
@@ -220,12 +220,10 @@ export const clarifyContest = (clear) => async (values, dispatch) => {
     //   return;
     // }
     nprogress.start();
-    const { cid } = values;
-    await postJSON(
-      `${api}/contests/${cid}/clarification`,
-      values);
-    dispatch(updateContest(true));
-    if (clear) clear();
+    const cid = data.get('cid');
+    await postJSON(`${api}/contests/${cid}/clarification`, data);
+    await dispatch(updateContest(true));
+    await dispatch(reset(`clarification${data.get('qid')}`));
     toast('success', 'Post succeed');
   } catch (err) {
     toast('error', err.message);

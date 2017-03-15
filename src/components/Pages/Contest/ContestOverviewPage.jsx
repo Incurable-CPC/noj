@@ -16,8 +16,8 @@ import BasePage from '../BasePage';
 @withTitle('NOJ - Contests')
 @withStyles(s)
 @connect((state) => ({
-  username: state.auth.get('username'),
-  contest: state.contest.get('detail'),
+  username: state.getIn(['auth', 'username']),
+  contest: state.getIn(['contest', 'detail']),
 }))
 export default class ContestOverviewPage extends BasePage {
   static propTypes = {

@@ -17,8 +17,8 @@ import BasePage from '../BasePage';
 @withTitle('NOJ - Contests')
 @withStyles(s)
 @connect(state => ({
-  problems: state.contest.getIn(['detail', 'problems']),
-  teams: state.contest.getIn(['detail', 'teams']),
+  problems: state.getIn(['contest', 'detail', 'problems']),
+  teams: state.getIn(['contest', 'detail', 'teams']),
 }))
 export default class ContestBoardPage extends BasePage {
   static propTypes = {

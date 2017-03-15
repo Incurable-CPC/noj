@@ -31,38 +31,28 @@ export default class FileInput extends Component {
   static propTypes = {
     onChange: PropTypes.func,
     label: PropTypes.string,
-    files: PropTypes.object,
+    style: PropTypes.object,
     accept: PropTypes.string,
     multiple: PropTypes.bool,
-    style: PropTypes.object,
-  };
-
-  state = {
-    fileInfo: '',
+    files: PropTypes.object,
   };
 
   _handleChange = (evt) => {
     const { files } = evt.target;
     const { onChange } = this.props;
-    this.setState({ fileInfo: filesToStr(files) });
     if (onChange) onChange(evt, files);
   };
 
   render() {
-    const {
-      files, accept, multiple, label,
-      style, ...props,
-    } = this.props;
-    const fileInfo = files ?
-      filesToStr(files) : this.state.fileInfo;
+    const { accept, multiple, label, style, files } = this.props;
     return (
-      <div style={Object.assign({}, styles.root, style)} {...props}>
+      <div style={Object.assign({}, styles.root, style)} >
         <RaisedButton
           label={label || 'browse'}
           style={styles.button}
           onTouchTap={() => this.refs.file.click()}
         />
-        <div style={styles.fileInfo}>{fileInfo}</div>
+        <div style={styles.fileInfo}>{filesToStr(files)}</div>
         <input
           ref="file"
           type="file"

@@ -20,7 +20,7 @@ import BasePage from '../BasePage';
 @withTitle('NOJ - Contests')
 @withStyles(s)
 @connect((state) => {
-  const contest = state.contest.get('detail');
+  const contest = state.getIn(['contest', 'detail']);
   return {
     problems: contest.get('problems'),
     cid: contest.get('cid'),

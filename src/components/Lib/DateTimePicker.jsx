@@ -11,11 +11,9 @@ import moment from 'moment';
 export default class DateTimePicker extends Component {
   static propTypes = {
     format: PropTypes.string.isRequired,
-    value: PropTypes.object,
+    dateTime: PropTypes.object,
     onChange: PropTypes.func,
   };
-
-  getDate = () => this.props.value;
 
   handleChange = (date) => {
     if (this.props.onChange) {
@@ -24,7 +22,7 @@ export default class DateTimePicker extends Component {
   }
 
   changeTime = (evt, date) => {
-    const newDate = moment(this.getDate());
+    const newDate = moment(this.props.dateTime);
     newDate.hour(date.getHours());
     newDate.minute(date.getMinutes());
     newDate.second(0);
@@ -33,7 +31,7 @@ export default class DateTimePicker extends Component {
   };
 
   changeDate = (evt, date) => {
-    const newDate = moment(this.getDate());
+    const newDate = moment(this.props.dateTime);
     newDate.year(date.getFullYear());
     newDate.month(date.getMonth());
     newDate.date(date.getDate());
@@ -46,13 +44,12 @@ export default class DateTimePicker extends Component {
     setTimeout(() => this.refs.datepicker.openDialog(), 0);
 
   render() {
-    const date = this.getDate();
-    let { value, format, ...others } = this.props;
-    value = date && moment(date).format(format);
+    let { dateTime, format, ...others } = this.props;
+    const value = dateTime && moment(dateTime).format(format);
     return (
       <div>
         <TextField
-          value={value}
+          value={value || ''}
           onFocus={this.handleInputFocus}
           onTouchTap={this.handleInputTouchTap}
           {...others}
@@ -64,7 +61,7 @@ export default class DateTimePicker extends Component {
             mode="landscape"
             ref="datepicker"
             onChange={this.changeDate}
-            value={date}
+            value={dateTime}
           />
           <TimePicker
             autoOk
@@ -72,7 +69,7 @@ export default class DateTimePicker extends Component {
             format="24hr"
             ref="timepicker"
             onChange={this.changeTime}
-            value={date}
+            value={dateTime}
           />
         </div>
       </div>

@@ -24,20 +24,21 @@ export default class Board extends Component {
     teams: ImmutableTypes.map,
   };
 
+  renderTime = (t) => {
+    let res = '';
+    if (t) {
+      let sec = t.seconds();
+      let min = t.minutes();
+      let hour = Math.floor(t.asHours());
+      if (sec < 10) sec = '0' + sec;
+      if (min < 10) min = '0' + min;
+      res = `${hour}:${min}:${sec}`;
+    }
+    return res;
+  }
+
   render() {
     const { problems, teams } = this.props;
-    const showTime = (t) => {
-      let res = '';
-      if (t) {
-        let sec = t.seconds();
-        let min = t.minutes();
-        let hour = Math.floor(t.asHours());
-        if (sec < 10) sec = '0' + sec;
-        if (min < 10) min = '0' + min;
-        res = `${hour}:${min}:${sec}`;
-      }
-      return res;
-    };
     return (
       <table className={s.board}>
         <tbody>
@@ -65,7 +66,7 @@ export default class Board extends Component {
             <td>{rank + 1}</td>
             <td>{name}</td>
             <td>{team.get('solved') || 0}</td>
-            <td>{showTime(team.get('penalty'))}</td>
+            <td>{this.renderTime(team.get('penalty'))}</td>
             {problems.map((problem, index) => {
               const state = team.getIn(['problems', index]) || new Map();
               let style = Object.assign({}, styles.col);
@@ -78,7 +79,7 @@ export default class Board extends Component {
                   key={index}
                   style={style}
                 >
-                  {showTime(state.get('solved'))}
+                  {this.renderTime(state.get('solved'))}
                   {twoLine && <br />}
                   {state.has('failed') && `(-${state.get('failed')})`}
                 </td>

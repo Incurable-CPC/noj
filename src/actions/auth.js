@@ -2,12 +2,14 @@
  * Created by cpc on 1/7/16.
  */
 
-import { getValues, reset } from 'redux-form';
+import { getValues, reset } from 'redux-form/immutable';
 import cookie from 'react-cookie';
+
 import AUTH from '../constants/auth';
 import { loginChecker, registerChecker, passwordsChecker } from '../check/auth';
 import { getJSON, postJSON } from '../core/fetchJSON';
 import { updateUser } from './user';
+import { hideDialog } from './dialog';
 import nprogress from '../core/nprogress';
 import toast from '../core/toast';
 import { api } from '../config';
@@ -45,31 +47,44 @@ export const loadAuthedUserInfo = () => async (dispatch) => {
   }
 };
 
-export const login = () => async(dispatch, getState) => {
+export const register = () => async(data, dispatch) => {
   try {
-    const state = getState();
-    const { username, password } = getValues(state.form.login) || {};
+    const { username, password, confirmPassword } = data.toJS();
+    const error = registerChecker(username, password, confirmPassword);
+    if (error) {
+      toast('warning', error);
+    } else {
+      nprogress.start();
+      const { token } = await postJSON(`${api}/auth/register`, data);
+      toast('success', 'Register succeed', 'Welcome to NJU Online Judge');
+      loginSuccess({ username, token });
+      await dispatch(loadAuthedUserInfo());
+      await dispatch(hideDialog());
+    }
+  } catch (err) {
+    toast('error', err.message);
+  }
+  await nprogress.done();
+};
+
+export const login = () => async(data, dispatch) => {
+  try {
+    const { username, password } = data.toJS();
     const error = loginChecker(username, password);
     if (error) {
       toast('warning', error);
     } else {
       nprogress.start();
-      dispatch({ type: AUTH.LOGIN });
-      const { token } = await postJSON(`${api}/auth/login`, {
-        username,
-        password,
-      });
+      const { token } = await postJSON(`${api}/auth/login`, data);
       toast('success', 'Login succeed', 'Welcome to NJU Online Judge');
       loginSuccess({ username, token });
       await dispatch(loadAuthedUserInfo());
-      nprogress.done();
-      return true;
+      await dispatch(hideDialog());
     }
   } catch (err) {
     toast('error', err.message);
-    nprogress.done();
   }
-  return false;
+  await nprogress.done();
 };
 
 export const logout = (option) => async(dispatch) => {
@@ -81,63 +96,29 @@ export const logout = (option) => async(dispatch) => {
       await postJSON(`${api}/auth/logout`);
       toast('success', 'Logout succeed');
       dispatch(clearUserInfo());
-      nprogress.done();
     } catch (err) {
       toast('error', err.message);
-      nprogress.done();
     }
+    nprogress.done();
   }
-};
-
-export const register = () => async(dispatch, getState) => {
-  let ok = true;
-  try {
-    const state = getState();
-    const { username, password, confirmPassword } = getValues(state.form.register) || {};
-    const error = registerChecker(username, password, confirmPassword);
-    if (error) {
-      toast('warning', error);
-      ok = false;
-    } else {
-      nprogress.start();
-      dispatch({ type: AUTH.REGISTER });
-      const { token } = await postJSON(`${api}/auth/register`, {
-        username,
-        password,
-        confirmPassword,
-      });
-      toast('success', 'Register succeed', 'Welcome to NJU Online Judge');
-      loginSuccess({ username, token });
-      await dispatch(loadAuthedUserInfo());
-    }
-  } catch (err) {
-    toast('error', err.message);
-    ok = false;
-  }
-  await nprogress.done();
-  return ok;
 };
 
 export const changePassword = (username) => async (data, dispatch) => {
-  let ok = true;
   try {
-    const { oldPassword, password, confirmPassword } = data;
+    const { oldPassword, password, confirmPassword } = data.toJS();
     const error = passwordsChecker(oldPassword, password, confirmPassword);
     if (error) {
       toast('warning', error);
-      ok = false;
     } else {
       nprogress.start();
       const { token } = await postJSON(`${api}/auth/passwords`, data);
       toast('success', 'Change password succeed');
       loginSuccess({ username, token });
-      dispatch(reset('account'));
       await dispatch(updateUser('auth'));
+      await dispatch(reset('account'));
     }
   } catch (err) {
     toast('error', err.message);
-    ok = false;
   }
   await nprogress.done();
-  return ok;
 };

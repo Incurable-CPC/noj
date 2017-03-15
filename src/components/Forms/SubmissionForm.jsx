@@ -9,31 +9,31 @@ import ToolbarGroup from 'material-ui/Toolbar/ToolbarGroup';
 import ToolbarTitle from 'material-ui/Toolbar/ToolbarTitle';
 import ToolbarSeparator from 'material-ui/Toolbar/ToolbarSeparator';
 import MenuItem from 'material-ui/MenuItem';
-import DropDownMenu from 'material-ui/DropDownMenu';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import Codemirror from 'react-codemirror';
-import 'codemirror/mode/clike/clike';
-import 'codemirror/mode/python/python';
-import { reduxForm } from 'redux-form';
+import { Field, Form, formValueSelector, reduxForm } from 'redux-form/immutable';
 
-import { submit } from '../../actions/submission';
+import { connect } from 'react-redux';
+
+import { submitCode } from '../../actions/submission';
+import { SelectInput, CodeInput } from './Inputs';
 import { LANGUAGES, getModeByValue } from '../../core/languages';
 
-const fields = ['code', 'language', 'pid', 'cid'];
-@reduxForm({
-  form: 'submission',
-  fields,
-}, (state, props) => ({
+const form = 'submission';
+const selector = formValueSelector(form);
+@connect((state, props) => ({
+  language: selector(state, 'language'),
   initialValues: {
     language: 0,
     pid: props.problem.get('pid'),
     cid: props.cid,
   },
 }))
+@reduxForm({ form })
 export default class SubmissionForm extends Component {
   static propTypes = {
-    fields: PropTypes.object.isRequired,
+    language: PropTypes.number,
+    initialValues: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     submitting: PropTypes.bool.isRequired,
     problem: ImmutableTypes.map.isRequired,
@@ -42,10 +42,10 @@ export default class SubmissionForm extends Component {
 
   render() {
     const {
-      fields: { code, language },
+      language,
+      problem,
       handleSubmit,
       submitting,
-      problem,
       } = this.props;
     const pid = problem.get('pid');
     const originOJ = problem.get('originOJ');
@@ -54,17 +54,17 @@ export default class SubmissionForm extends Component {
     ));
     const options = {
       lineNumbers: true,
-      mode: getModeByValue(originOJ, language.value),
+      mode: getModeByValue(originOJ, language),
     };
     return (
       <Paper>
-        <form onSubmit={handleSubmit(submit)}>
+        <Form onSubmit={handleSubmit(submitCode())}>
           <Toolbar>
             <ToolbarGroup>
               <ToolbarTitle text="Language: "/>
-              <DropDownMenu {...language} onChange={(evt, index, val) => language.onChange(val)}>
+              <Field name="language" component={SelectInput}>
                 {langs}
-              </DropDownMenu>
+              </Field>
             </ToolbarGroup>
             <ToolbarGroup>
               <RaisedButton
@@ -77,11 +77,8 @@ export default class SubmissionForm extends Component {
               <ToolbarTitle text={pid} />
             </ToolbarGroup>
           </Toolbar>
-          <Codemirror
-            onChange={code.onChange}
-            options={options}
-          />
-        </form>
+          <Field name="code" options={options} component={CodeInput}/>
+        </Form>
       </Paper>
     );
   }

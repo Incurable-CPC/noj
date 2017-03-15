@@ -3,72 +3,66 @@
  **/
 
 import React, { Component, PropTypes } from 'react';
-import { reduxForm } from 'redux-form';
-import TextField from 'material-ui/TextField';
+import { Form, Field, reduxForm } from 'redux-form/immutable';
 import FlatButton from 'material-ui/FlatButton';
 
+import { register } from '../../actions/auth';
 import withStyle from '../../decorators/withStyles';
+import { TextInput } from './Inputs';
 import s from './SmallForm.scss';
-import { usernameChecker } from '../../check/auth';
+// import { usernameChecker } from '../../check/auth';
 
 const styles = {
-  hiddlen: {
-    position: 'absolute',
-    left: -9999,
+  hidden: {
+    display: 'none',
   },
 };
-const fields = ['username', 'password', 'confirmPassword'];
-@withStyle(s)
-@reduxForm({ form: 'register', fields })
-export default class LoginForm extends Component {
-  static propTypes = {
-    register: PropTypes.func.isRequired,
-    fields: PropTypes.object.isRequired,
-    withoutAction: PropTypes.bool,
-    disabled: PropTypes.bool,
-  };
 
-  _handleSubmit = (evt) => {
-    evt.preventDefault();
-    this.props.register();
+const form = 'register';
+@withStyle(s)
+@reduxForm({ form })
+export default class RegisterForm extends Component {
+  static propTypes = {
+    withAction: PropTypes.bool,
+    handleSubmit: PropTypes.func.isRequired,
+    submitting: PropTypes.bool.isRequired,
   };
 
   render() {
     const {
-      disabled,
-      withoutAction,
-      fields: { username, password, confirmPassword },
+      withAction,
+      handleSubmit,
+      submitting,
       } = this.props;
     return (
-      <form className={s.form} onSubmit={this._handleSubmit}>
-        <TextField
-          {...username}
+      <Form className={s.form} onSubmit={handleSubmit(register())}>
+        <Field
+          name="username" label="Username"
           fullWidth
-          floatingLabelText="Username"
-          errorText={usernameChecker(username.value)}
+          component={TextInput}
         />
-        <TextField
-          {...password}
-          fullWidth
+        <Field
+          name="password" label="Password"
           type="password"
-          floatingLabelText="Password"
+          fullWidth
+          component={TextInput}
         />
-        <TextField
-          {...confirmPassword}
-          fullWidth
+        <Field
+          name="confirmPassword" label="Confirm Password"
           type="password"
-          floatingLabelText="Confirm Password"
+          fullWidth
+          component={TextInput}
         />
         <FlatButton
-          style={withoutAction ? styles.hiddlen : {}}
+          style={withAction ? {} : styles.hidden}
           className={s.action}
-          disable={disabled}
+          disabled={submitting}
           label="register"
           type="submit"
           primary
         />
         <div style={{ clear: 'both' }} />
-      </form>
+      </Form>
     );
   }
 }

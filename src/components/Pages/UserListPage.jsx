@@ -21,10 +21,10 @@ import BasePage from './BasePage';
 @withTitle('NOJ - Users')
 @withStyles(s)
 @connect(state => ({
-  userList: state.user.get('list'),
-  count: state.user.get('count'),
-  condition: state.user.get('condition'),
-  user: state.auth,
+  userList: state.getIn(['user', 'list']),
+  count: state.getIn(['user', 'count']),
+  condition: state.getIn(['user', 'condition']),
+  user: state.get('auth'),
 }))
 class UserListPage extends BasePage {
   static propTypes = {

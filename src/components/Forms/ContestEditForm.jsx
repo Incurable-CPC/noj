@@ -3,13 +3,15 @@
  **/
 
 import React, { Component, PropTypes } from 'react';
-import { reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { Form, Field, FieldArray, formValueSelector, reduxForm } from 'redux-form/immutable';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import DateTimePicker from '../Lib/DateTimePicker.jsx';
+import { fromJS } from 'immutable';
 
-import Animate from '../Lib/Animate.jsx';
+import { TextInput, DataTimeInput } from './Inputs';
+import Animate from '../Lib/Animate';
 import { getJSON } from '../../core/fetchJSON';
 import { postContest } from '../../actions/contest';
 import s from './EditForm.scss';
@@ -18,118 +20,121 @@ import { problemNotExist, MAX_PROBLEM_CNT } from '../../check/contest';
 import toast from '../../core/toast';
 import { api } from '../../config';
 
-const fields = [
-  'cid',
-  'title',
-  'start',
-  'duration',
-  'problems[].pid',
-  'problems[].title',
-  'problems[].error',
-];
+const form = 'contestEdit';
+const selector = formValueSelector(form);
 
-@reduxForm({
-  form: 'contestEdit',
-  fields,
-}, (state) => ({ initialValues: state.contest.get('detail').toJS() }))
 @withStyles(s)
+@connect((state) => ({
+  start: selector(state, 'start'),
+  initialValues: state.getIn(['contest', 'detail']),
+}))
+@reduxForm({ form })
 export default class ContestEditForm extends Component {
   static propTypes = {
     action: PropTypes.string,
-    fields: PropTypes.object.isRequired,
-    values: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     submitting: PropTypes.bool.isRequired,
+    start: PropTypes.object,
   };
 
-  setProblemInfoText = (index, title, error) => {
-    const problem = this.props.fields.problems[index];
-    problem.title.onChange(title);
-    problem.error.onChange(error);
+  state = {
+    data: fromJS([]),
   };
 
-  getProblemTitle = (index, pid) => {
+  updateProblem = (index, pid, input) => {
+    input.onChange(pid);
     clearTimeout(this._updateProblem[index]);
     this._updateProblem[index] = setTimeout(async () => {
+      let field = '';
+      let content = '';
       try {
         const { problem: { title } } = await getJSON(`${api}/problems/${pid}`);
-        this.setProblemInfoText(index, title);
+        field = 'title';
+        content = title;
       } catch (err) {
-        this.setProblemInfoText(index, '', problemNotExist(pid, index));
+        field = 'error';
+        content = problemNotExist(pid, index);
       }
-      this.forceUpdate();
+      this.setState(({ data }) => ({
+        data: data.set(index, fromJS({ [field]: content })),
+      }));
     }, 500);
   };
 
-  addProblem = () => {
-    const { problems } = this.props.fields;
+  _updateProblem = [];
+
+  addProblem = (problems) => () => {
     if (problems.length < MAX_PROBLEM_CNT) {
-      problems.addField();
+      problems.push();
     } else {
       toast('warning', 'Too many problems');
     }
   };
 
-  _updateProblem = [];
+  renderProblem = ({ input, label, index, error }) => (
+    <TextField
+      floatingLabelText={label}
+      onChange={(evt, val) => this.updateProblem(index, val, input)}
+      errorText={error}
+    />
+  );
+
+  renderProblems = ({ fields, info }) => (
+    <div>
+      <Animate style={s} name="problem">
+        {fields.map((problem, index) => {
+          const pid = String.fromCharCode('A'.charCodeAt(0) + index);
+          return (
+            <div className={s.problem} key={index}>
+              <Field
+                name={`${problem}.pid`}
+                label={`Problem ${pid}`}
+                index={index}
+                error={info.getIn([index, 'error'])}
+                component={this.renderProblem}
+              />
+              {info.getIn([index, 'title'])}
+              <FlatButton label="remove" onTouchTap={() => fields.remove(index)} />
+            </div>
+          );
+        })}
+      </Animate>
+      <FlatButton
+        onTouchTap={this.addProblem(fields)}
+        label="add problem"
+      />
+    </div>
+  );
 
   render() {
     const {
-      fields: { title, duration, start, problems },
       handleSubmit,
       submitting,
       action,
+      start,
     } = this.props;
-    start.value = start.value || start.initialValue;
-    const startDate = start.value && new Date(start.value);
+    const startDate = start && new Date(start);
     return (
-      <form className={s.form} onSubmit={handleSubmit(postContest())}>
+      <Form className={s.form} onSubmit={handleSubmit(postContest())}>
         <div>
-          <TextField
-            floatingLabelText="Title"
-            {...title}
-          />
-          <DateTimePicker
-            floatingLabelText="Start Time"
-            format="YYYY-MM-DD HH:mm"
-            value={startDate}
-            onChange={(evt, date) => start.onChange(date)}
+          <Field name="title" label="Title" component={TextInput}/>
+          <Field
+            name="start" label="Start Time"
+            dateTimeFormat="YYYY-MM-DD HH:mm"
+            dateTime={startDate}
+            component={DataTimeInput}
           />
           <div>
-            <TextField
-              floatingLabelText="Duration / hours"
+            <Field
+              name="duration" label="Duration / hours"
               type="number"
-              {...duration}
+              component={TextInput}
             />
           </div>
-          <Animate style={s} name="problem">
-            {problems.map((problem, index) => {
-              const { pid: { onChange, ...others } } = problem;
-              const handleChange = (evt) => {
-                const value = evt.target.value;
-                onChange(value);
-                this.getProblemTitle(index, value);
-              };
-              const pid = String.fromCharCode('A'.charCodeAt(0) + index);
-              return (
-                <div className={s.problem} key={index}>
-                  <TextField
-                    floatingLabelText={`Problem ${pid}`}
-                    errorText={problem.error.value}
-                    onChange={handleChange}
-                    {...others}
-                  />
-                  {problem.title.value}
-                  <FlatButton
-                    onTouchTap={() => problems.removeField(index)}
-                    label="remove"
-                  />
-                </div>
-              );
-            })}
-          </Animate>
-          <FlatButton
-            onTouchTap={this.addProblem}
-            label="add problem"
+          <FieldArray
+            name="problems"
+            info={this.state.data}
+            component={this.renderProblems}
           />
         </div>
         <div className={s.action}>
@@ -141,7 +146,7 @@ export default class ContestEditForm extends Component {
           />
         </div>
         <div style={{ clear: 'both' }} />
-      </form>
+      </Form>
     );
   }
 }
