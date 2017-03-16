@@ -60,7 +60,7 @@ const config = {
   ],
 
   resolve: {
-    extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx', '.json'],
+    extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx', '.json', '.node'],
   },
 
   module: {
@@ -92,6 +92,11 @@ const config = {
       }, {
         test: /\.(eot|ttf|wav|mp3)$/,
         loader: 'file-loader',
+      },
+      {
+        test: /\.node$/,
+        include: path.resolve(__dirname, '../test/build/Release'),
+        loader: 'node-native-loader?name=[name].[ext]',
       },
     ],
   },

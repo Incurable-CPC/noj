@@ -57,6 +57,7 @@
     "lodash.merge": "^3.3.2",
     "material-ui": "^0.17.1",
     "ncp": "^2.0.0",
+    "node-native-loader": "^1.1.1",
     "normalize.css": "^5.0.0",
     "npm": "^4.4.2",
     "nprogress": "^0.2.0",
